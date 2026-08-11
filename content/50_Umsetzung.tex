@@ -1,0 +1,51 @@
+%!TEX root = ../main.tex
+
+\chapter{Umsetzung}
+
+Aufgrund des zeitlichen Rahmens konnte die zentrale Testumgebung nicht mehr vollständig implementiert werden. Für diesen Teil wurde daher ein belastbares Konzept ausgearbeitet, während die praktische Umsetzung auf den lokalen Testbetrieb fokussiert wurde.
+
+
+Dieses Kapitel dokumentiert die konkrete technische Realisierung der lokalen Testinfrastruktur und zeigt, wie die konzipierten Bausteine praktisch umgesetzt wurden.
+
+\section{Abgleich Erstkonzept und tatsächliche Umsetzung}
+Das erste Testkonzept diente als Leitlinie, wurde jedoch während der Implementierung an reale Randbedingungen angepasst.
+
+\textbf{Wesentliche Änderungen im Projektverlauf:}
+\begin{itemize}
+	\item Die zentrale Umgebung (Agent/VM mit durchgängiger Pipeline-Ausführung) blieb im Konzeptstatus und wurde nicht vollständig produktiv umgesetzt.
+	\item Die operative Pipeline-Weiterentwicklung wurde mit dem Hauptentwickler abgestimmt; die studentische Umsetzung konzentrierte sich auf lokale Teststruktur und testbare Artefakte.
+	\item Der End-to-End-Fokus wurde auf Playwright konsolidiert, um einen einheitlichen und wartbaren UI-Testpfad zu sichern.
+	\item Die Umsetzung priorisierte zuerst fachkritische Kernflüsse; nachgelagerte Bereiche wurden teilweise konzeptionell vorbereitet.
+\end{itemize}
+
+\section{Backend}
+
+\subsection{Unit}
+Darzustellen sind Aufbau, Struktur und zentrale Beispiele für Unit-Tests sowie deren Ausführbarkeit im Entwicklungsalltag.
+
+\subsection{Integration}
+Darzustellen sind Integrationsszenarien, beteiligte Komponenten und die gewählte Strategie für Testdaten und Abhängigkeiten.
+
+\subsection{End-to-End-Tests (Backend-nahe Szenarien)}
+Darzustellen sind durchgängige API-nahe Szenarien, insbesondere für Authentifizierung, Berechtigungen, Dateioperationen sowie fachkritische Flows der priorisierten Services.
+
+\section{Frontend}
+
+
+
+\subsection{Integration}
+Darzustellen sind Integrationsszenarien, beteiligte Komponenten und die gewählte Strategie für Testdaten und Abhängigkeiten.
+
+\subsection{End-to-End-Tests - Playwright}
+Hier wird beschrieben, wie geschäftskritische User-Journeys mit Playwright modelliert, automatisiert und stabil gehalten werden.
+
+\subsection{Cross-Browser-Tests}
+Optional kann gezeigt werden, in welchem Umfang Browserkompatibilität geprüft wurde und welche Priorisierung gewählt wurde.
+
+\textbf{Beispielhafter großer End-to-End-Test über mehrere Komponenten}
+Dieser Unterabschnitt erläutert einen repräsentativen E2E-Testfall, der mehrere Fachkomponenten verbindet und den End-to-End-Nutzen der Testinfrastruktur sichtbar macht.
+
+
+
+\section{Herausforderungen bei der Umsetzung}
+Zu reflektieren sind konkrete Umsetzungsprobleme, beispielsweise Proxy-Themen, Laufzeitprobleme, Synchronisationsfehler oder instabile Testabhängigkeiten.

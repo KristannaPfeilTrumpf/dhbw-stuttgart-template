@@ -1,0 +1,72 @@
+%!TEX root = ../main.tex
+
+\chapter{Ist-Analyse und Anforderungen}
+
+\section{Systemarchitektur von ATLAS aus Entwickler-Sicht}
+Die Systemarchitektur umfasst Frontend, Backend, Datenhaltung und externe Dienste. Ziel dieses Abschnitts ist eine klare Darstellung der Komponenten und ihrer Schnittstellen.
+
+\textbf{Zu beschreiben:}
+\begin{itemize}
+	\item Angular-Frontend, ASP.NET-Core-Backend, PostgreSQL und Azure Blob Storage
+	\item Kommunikationswege zwischen Frontend und Backend
+	\item Zweck zentraler Backend-Services
+\end{itemize}
+
+\section{Bestehende Testinfrastruktur}
+Hier wird der Ausgangszustand der Tests beschrieben, einschließlich Umfang, Abdeckung und technischer Einbindung.
+
+Im ersten Konzeptstand zeigte sich im Backend eine nur teilweise Abdeckung: Von fünf zentralen Services waren zunächst nur Experiment-, File- und Search-Service mit Tests versehen, und die Abdeckung lag insgesamt deutlich unter dem Zielwert von durchschnittlich 80\,\% in Kernbereichen. Für das Frontend lagen zu diesem Zeitpunkt noch keine automatisierten Tests und keine belastbare Coverage-Basis vor.
+
+Zusätzlich war eine CI/CD-Ausführung zwar geplant (insbesondere als Pull-Request-nahe Qualitätssicherung), jedoch im betrachteten Zeitpunkt noch nicht aktiv.
+
+\textbf{Zu beschreiben:}
+\begin{itemize}
+	\item bisheriger Test-Coverage-Anteil
+	\item vorhandene Testarten und Werkzeuge
+	\item Grenzen des aktuellen Ansatzes
+\end{itemize}
+
+\section{Anforderungen an die Testinfrastruktur (lokal und global)}
+Die Anforderungen bilden die Grundlage für die Konzeption und spätere Bewertung der Lösung.
+
+\subsection{Unittests}
+Anforderung: schnelle, isolierte und lokal ausführbare Tests für zentrale Logikbausteine.
+
+\subsection{Integrationstests}
+Anforderung: Zusammenspiel mehrerer Komponenten mit realitätsnaher Daten- und Servicekopplung prüfen.
+
+\subsection{End-to-End-Tests}
+Anforderung: geschäftskritische Nutzerabläufe automatisiert über Systemgrenzen hinweg absichern.
+
+\subsection{Klick- und UI-Tests}
+Anforderung: robuste Validierung zentraler UI-Interaktionen und Frontend-Regressionen.
+
+\subsection{Testumgebung}
+Anforderung: reproduzierbare und wartbare Umgebungen für lokale und zentralisierte Ausführung.
+
+\subsubsection{VM}
+Option: definierte Laufzeitumgebung mit kontrollierten Abhängigkeiten.
+
+\subsubsection{Azure DevOps}
+Option: zentrale Pipeline-Orchestrierung für Build, Test und Reporting.
+
+\subsubsection{Agenten}
+Option: skalierbare Ausführung über dedizierte Build- oder Testagenten.
+
+\subsubsection{Eigenständiger PC}
+Option: dedizierte Hardware als pragmatische Zwischenlösung.
+
+\subsection{Sicheres und schnelles Entwickeln}
+Anforderung: kurze Feedbackzyklen bei gleichzeitig stabilen Qualitätskontrollen.
+
+\subsection{Clean Code}
+Anforderung: testspezifischer Code soll nachvollziehbar, konsistent und erweiterbar sein.
+
+\subsection{Wartbarkeit}
+Anforderung: langfristig pflegbare Teststruktur mit klaren Zuständigkeiten und geringem Anpassungsaufwand.
+
+\subsection{Zusammenarbeit mit dem Hauptentwickler und bestehenden Tests}
+Anforderung: neue Tests müssen sich konfliktarm in bestehende Testmuster und Entwicklungsprozesse integrieren.
+
+\subsection{Funktionale und nichtfunktionale Anforderungen}
+In diesem Unterabschnitt kann eine explizite Trennung in funktionale und nichtfunktionale Anforderungen vorgenommen und begründet werden.

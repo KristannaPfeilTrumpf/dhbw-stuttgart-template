@@ -2,4 +2,66 @@
 %!TEX root = ../main.tex
 
 \chapter{Grundlagen}
-Ausgehend von der Aufgabenstellung ist der derzeitige Stand der Technik für die Lösungsfindung zu beschreiben. Es sind z.B. die Vor- und Nachteile bisheriger Lösungen bzw. fundamentaler Lösungsprinzipien fundiert von und ggf. anderen Quellen darzulegen.
+
+\section{ATLAS aus User-Sicht}
+In diesem Abschnitt wird ATLAS aus fachlicher Anwendersicht beschrieben, ohne technische Implementierungsdetails zu vertiefen.
+
+ATLAS ist eine Webanwendung, die auf einem Angular-Frontend und einem .NET-basierten Backend aufbaut. Der Fokus liegt hier auf dem Nutzungskontext und den Kernfunktionen aus Sicht der Anwender.
+
+ATLAS unterstützt fachliche Prozesse, indem Informationen strukturiert bereitgestellt, verarbeitet und nachverfolgt werden können.
+
+\section{Stand der Technik}
+Der Stand der Technik ordnet relevante Testarten, Werkzeuge und Laufzeitumgebungen ein, die für die spätere Konzeption der Testinfrastruktur benötigt werden.
+
+\subsection{Einordnung des ersten Testkonzepts}
+Das erste Testkonzept (Stand: Juni 2026) definiert den Einstieg in eine strukturierte Teststrategie für ATLAS. Es beschreibt eine klare Priorisierung kritischer Komponenten, eine Zuordnung von Unit-, Integrations- und End-to-End-Tests sowie ein zweistufiges Zielbild aus lokaler Umsetzung und späterer CI/CD-Einbindung.
+
+Für den initialen Stack waren unter anderem xUnit, WebApplicationFactory und Moq im Backend, Angular TestBed im Frontend sowie Playwright für End-to-End-Szenarien vorgesehen. Im frühen Entwurf wurden bei E2E-Tests zusätzlich Alternativen betrachtet; im weiteren Projektverlauf wurde die Umsetzung auf Playwright fokussiert.
+Die Einordnung dieses Entwicklungsstands basiert auf dem projektspezifischen Testkonzeptentwurf \cite{Pfeil2026Testkonzept}.
+
+\subsection{Softwaretests im Überblick}
+Darzustellen sind zentrale Testarten (Unit-, Integrations- und End-to-End-Tests) sowie die Testpyramide als Modell für eine ausgewogene Teststrategie.
+Als methodische Grundlage dienen standardisierte Testprozesse \cite{IEEE29119_2_2021} sowie das Testpyramiden-Modell zur Gewichtung der Testebenen \cite{Cohn2009}. Für die Isolation von Komponenten in Unit-Tests ist die klare Trennung von Test Doubles zentral \cite{Fowler2007}.
+
+\subsection{Azure DevOps und Azure Blob Storage}
+Zu erläutern sind Build- und Pipeline-Funktionen in Azure DevOps sowie die Rolle von Azure Blob Storage für Artefakte oder Testdaten.
+Azure Pipelines unterstützt mehrstufige CI/CD-Prozesse und automatisierte Testausführung \cite{MicrosoftAzurePipelines2026,MicrosoftAzurePipelinesArchitecture2026}. Für testspezifische Blob-Storage-Szenarien kann Azurite als lokaler Emulator eingesetzt werden \cite{MicrosoftAzurite2026}.
+
+\subsection{Visual Studio}
+Visual Studio ergänzt die Testinfrastruktur durch Test Explorer, integrierte Ausführung und Analyse von Tests sowie zusätzliche Qualitätssicherungswerkzeuge \cite{MicrosoftTestExplorerBasics2026,MicrosoftTestingToolsOverview2026}.
+Es wird zum entwickeln des Backends genutzt um dort die TEsts zu implementieren und auszuführen. DA es eben extra Tools für unittests, code coverage unt tet analyzing (Test explorer hat)
+
+\subsection{Angular}
+Hier wird Angular als Frontend-Framework eingeordnet, insbesondere im Hinblick auf testbare Komponenten und UI-Interaktionen.
+Für das Testen sind insbesondere Angular TestBed sowie die standardisierte Einbindung von Jasmine und Karma relevant \cite{AngularTestingKarma2026,JasmineDocs2026,KarmaDocs2026}.
+
+\subsection{Docker}
+Optional kann Docker als Containerisierungsansatz für reproduzierbare Testumgebungen dargestellt und begründet werden.
+Docker und Docker Compose ermöglichen reproduzierbare Multi-Container-Testumgebungen für lokale Entwicklung und Pipeline-Ausführung \cite{DockerDocs2026,DockerComposeSpec2020}. Ergänzend zeigen aktuelle Arbeiten die Eignung von Containeransätzen für skalierbare Testlabore \cite{Lemos2026}.
+
+\subsection{.NET Core}
+Darzustellen sind die für die Backend-Tests relevanten Eigenschaften von .NET Core, etwa Testintegration und Ausführbarkeit in CI-Umgebungen.
+ASP.NET Core stellt hierfür etablierte Muster für Unit- und Integrationstests bereit, einschließlich testbarer Servicearchitekturen und In-Memory-Testservern \cite{MicrosoftTestingASPNETCore2026,MicrosoftTestASPNETCoreMVC2026}. Ergänzend sind Best Practices zur Teststruktur und Wartbarkeit zu berücksichtigen \cite{MicrosoftUnitTestingBestPractices2026}.
+
+\subsection{Frameworks}
+Die folgenden Frameworks bilden die technische Grundlage für den Testansatz der Arbeit.
+
+
+
+\subsubsection{xUnit}
+xUnit eignet sich als etabliertes Framework für Unit- und Integrationsnahe Tests im .NET-Umfeld.
+xUnit ist im .NET-Umfeld weit verbreitet und eng mit etablierten Testpraktiken in ASP.NET-Core-Projekten verbunden \cite{xUnitDocs2026,MicrosoftUnitTestingBestPractices2026}. warum x unit? und niccht n unit oder mstest?
+
+\subsubsection{Playwright}
+Playwright wird für browsernahe End-to-End-Tests eingesetzt. Bei knapper Seitenzahl kann auf offizielle Dokumentation verwiesen werden.
+Playwright unterstützt stabile, browserübergreifende E2E-Tests mit einheitlicher API und CI/CD-Integration \cite{PlaywrightDocs2026}.
+
+\subsection{VM}
+was ist eine virtuelle maschine ? 
+Virtuelle Maschinen werden als Option für zentralisierte, kontrollierte und reproduzierbare Testausführungen betrachtet.
+Für reproduzierbare VM-basierte Testumgebungen sind automatisierte Provisionierung und ein definierter Ausgangszustand entscheidend \cite{VagrantDocs2026,Paleologu2008}.
+
+
+
+\section{Verknüpfung zu möglichen Vorlesungsinhalten}
+softwareengineering (vorlseung welche testarten es gibt), datenbanken vorlesung (Postgresql, weil dort daten gespeichert werden)
