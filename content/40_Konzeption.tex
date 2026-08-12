@@ -9,6 +9,14 @@ Die Konzeption folgt einem zweistufigen Vorgehen: zuerst eine belastbare lokale 
 Lokale Stabilität und Teamakzeptanz sind Voraussetzung für eine erfolgreiche Zentralisierung.
 
 \subsection{Konzept der lokalen Testumgebung}
+
+\subsubsection{Einordnung des ersten Testkonzepts}
+Das erste Testkonzept (Stand: Juni 2026) definiert den Einstieg in eine strukturierte Teststrategie für ATLAS. Es beschreibt eine klare Priorisierung kritischer Komponenten, eine Zuordnung von Unit-, Integrations- und End-to-End-Tests sowie ein zweistufiges Zielbild aus lokaler Umsetzung und späterer CI/CD-Einbindung.
+
+Für den initialen Stack waren unter anderem xUnit, WebApplicationFactory und Moq im Backend, Angular TestBed im Frontend sowie Playwright für End-to-End-Szenarien vorgesehen. Im frühen Entwurf wurden bei E2E-Tests zusätzlich Alternativen betrachtet; im weiteren Projektverlauf wurde die Umsetzung auf Playwright fokussiert.
+Die Einordnung dieses Entwicklungsstands basiert auf dem projektspezifischen Testkonzeptentwurf \cite{Pfeil2026Testkonzept}.
+
+
 Beschrieben werden Setup, Ausführungsabläufe, Testgrenzen und die Übergabe an den Main-Entwickler zur Pipeline-Integration.
 
 Das initiale Konzept priorisiert im Backend zuerst GatewayService, ExperimentService und FileService (Priorität 1), danach ReportService und SearchService (Priorität 2). Im Frontend wurden zunächst die fachkritischen Bereiche Features, Services, Auth und Guards priorisiert; wiederverwendbare Komponenten und Layout-Bausteine wurden nachgelagert betrachtet.

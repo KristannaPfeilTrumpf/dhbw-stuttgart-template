@@ -1,27 +1,14 @@
 %!TEX root = ../main.tex
 
 \chapter{Einleitung}
-Die Einleitung soll den Ausgangspunkt der Arbeit umreißen, in kurzer Form zur Problemstellung hinführen und das Interesse der lesenden Person für die Arbeit wecken. Allgemeine Einleitung ins Thema, keine Unternehmens- oder Produktbeschreibungen, Organigramme u.ä., wenn diese nicht direkt zum Thema führen. Ziele und Vorgehensweise nicht vermischen.
 
 \section{Ausgangssituation}
-ATLAS ist eine Webanwendung im Unternehmenskontext. In diesem Abschnitt wird die aktuelle Ausgangslage beschrieben: Welche Funktionen bereits vorhanden sind, wie der bisherige Entwicklungsstand ist und wie weit die automatisierten Tests aktuell fortgeschritten sind.
-
-\textbf{Leitfragen:}
-\begin{itemize}
-	\item Was ist ATLAS in ein bis zwei Sätzen?
-	\item Welche Testarten gibt es heute bereits?
-	\item Wo bestehen aktuell Lücken in der Absicherung?
-\end{itemize}
+Die ATLAS-Laserapplikationsdatenbank ist ein Projekt bei TRUMPF zur strukturierten Dokumentation von Laser-Applikationen und Versuchen. Die Anwendung unterstützt sowohl die interne Anwendungsentwicklung als auch die Kundenberatung. Aufgrund der fachlichen Bedeutung von ATLAS ist eine hohe Zuverlässigkeit der Plattform erforderlich.
 
 \section{Problemstellung und Zielsetzung}
-Die Problemstellung ergibt sich aus dem Spannungsfeld zwischen wachsender Systemkomplexität und unzureichender Testabdeckung. Ziel ist es, eine belastbare Testinfrastruktur zu schaffen, die lokal nutzbar ist und perspektivisch zentral betrieben werden kann.
+Die bestehende Testinfrastruktur war zu Projektbeginn nur eingeschränkt ausgebaut. In mehreren Bereichen fehlten Unit- und Integrationstests oder lagen nur rudimentär vor. Dies führte zu einer überwiegend manuellen Qualitätssicherung mit hohem Zeitaufwand, verlängerten Feedback-Zyklen und einem erhöhten Risiko, dass Fehler erst spät im Entwicklungsprozess erkannt werden.
 
-\textbf{Leitfragen:}
-\begin{itemize}
-	\item Warum reicht der bisherige Testansatz nicht aus?
-	\item Welches konkrete Ziel soll mit dem Projekt erreicht werden?
-	\item Welche Ergebnisse gelten als erfolgreich?
-\end{itemize}
+Ziel der Arbeit ist der Mitaufbau einer robusten und nachhaltigen Testinfrastruktur für ATLAS. Dazu sollen Kernkomponenten in Frontend und Backend systematisch durch automatisierte Tests abgesichert und zentrale Abläufe reproduzierbar validiert werden. Ergänzend wird die technische Grundlage geschaffen, Testergebnisse perspektivisch in CI/CD-Prozessen konsistent zu nutzen.
 
 \section{Motivation}
 Die Motivation liegt in einer höheren Entwicklungsqualität, schnelleren Feedbackzyklen und einer stabileren Zusammenarbeit im Team.

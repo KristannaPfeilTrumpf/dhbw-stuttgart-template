@@ -3,21 +3,18 @@
 
 \chapter{Grundlagen}
 
-\section{ATLAS aus User-Sicht}
-In diesem Abschnitt wird ATLAS aus fachlicher Anwendersicht beschrieben, ohne technische Implementierungsdetails zu vertiefen.
+\section{ATLAS aus Anwender-Sicht}
+In diesem Abschnitt wird ATLAS aus Sicht der Anwender beschrieben. Technische Details werden hier bewusst nur kurz angesprochen und in Kapitel 3 aus Entwickler-Sicht genauer erklärt.
+ATLAS ist eine Webanwendung, die auf einem Angular-Frontend und einem .NET-basierten Backend aufbaut. 
 
-ATLAS ist eine Webanwendung, die auf einem Angular-Frontend und einem .NET-basierten Backend aufbaut. Der Fokus liegt hier auf dem Nutzungskontext und den Kernfunktionen aus Sicht der Anwender.
+Aus Anwender-Sicht dient ATLAS als Plattform zur Dokumentation von Laser-Applikationen und Versuchen. Die saubere Verarbeitung der Daten ist besonders wichtig, da fehlerhafte oder unvollständige Daten direkte Auswirkungen auf Anwendungsentwicklung und Kundenberatung haben können. Aus diesem Grund ist der Aufbau einer stabilen Testinfrastruktur ein zentraler Bestandteil des Projekts: neue Funktionen sollen schneller bereitgestellt und gleichzeitig zuverlässig abgesichert werden.
 
-ATLAS unterstützt fachliche Prozesse, indem Informationen strukturiert bereitgestellt, verarbeitet und nachverfolgt werden können.
+es gibt verschieden rollen: 
+
 
 \section{Stand der Technik}
-Der Stand der Technik ordnet relevante Testarten, Werkzeuge und Laufzeitumgebungen ein, die für die spätere Konzeption der Testinfrastruktur benötigt werden.
-
-\subsection{Einordnung des ersten Testkonzepts}
-Das erste Testkonzept (Stand: Juni 2026) definiert den Einstieg in eine strukturierte Teststrategie für ATLAS. Es beschreibt eine klare Priorisierung kritischer Komponenten, eine Zuordnung von Unit-, Integrations- und End-to-End-Tests sowie ein zweistufiges Zielbild aus lokaler Umsetzung und späterer CI/CD-Einbindung.
-
-Für den initialen Stack waren unter anderem xUnit, WebApplicationFactory und Moq im Backend, Angular TestBed im Frontend sowie Playwright für End-to-End-Szenarien vorgesehen. Im frühen Entwurf wurden bei E2E-Tests zusätzlich Alternativen betrachtet; im weiteren Projektverlauf wurde die Umsetzung auf Playwright fokussiert.
-Die Einordnung dieses Entwicklungsstands basiert auf dem projektspezifischen Testkonzeptentwurf \cite{Pfeil2026Testkonzept}.
+Die technischen Grundlagen dieses Projekts ergeben sich direkt aus der Architektur von ATLAS und dem Ziel, eine belastbare Testinfrastruktur aufzubauen. Relevant sind insbesondere jene Technologien, mit denen fachliche Daten verarbeitet, serviceübergreifende Abläufe abgesichert und automatisierte Tests lokal sowie perspektivisch in CI/CD-Umgebungen ausgef{"u}hrt werden. Im Vordergrund stehen daher nicht nur die allgemeinen Produktbeschreibungen, sondern auch die jeweilige Rolle der Werkzeuge im Testprozess und im Gesamtsystem.
+ \todo{Bild von Test Atlas UI einfügen}
 
 \subsection{Softwaretests im Überblick}
 Darzustellen sind zentrale Testarten (Unit-, Integrations- und End-to-End-Tests) sowie die Testpyramide als Modell für eine ausgewogene Teststrategie.
@@ -29,7 +26,7 @@ Azure Pipelines unterstützt mehrstufige CI/CD-Prozesse und automatisierte Testa
 
 \subsection{Visual Studio}
 Visual Studio ergänzt die Testinfrastruktur durch Test Explorer, integrierte Ausführung und Analyse von Tests sowie zusätzliche Qualitätssicherungswerkzeuge \cite{MicrosoftTestExplorerBasics2026,MicrosoftTestingToolsOverview2026}.
-Es wird zum entwickeln des Backends genutzt um dort die TEsts zu implementieren und auszuführen. DA es eben extra Tools für unittests, code coverage unt tet analyzing (Test explorer hat)
+Im Projekt wird Visual Studio insbesondere für die Backend-Entwicklung genutzt, um Tests zu implementieren, auszuführen und systematisch auszuwerten. Der zentrale Mehrwert liegt in der integrierten Unterstützung für Unit-Tests, Code-Coverage-Analysen und testbezogene Auswertungen über den Test Explorer.
 
 \subsection{Angular}
 Hier wird Angular als Frontend-Framework eingeordnet, insbesondere im Hinblick auf testbare Komponenten und UI-Interaktionen.
