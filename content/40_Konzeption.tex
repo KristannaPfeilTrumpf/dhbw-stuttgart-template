@@ -1,14 +1,16 @@
 %!TEX root = ../main.tex
 
 \chapter{Konzeption der Testinfrastruktur}
+\label{chap:konzeption}
 
-\section{Zwei-Phasen-Rollout-Konzept (lokal $\rightarrow$ zentralisiert)}
+\section{Zwei-Phasen-Rollout-Konzept (lokal zu zentralisiert)}
 Die Konzeption folgt einem zweistufigen Vorgehen: zuerst eine belastbare lokale Testinfrastruktur, anschließend die Überführung in eine zentrale Ausführungsumgebung.
 
 \textbf{Leitgedanke:}
 Lokale Stabilität und Teamakzeptanz sind Voraussetzung für eine erfolgreiche Zentralisierung.
 
 \subsection{Konzept der lokalen Testumgebung}
+Das Konzept orientiert sich an den in \autoref{chap:ist-analyse-anforderungen} beschriebenen Anforderungen und priorisiert zunächst lokal beherrschbare, reproduzierbare Testläufe.
 
 \subsubsection{Einordnung des ersten Testkonzepts}
 Das erste Testkonzept (Stand: Juni 2026) definiert den Einstieg in eine strukturierte Teststrategie für ATLAS. Es beschreibt eine klare Priorisierung kritischer Komponenten, eine Zuordnung von Unit-, Integrations- und End-to-End-Tests sowie ein zweistufiges Zielbild aus lokaler Umsetzung und späterer CI/CD-Einbindung.

@@ -1,14 +1,16 @@
 %!TEX root = ../main.tex
 
 \chapter{Einleitung}
+\label{chap:einleitung}
 
 \section{Ausgangssituation}
-Die ATLAS-Laserapplikationsdatenbank ist ein Projekt bei TRUMPF zur strukturierten Dokumentation von Laser-Applikationen und Versuchen. Die Anwendung unterstützt sowohl die interne Anwendungsentwicklung als auch die Kundenberatung. Aufgrund der fachlichen Bedeutung von ATLAS ist eine hohe Zuverlässigkeit der Plattform erforderlich.
+Die \ac{ATLAS} ist ein Projekt bei TRUMPF zur strukturierten Dokumentation von Laser-Applikationen und Versuchen. Die Anwendung unterstützt sowohl die interne Anwendungsentwicklung als auch die Kundenberatung. Aufgrund der fachlichen Bedeutung von \ac{ATLAS} ist eine hohe Zuverlässigkeit der Plattform erforderlich. was ist das LAC?
+Im \ac{LAC} werden diese Informationen genutzt, um Versuchsergebnisse zu bewerten, Kundenanfragen fundiert zu beantworten und Applikationswissen systematisch bereitzustellen.
 
 \section{Problemstellung und Zielsetzung}
 Die bestehende Testinfrastruktur war zu Projektbeginn nur eingeschränkt ausgebaut. In mehreren Bereichen fehlten Unit- und Integrationstests oder lagen nur rudimentär vor. Dies führte zu einer überwiegend manuellen Qualitätssicherung mit hohem Zeitaufwand, verlängerten Feedback-Zyklen und einem erhöhten Risiko, dass Fehler erst spät im Entwicklungsprozess erkannt werden.
 
-Ziel der Arbeit ist der Mitaufbau einer robusten und nachhaltigen Testinfrastruktur für ATLAS. Dazu sollen Kernkomponenten in Frontend und Backend systematisch durch automatisierte Tests abgesichert und zentrale Abläufe reproduzierbar validiert werden. Ergänzend wird die technische Grundlage geschaffen, Testergebnisse perspektivisch in CI/CD-Prozessen konsistent zu nutzen.
+Ziel der Arbeit ist der Mitaufbau einer robusten und nachhaltigen Testinfrastruktur für \ac{ATLAS}. Dazu sollen Kernkomponenten in Frontend und Backend systematisch durch automatisierte Tests abgesichert und zentrale Abläufe reproduzierbar validiert werden. Ergänzend wird die technische Grundlage geschaffen, Testergebnisse perspektivisch in CI/CD-Prozessen konsistent zu nutzen. Konkrete Anforderungen an diese Infrastruktur werden in \autoref{chap:ist-analyse-anforderungen} beschrieben.
 
 \section{Motivation}
 Die Motivation liegt in einer höheren Entwicklungsqualität, schnelleren Feedbackzyklen und einer stabileren Zusammenarbeit im Team.
@@ -23,4 +25,4 @@ Der Mehrwert zeigt sich in früher Fehlererkennung, besserer Wartbarkeit und ein
 Vom verbesserten Testprozess profitieren Entwicklerteam, Hauptentwickler, Stakeholder und Endnutzer durch stabilere Funktionalität und planbarere Auslieferungen.
 
 \section{Aufbau der Arbeit}
-Diese Arbeit gliedert sich in sechs Kapitel: Einleitung, Grundlagen, Ist-Analyse und Anforderungen, Konzeption der Testinfrastruktur, Umsetzung sowie kritische Reflexion mit Ausblick.
+Diese Arbeit gliedert sich in sechs Kapitel: Nach der Einleitung werden in \autoref{chap:grundlagen} die fachlichen und technischen Grundlagen dargestellt. \autoref{chap:ist-analyse-anforderungen} beschreibt den Ausgangszustand und die Anforderungen an die Testinfrastruktur. Darauf aufbauend werden in \autoref{chap:konzeption} das Testkonzept und in \autoref{chap:umsetzung} die praktische Realisierung erläutert. Abschließend fasst \autoref{chap:reflexion-ausblick} die Ergebnisse zusammen und ordnet sie kritisch ein.

@@ -1,74 +1,113 @@
 %!TEX root = ../main.tex
 
 \chapter{Ist-Analyse und Anforderungen}
+\label{chap:ist-analyse-anforderungen}
 
-\section{Systemarchitektur von ATLAS aus Entwickler-Sicht}
-Die Systemarchitektur umfasst Frontend, Backend, Datenhaltung und externe Dienste. Ziel dieses Abschnitts ist eine klare Darstellung der Komponenten und ihrer Schnittstellen.
+\section{Architektur von ATLAS aus Entwickler-Sicht}
+Die Architektur von \ac{ATLAS} umfasst ein Angular-Frontend, mehrere ASP.NET-Core-Backend-Services, eine relationale Datenbank sowie einen Objektspeicher (Blob Storage) für hochgeladene Dateien, Bilder und generierte Reports. Die hierfür relevanten technologischen Grundlagen wurden bereits in \autoref{chap:grundlagen} beschrieben.
 
-\textbf{Zu beschreiben:}
-\begin{itemize}
-	\item Angular-Frontend, ASP.NET-Core-Backend, PostgreSQL und Azure Blob Storage
-	\item Kommunikationswege zwischen Frontend und Backend
-	\item Zweck zentraler Backend-Services
-\end{itemize}
+\subsection{Gesamtarchitektur}
+\ac{ATLAS} basiert auf einer Microservice-Architektur, bei der das System aus mehreren kleinen, unabhängigen Diensten besteht, die auf Basis von ASP.NET Core 8 entwickelt wurden. Das Frontend ist eine Angular-19-Single-Page-Application, bei der nach dem ersten Laden nur noch einzelne Inhalte aktualisiert werden, ohne die gesamte Seite neu zu laden. Jeder Backend-Service kann eigenständig auf einem Server veröffentlicht und betrieben werden und ist über HTTP erreichbar. Als einziger Eintrittspunkt für das Frontend fungiert ein API-Gateway-Service, der Authentifizierung, Autorisierung und das Routing zu den fachlichen Services übernimmt. Mehrere Services teilen sich gemeinsame Klassenbibliotheken (\texttt{LAC.Core}, \texttt{LAC.Web}, \texttt{LAC.Database}, \texttt{LAC.Authorization}, \texttt{LAC.Utility}).
+
+\subsection{Services und ihre Aufgaben}
+\autoref{tab:services} gibt einen Überblick über die zentralen Backend-Services und ihre jeweiligen Aufgaben.
+
+\begin{table}[H]
+    \centering
+    \caption{Übersicht der Backend-Services in \ac{ATLAS}}
+    \label{tab:services}
+    \begin{tabularx}{\textwidth}{|p{4.2cm}|X|}
+        \hline
+        \textbf{Service} & \textbf{Aufgabe} \\
+        \hline
+        GatewayService & API-Gateway: JWT-Authentifizierung (Azure AD / Entra ID), Autorisierung, Routing und Aggregation der Anfragen an die Fachservices. \\
+        \hline
+        ExperimentService & CRUD für Experimente, Tasks, Setups, Parametersätze und Ergebnisse; Parameterberechnung, Excel-Import, Anwendungsprotokolle. \\
+        \hline
+        SearchService & Such- und Filterlogik über Experiment- und Parameterdaten; Verwaltung von Suchsichten, Filter-Buffern und Lesezeichen. \\
+        \hline
+        FileService & Datei-Upload/-Download und -Verwaltung (Messdaten, Bilder, Report-Artefakte) gegen einen Objektspeicher. \\
+        \hline
+        ReportService & Generierung von Auswertungsdokumenten: Excel-, PowerPoint- und Bild-Exporte sowie Slide-Vorschauen. \\
+        \hline
+        AiService & Ausführung von Python-Skripten für Analyse- und KI-Auswertungen inkl. Verwaltung der Skript-Artefakte. \\
+        \hline
+        ApplicationLoggingService & Zentrales Sammeln von Anwendungs- und Konsolenlogs der übrigen Services (derzeit In-Memory). \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+\subsection{Kommunikation}
+Das Frontend kommuniziert ausschließlich mit dem Gateway über REST/HTTP(S) mit JSON. Authentifizierung erfolgt per JWT-Bearer-Token; Angular-HTTP-Interceptoren ergänzen den Token und behandeln Validierungsfehler zentral. Das Gateway leitet Anfragen synchron per REST an die Fachservices weiter (HTTP-Client-Bibliothek Flurl); das JWT wird dabei durchgereicht, sodass die Fachservices den Benutzerkontext kennen. Es existiert kein asynchrones Messaging und kein gRPC. Die Autorisierung erfolgt zweistufig: grobe Rechteprüfung im Gateway, ergänzt durch rollenbasierte Filterung sensibler Felder in den Fachservices.
+
+\subsection{Datenhaltung}
+Strukturierte Fachdaten werden in einer PostgreSQL-Datenbank persistiert (Zugriff über EF~Core / Npgsql). Dazu zählen Experimente, Tasks, Setups, Parametersätze, Messergebnisse, Stammdaten (Maschinen, Laser, Optiken, Materialien) sowie nutzerbezogene Daten wie Suchsichten und Filtereinstellungen. Für flexible Parameterstrukturen werden teilweise JSON-Spalten eingesetzt; für die Suchfunktion existieren Datenbank-Views.
+
+Unstrukturierte Artefakte -- hochgeladene Dateien und Bilder, generierte Reports sowie Python-Skripte -- werden in Azure Blob Storage abgelegt. Für die lokale Entwicklung steht der Azurite-Emulator zur Verfügung. Der Zugriff erfolgt über zeitlich begrenzte SAS-Token; Blob-Tags ermöglichen die Verschlagwortung der Artefakte. Logeinträge des ApplicationLoggingService werden derzeit ausschließlich im Arbeitsspeicher gehalten.
 
 \section{Bestehende Testinfrastruktur}
-Hier wird der Ausgangszustand der Tests beschrieben, einschließlich Umfang, Abdeckung und technischer Einbindung.
+Zu Projektbeginn existierte im Backend bereits eine teilweise Testabdeckung, die jedoch ungleichmäßig auf die einzelnen Services verteilt war. Im Frontend waren wenige E2E-Tests vorhanden, Unit-Tests fehlten weitgehend. Eine automatisierte CI/CD-Testpipeline war nicht eingerichtet.
 
-Im ersten Konzeptstand zeigte sich im Backend eine nur teilweise Abdeckung: Von fünf zentralen Services waren zunächst nur Experiment-, File- und Search-Service mit Tests versehen, und die Abdeckung lag insgesamt deutlich unter dem Zielwert von durchschnittlich 80\,\% in Kernbereichen. Für das Frontend lagen zu diesem Zeitpunkt noch keine automatisierten Tests und keine belastbare Coverage-Basis vor.
+\subsection{Backend-Testabdeckung}
+Die Code-Coverage-Messung ergab für die zentralen Backend-Services folgendes Bild: \texttt{LAC.Database} war mit 97,1\,\% sehr gut abgedeckt, \texttt{LAC.SearchService} mit 43,5\,\% mäßig. Die übrigen fachkritischen Services wiesen deutliche Lücken auf: \texttt{LAC.ExperimentService} erreichte lediglich 9,8\,\%, \texttt{LAC.Authorization} 9,2\,\% und \texttt{LAC.Core} 7,3\,\%. \texttt{LAC.FileService} lag bei 18,6\,\%. Der \texttt{LAC.GatewayService} war zum Messzeitpunkt nicht durch eigene Tests abgedeckt.
 
-Zusätzlich war eine CI/CD-Ausführung zwar geplant (insbesondere als Pull-Request-nahe Qualitätssicherung), jedoch im betrachteten Zeitpunkt noch nicht aktiv.
-
-Operativ zeigte sich dadurch eine stark manuelle Qualitätssicherung mit entsprechendem Zeitaufwand und erhöhter Fehleranfälligkeit. Neue Funktionen und Änderungen konnten nicht durchgängig automatisiert validiert werden, wodurch sich Feedback-Zyklen verlängerten und das Risiko später Fehlererkennung anstieg.
-
-\textbf{Zu beschreiben:}
+Bereits vorhanden waren eigenständige Testprojekte für folgende Bereiche:
 \begin{itemize}
-	\item bisheriger Test-Coverage-Anteil
-	\item vorhandene Testarten und Werkzeuge
-	\item Grenzen des aktuellen Ansatzes
+    \item \texttt{LAC.Tests.Integration.ExperimentService} (Integrationstests, 100\,\% Coverage innerhalb der Tests)
+    \item \texttt{LAC.Tests.Unit.ExperimentService} (Unit-Tests, 77,2\,\%)
+    \item \texttt{LAC.Tests.UnitTests.File} (Unit-Tests, 90,6\,\%)
+    \item \texttt{LAC.Tests.Unit.Database} (Unit-Tests, 100\,\%)
+    \item \texttt{LAC.Tests.Unit.SearchService} (Unit-Tests, 99,2\,\%)
+    \item \texttt{LAC.Tests.Integration.SearchService} (Integrationstests, 85,5\,\%)
+    \item Tests für den AI-Service
 \end{itemize}
 
-\section{Anforderungen an die Testinfrastruktur (lokal und global)}
-Die Anforderungen bilden die Grundlage für die Konzeption und spätere Bewertung der Lösung.
+Die Integrationstests nutzen \texttt{WebApplicationFactory} aus ASP.NET Core, um die jeweilige Anwendung in einem In-Memory-Testserver zu starten. Testdaten werden über dedizierte DataProvider aufgebaut; HTTP-Requests erfolgen per Flurl. Assertions sind mit FluentAssertions formuliert, was eine lesbare und ausdrucksstarke Testsprache ergibt.
 
-\subsection{Unittests}
-Anforderung: schnelle, isolierte und lokal ausführbare Tests für zentrale Logikbausteine.
+\subsection{Frontend-Teststand}
+Im Frontend-Repository lagen unter \texttt{src/frontend/e2e/tests} vier E2E-Testdateien vor, die im Juni 2026 angelegt wurden:
+\begin{itemize}
+    \item \texttt{ag-grid-scroll.spec.ts}
+    \item \texttt{auth-redirect.spec.ts}
+    \item \texttt{auth-token-restore.spec.ts}
+    \item \texttt{wizard-unsaved.spec.ts}
+\end{itemize}
 
-\subsection{Integrationstests}
-Anforderung: Zusammenspiel mehrerer Komponenten mit realitätsnaher Daten- und Servicekopplung prüfen.
+Unit-Tests konnten grundsätzlich über \texttt{ng test} mit Karma ausgeführt werden. Für E2E-Tests war laut Dokumentation noch kein Framework-Paket eingebunden.
 
-\subsection{End-to-End-Tests}
-Anforderung: geschäftskritische Nutzerabläufe automatisiert über Systemgrenzen hinweg absichern.
+\subsection{CI/CD-Integration}
+Eine dedizierte Testpipeline existierte zum Projektzeitpunkt nicht. Die Integration der Tests in die Azure-DevOps-Pipeline ist als nachgelagerter Schritt geplant und liegt im Verantwortungsbereich des Hauptentwicklers.
 
-\subsection{Klick- und UI-Tests}
-Anforderung: robuste Validierung zentraler UI-Interaktionen und Frontend-Regressionen.
+\subsection{Bewertung des Ausgangszustands}
+Die Bestandsaufnahme zeigt ein heterogenes Bild: Einige Services und Datenbankschicht waren bereits gut getestet, andere fachkritische Bereiche -- insbesondere \texttt{ExperimentService}, \texttt{Authorization} und \texttt{Core} -- wiesen erhebliche Lücken auf. Das Frontend-Testing war in einem frühen Stadium. Ohne automatisierte Testausführung in der Pipeline war eine durchgängige Qualitätssicherung bei Codeänderungen nicht gewährleistet.
 
-\subsection{Testumgebung}
-Anforderung: reproduzierbare und wartbare Umgebungen für lokale und zentralisierte Ausführung.
+\section{Anforderungen an die Testinfrastruktur}
+Die Anforderungen an die Testinfrastruktur wurden nicht formell vorgegeben, sondern aus mehreren Quellen abgeleitet: Gesprächen mit der Projektleitung und dem Hauptentwickler, der Analyse des bestehenden Codes sowie Beobachtungen aus Code Reviews. Die folgende Zusammenstellung beschreibt die daraus resultierenden funktionalen und nicht-funktionalen Anforderungen.
 
-\subsubsection{VM}
-Option: definierte Laufzeitumgebung mit kontrollierten Abhängigkeiten.
+\subsection{Funktionale Anforderungen}
 
-\subsubsection{Azure DevOps}
-Option: zentrale Pipeline-Orchestrierung für Build, Test und Reporting.
+\subsubsection{Unit-Tests}
+Für die zentralen Fachservices und Bibliotheken -- insbesondere \texttt{ExperimentService}, \texttt{Authorization} und \texttt{Core} -- sollen Unit-Tests implementiert werden. Sie müssen isoliert, ohne Datenbankverbindung und lokal ausführbar sein. Im Frontend sollen Unit-Tests für Services, Guards und ausgewählte Komponenten ergänzt werden.
 
-\subsubsection{Agenten}
-Option: skalierbare Ausführung über dedizierte Build- oder Testagenten.
+\subsubsection{Integrationstests}
+Das Zusammenspiel von HTTP-Endpunkten, Datenbankschicht und Services soll durch Integrationstests abgesichert werden. Bestehende Integrationstests (z.\,B. für den \texttt{ExperimentService} und \texttt{SearchService}) dienen dabei als Muster; fehlende Services sind entsprechend zu ergänzen.
 
-\subsubsection{Eigenständiger PC}
-Option: dedizierte Hardware als pragmatische Zwischenlösung.
+\subsubsection{End-to-End-Tests}
+Kritische Nutzerabläufe -- insbesondere Login, Experiment anlegen, Wizard-Navigation und Suche -- sollen als E2E-Tests automatisiert werden. Das Frontend bietet dafür bereits einen \texttt{e2e}-Ordner mit ersten Testdateien; dieser ist um weitere relevante Szenarien zu erweitern.
 
-\subsection{Sicheres und schnelles Entwickeln}
-Anforderung: kurze Feedbackzyklen bei gleichzeitig stabilen Qualitätskontrollen.
+\subsubsection{Kompatibilität mit bestehenden Tests}
+Neue Tests müssen nahtlos mit den vorhandenen Testprojekten zusammenarbeiten. Namenskonventionen, Teststruktur und der Einsatz von \texttt{WebApplicationFactory}, Moq und FluentAssertions sollen einheitlich weitergeführt werden.
 
-\subsection{Clean Code}
-Anforderung: testspezifischer Code soll nachvollziehbar, konsistent und erweiterbar sein.
+\subsection{Nicht-funktionale Anforderungen}
 
-\subsection{Wartbarkeit}
-Anforderung: langfristig pflegbare Teststruktur mit klaren Zuständigkeiten und geringem Anpassungsaufwand.
+\subsubsection{Lokale Ausführbarkeit}
+Alle Tests sollen lokal ohne externe Abhängigkeiten ausführbar sein. Datenbankzugriffe werden über EF-Core-In-Memory oder SQLite-In-Memory simuliert; für Blob Storage steht Azurite als lokaler Emulator zur Verfügung.
 
-\subsection{Zusammenarbeit mit dem Hauptentwickler und bestehenden Tests}
-Anforderung: neue Tests müssen sich konfliktarm in bestehende Testmuster und Entwicklungsprozesse integrieren.
+\subsubsection{Wartbarkeit und Clean Code}
+Testcode soll denselben Qualitätsstandards wie Produktionscode folgen: klare Benennung nach dem Muster \textit{Methode\_Bedingung\_Erwartung}, keine Duplizierung, sinnvoller Einsatz von DataProvi\-dern und Test-Fixtures. Dadurch bleibt die Testbasis auch bei Systemerweiterungen pflegbar.
 
-\subsection{Funktionale und nichtfunktionale Anforderungen}
-In diesem Unterabschnitt kann eine explizite Trennung in funktionale und nichtfunktionale Anforderungen vorgenommen und begründet werden.
+\subsubsection{Schnelle Feedbackzyklen}
+Unit-Tests sollen in unter 20~Sekunden, Integrationstests in unter 40~Sekunden durchlaufen. Kurze Laufzeiten ermöglichen regelmäßige lokale Ausführung und reduzieren Unterbrechungen im Entwicklungsfluss.
+
+\subsubsection{Vorbereitung auf CI/CD-Integration}
+Die Tests sollen so strukturiert sein, dass der Hauptentwickler sie ohne größeren Aufwand in eine Azure-DevOps-Pipeline einbinden kann. Dies betrifft unter anderem konsistente Projektreferenzen, keine hardcodierten lokalen Pfade und die Unterstützung der .NET-CLI-Ausführung (\texttt{dotnet test}).

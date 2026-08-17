@@ -1,0 +1,116 @@
+% ============================================================
+% BEISPIEL: Kapitel 1 - Einleitung (Stundenbuchungstool)
+% Dies ist ein Beispiel, wie eine Einleitung aussehen koennte.
+% ============================================================
+
+\chapter{Problemstellung, Ziel und Vorgehensweise}
+\label{chap:einleitung}
+
+\section{Motivation und Ausgangssituation}
+\label{sec:motivation}
+
+In vielen Unternehmen stellt die korrekte Erfassung und Zuordnung von 
+Arbeitsstunden auf Projekte eine grundlegende Voraussetzung für die 
+Kosten\-rechnung und Projekt\-steuerung dar. Insbesondere in 
+Forschungs- und Entwicklungsabteilungen, in denen Mitarbeitende 
+parallel an mehreren Projekten arbeiten, ist eine präzise 
+Stundendokumentation unerlässlich \cite[vgl.][S.~34]{controlling_buch}.
+
+Die Digitalisierung solcher Prozesse bietet die Möglichkeit, manuelle 
+Tätigkeiten zu reduzieren, die Datenqualität zu erhöhen und 
+Auswertungen in Echtzeit bereitzustellen 
+\cite[vgl.][S.~12\,ff.]{digitalisierung2024}. Gleichzeitig stellen 
+Low-Code-Plattformen wie Microsoft Power Apps eine Technologie dar, 
+die es ermöglicht, solche Anwendungen mit vergleichsweise geringem 
+Entwicklungsaufwand zu realisieren \cite[vgl.][S.~8]{microsoft_lowcode}.
+
+\section{Problemstellung}
+\label{sec:problemstellung}
+
+Der aktuelle Stundenbuchungsprozess beim Dualen Partner basiert auf 
+einer Vielzahl individueller Excel-Dateien. Jede/r Mitarbeitende führt 
+eine eigene Tabelle, in der die auf verschiedene Projekte verteilten 
+Stunden dokumentiert werden. Zusätzlich existiert eine zentrale 
+Projektliste mit Metadaten wie Projekt-ID, Projektname und 
+Kostenstelle.
+
+Dieser Prozess weist folgende Schwachstellen auf:
+
+\begin{itemize}
+    \item \textbf{Hoher manueller Aufwand:} Am Monatsende müssen 
+    sämtliche Einzel-Tabellen manuell zusammengeführt werden.
+    \item \textbf{Niedrige Datenqualität:} Durch Freitexteingaben 
+    entstehen Tippfehler, inkonsistente Bezeichnungen und fehlende 
+    Pflichtangaben.
+    \item \textbf{Fehleranfälliger SAP-Import:} Die zusammengeführte 
+    Tabelle muss in das Buchungssystem SAP importiert werden. 
+    Auftretende Fehlermeldungen erfordern iterative manuelle 
+    Korrekturen.
+    \item \textbf{Eingeschränkte Auswertbarkeit:} Aufgrund der 
+    heterogenen Datenstruktur sind Analysen wie 
+    Stundensatzberechnungen nur mit erheblichem Aufwand möglich.
+\end{itemize}
+
+\section{Ziel der Arbeit}
+\label{sec:ziel}
+
+Ziel dieser Arbeit ist die Fertigstellung und Einführung eines 
+digitalen Stundenbuchungstools, das den beschriebenen manuellen 
+Prozess ablöst. Die Entwicklung erfolgt in Zusammenarbeit mit einer 
+weiteren Entwicklerin, die bereits Vorarbeiten geleistet hat.
+
+Der Eigenanteil dieser Arbeit gliedert sich in zwei Schwerpunkte:
+
+\begin{enumerate}
+    \item \textbf{Technische Umsetzung:} Analyse des bestehenden 
+    Prozesses, systematische Ableitung der Anforderungen und 
+    Implementierung der Kernfunktionen des Tools auf Basis von 
+    Microsoft Power Apps und Power Automate.
+    \item \textbf{Test- und Einführungsphase:} Erstellung eines 
+    Testkonzepts mit definierten Testfällen, Überprüfung der 
+    Datenqualität sowie Vorbereitung des Rollouts (Benutzerrollen, 
+    Berechtigungen, Nutzerleitfäden).
+\end{enumerate}
+
+Nicht Gegenstand dieser Arbeit sind die Anbindung an weitere 
+ERP-Module sowie die langfristige Wartung des Systems nach der 
+Einführung.
+
+\section{Geplantes Vorgehen}
+\label{sec:vorgehen}
+
+Das Vorgehen orientiert sich an einem iterativen Ansatz und lässt 
+sich in folgende Phasen unterteilen:
+
+\begin{enumerate}
+    \item \textbf{Analyse des Ist-Zustands:} Untersuchung des 
+    bestehenden Excel-basierten Prozesses hinsichtlich Schwachstellen, 
+    Schnittstellen und impliziter Anforderungen.
+    \item \textbf{Anforderungsdefinition:} Systematische Erfassung 
+    funktionaler und nicht-funktionaler Anforderungen auf Basis der 
+    Analyse und in Abstimmung mit den Stakeholdern.
+    \item \textbf{Implementierung:} Technische Umsetzung der 
+    Kernfunktionen in Microsoft Power Apps mit Automatisierungen 
+    über Power Automate.
+    \item \textbf{Test:} Erstellung und Durchführung eines 
+    Testkonzepts zur Sicherstellung der Funktionsfähigkeit und 
+    Datenqualität.
+    \item \textbf{Einführungsvorbereitung:} Festlegung von 
+    Benutzerrollen, Erstellung von Dokumentationen und Planung des 
+    Rollouts.
+\end{enumerate}
+
+\section{Aufbau der Arbeit}
+\label{sec:aufbau}
+
+Die vorliegende Arbeit ist wie folgt aufgebaut: In 
+Kapitel~\ref{chap:grundlagen} werden die theoretischen Grundlagen 
+zu Low-Code-Entwicklung, Microsoft Power Platform und 
+Datenqualitätsmanagement erläutert. 
+Kapitel~\ref{chap:analyse} beschreibt die Analyse des Ist-Zustands 
+und die daraus abgeleiteten Anforderungen. Die technische Umsetzung 
+wird in Kapitel~\ref{chap:umsetzung} dokumentiert, gefolgt von der 
+Test- und Einführungsphase in Kapitel~\ref{chap:test}. 
+Abschließend erfolgt in Kapitel~\ref{chap:reflexion} eine kritische 
+Reflexion der Ergebnisse sowie ein Ausblick auf weiterführende 
+Maßnahmen.
