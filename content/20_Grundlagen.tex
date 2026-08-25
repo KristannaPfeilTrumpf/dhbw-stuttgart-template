@@ -3,78 +3,92 @@
 
 \chapter{Grundlagen}
 \label{chap:grundlagen}
+\todo{\cite[S.~15--18]{SpillnerLinz2022} -- Fundamentaler Testprozess einarbeiten}
 
 \section{ATLAS aus Anwender-Sicht}
-In diesem Abschnitt wird \ac{ATLAS} aus Sicht der Anwender beschrieben. Technische Details werden hier bewusst nur kurz angesprochen und in \autoref{chap:ist-analyse-anforderungen} aus Entwickler-Sicht genauer erklärt.
+In diesem Abschnitt wird \ac{ATLAS} aus Anwender-Sicht beschrieben. Die zugehörige Startansicht der Rollen, die Experimente erstellen können, ist in \autoref{fig:user-home} dargestellt. Technische Details werden bewusst nur kurz angesprochen und in \autoref{chap:ist-analyse-anforderungen} aus Entwicklersicht vertieft.
 
-\ac{ATLAS} ist eine Webanwendung, die auf einem Angular-Frontend und einem .NET-basierten Backend aufbaut. Aus Anwender-Sicht dient \ac{ATLAS} als Plattform zur Dokumentation von Laser-Applikationen und Versuchen und unterstützt damit direkt die Anwendungsentwicklung sowie die Kundenberatung im \ac{LAC}. Eine saubere und vollständige Datenbasis ist dabei entscheidend, da fehlerhafte Einträge die Entscheidung bei Experimenten und Beratung der Kunden beeinträchtigen können.
+\ac{ATLAS} ist eine Webanwendung, die auf einem Angular-Frontend und einem .NET-basierten Backend aufbaut. Aus Anwendersicht dient \ac{ATLAS} als Plattform zur Dokumentation von Laser-Applikationen und Versuchen.
 
-Aktuell ist das System auf Experimente im Bereich Laserschweißen ausgerichtet. Berechtigte Nutzer können eigene Experimente erstellen und alle relevanten Versuchsinformationen strukturiert erfassen, zum Beispiel die Schweißkonfiguration, verwendete Materialien, Maschine, Laser sowie allgemeine Parameter wie Laserleistung und Schweißgeschwindigkeit. Ein Experiment besteht aus mehreren Versuchen, bis ein passendes Ergebnis erreicht wird.
+Aktuell ist das System auf Experimente im Bereich Laserschweißen ausgerichtet. Dies spiegelt sich auch in den Abbildungen der \ac{UI} wider. Berechtigte Anwender können eigene Experimente erstellen und alle relevanten Versuchsinformationen strukturiert erfassen, zum Beispiel die Schweißkonfiguration, verwendete Materialien, Maschine, Laser sowie allgemeine Parameter wie Laserleistung und Schweißgeschwindigkeit. Ein Experiment umfasst mehrere Versuche, die so lange durchgeführt werden, bis ein passendes Ergebnis erreicht ist. Die zuständigen Entwickler dokumentieren jeden durchgeführten Versuch in \ac{ATLAS}. Dadurch können die Ergebnisse später nachvollzogen und miteinander verglichen werden. Die einzelnen Schritte beim Anlegen eines Experiments werden in \autoref{subsec:ablauf-experiment} beschrieben.
 
-Zusätzlich erzeugt das System automatisiert einen Report als PowerPoint-Präsentation, in den definierte Informationen und Bilder übernommen werden. Dieser Report kann für die Kundenkommunikation genutzt oder durch den Sales-Bereich weiterverwendet werden.
+Sind alle notwendigen Informationen angegeben, erzeugt \ac{ATLAS} automatisiert einen Bericht in Form einer PowerPoint-Präsentation. In diesen Bericht werden definierte Informationen und Bilder übernommen. Der Bericht kann sowohl vom Entwickler als auch von Mitarbeitenden des Sales-Bereichs für die Kundenkommunikation genutzt werden.
+Welche Funktionen ein Anwender nutzen und welche Informationen er lesen oder bearbeiten darf, hängt von der zugewiesenen Rolle ab. Darauf aufbauend wird in \autoref{sec:rollen-und-berechtigungen} das Rollen- und Berechtigungskonzept erläutert.
 
-Welche Informationen ein Nutzer sehen oder bearbeiten darf, hängt von der zugewiesenen Rolle ab.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.95\textwidth]{USER-Home.png}
+	\caption{Startseite aus Sicht der Rollen mit Berechtigung zum Erstellen von Experimenten in \ac{ATLAS}}
+	\label{fig:user-home-experiment-roles}
+\end{figure}
 
 \subsection{Ablauf beim Anlegen eines Experiments}
-Das Anlegen und Bearbeiten eines Experiments folgt in \ac{ATLAS} einer klaren Schrittfolge:
+\label{subsec:ablauf-experiment}
+Das Anlegen und Bearbeiten eines Experiments erfolgt in \ac{ATLAS} nach einer klaren Schrittfolge:
 
 \begin{enumerate}
-	\item \textbf{Experiment -- allgemeine Informationen:} Erfassung von Stammdaten wie Projekt-ID, Projektname, Confidentiality Level, zuständiger Engineer und weiteren Basisinformationen.
+	\item \textbf{Experiment -- allgemeine Informationen:} Erfassung von Stammdaten wie Projekt-ID, Projektname, Vertraulichkeits Level, dem zuständigen Entwickler und weiteren Basisinformationen.
 	\item \textbf{Experiment Task:} Definition des technischen Versuchsrahmens, zum Beispiel Type of Joint (z. B. Butt Joint, T Joint), Type of Weld (z. B. I-Weld, Fillet Weld), Weld Type (z. B. Partial Penetration, Full Penetration) sowie Materialangaben.
 	\item \textbf{Setup:} Auswahl und Konfiguration von Maschine, Laser, Optik und weiteren spezifischen Prozessparametern.
-	\item \textbf{Parameters:} Übersicht der einzelnen Versuche mit den jeweils gewählten Parametern, die der Nutzer in seiner Ansicht sehen und vergleichen möchte.
-	\item \textbf{Result:} Aufbereitung der Ergebnisse einschließlich automatisiertem PowerPoint-Report mit den relevanten Informationen und eingebundenen Bildern.
+	\item \textbf{Parameters:} Übersicht der einzelnen Versuche mit den jeweils gewählten Parametern, die der Anwender in seiner Ansicht sehen und vergleichen möchte.
+	\item \textbf{Result:} Aufbereitung und Bewertung der Versuchsergebnisse durch Messungen, Bewertungsmatrizen und Gesamtbewertungen. Engineer-Nutzer können Medien verwalten und Querschliffbilder durch KI analysieren lassen. Die verfügbaren Funktionen sind rollen- und berechtigungsabhängig. Abschließend wird ein automatisierter PowerPoint-Bericht erstellt.
 \end{enumerate}
 
 Diese Struktur unterstützt eine nachvollziehbare Dokumentation von Experimenten und erleichtert die spätere Auswertung.
 
 \subsection{Rollen und Berechtigungen}
-In \ac{ATLAS} existieren mehrere Rollen mit unterschiedlichen Funktions- und Sichtrechten. Die Rechte werden rollenspezifisch vergeben und in einzelnen Bereichen zusätzlich durch den Kontext (z. B. Owner/Non-Owner) eingeschränkt.
+\label{sec:rollen-und-berechtigungen}
+In \ac{ATLAS} existieren insgesamt fünf Rollen mit unterschiedlichen Funktions- und Sichtrechten. Die Rechte werden rollenspezifisch vergeben und in einzelnen Bereichen zusätzlich durch den Status als Eigentümer oder Nicht-Eigentümer eines Experiments eingeschränkt. Für das fachliche Verständnis steht die Rolle App-Engineer im Mittelpunkt, da sie den typischen Anwender am besten abbildet.
 
-\textbf{ADMIN:} Die Rolle verfügt über vollständige Rechte innerhalb der Anwendung und kann alle relevanten Funktionen nutzen.
+\textbf{App-Engineer:} Der App-Engineer ist die zentrale Fachrolle in \ac{ATLAS} und für die Durchführung sowie Auswertung von Kundenexperimenten zuständig. Beim Anlegen eines Experiments wird diese Rolle automatisch als Eigentümer eingetragen. Abhängig von der Vertraulichkeitsstufe und der Eigentümerschaft können Daten gelesen und bearbeitet sowie Berichte generiert werden. Bei kritisch vertraulichen Experimenten der Stufe "Critical confidential" ist der Zugriff als Nicht-Eigentümer stark eingeschränkt. Die zugehörige Startansicht der Rollen mit Berechtigung zum Erstellen von Experimenten ist in \autoref{fig:user-home-experiment-roles} dargestellt.
 
-\textbf{SALES:} Die Rolle hat einen stark eingeschränkten Zugriff. Sie kann nur ausgewählte Informationen zu Experimenten sehen, keine Experimente erstellen und keine Detailinformationen innerhalb eines Experiments einsehen. Zusätzlich ist der Zugriff auf Berichte auf den Sales-Report begrenzt. Für Suchfunktionen werden nur die jeweils freigegebenen Informationen angezeigt.
+\textbf{Sales:} Die Sales-Rolle ist auf die Suche nach Parametersätzen und Experimenten beschränkt und hat keinen Zugriff auf die Startseite der Anwendung. Ein Zugriff auf Kundendaten ist grundsätzlich nicht vorgesehen. In der Experimentansicht sind nur die \ac{LAC}-ID und der zuständige Engineer sichtbar. Eine Ausnahme besteht bei Experimenten der Stufe "Critical confidential", wenn ein Sales-Nutzer einem Experiment explizit zugewiesen wurde.
 
-Weitere Rollen wie App-Engineer, R\&D Engineer und External Engineer besitzen ebenfalls eigene, funktionsbezogene Rechteprofile.
-
- \todo{Bild von Test Atlas UI einfügen}
-
-
+Die weiteren Rollen Application Administrator, R\&D Engineer und External Engineer werden im System ebenfalls eingesetzt, stehen in diesem Kontext jedoch nicht im Fokus.
 
 \section{Stand der Technik}
-Für den Aufbau einer Testinfrastruktur in \ac{ATLAS} sind bestimmte Technologien, Werkzeuge und Konzepte grundlegend. Dieser Abschnitt gibt einen Überblick über die wichtigsten davon und erklärt jeweils, welche Rolle sie im Testprozess spielen. Die genaue Einordnung in die Systemarchitektur von \ac{ATLAS} folgt in \autoref{chap:ist-analyse-anforderungen}.
+Für den Aufbau einer geeigneten Testinfrastruktur in \ac{ATLAS} kommen verschiedene Technologien zum Einsatz. Der folgende Abschnitt stellt diese Technologien vor und erläutert ihre Bedeutung für den Testprozess. Die genaue Einordnung in die Systemarchitektur von \ac{ATLAS} folgt in \autoref{chap:ist-analyse-anforderungen}.
 
-\subsection{Softwaretests im Überblick}
-Automatisierte Softwaretests lassen sich in drei Hauptebenen einteilen: Unit-Tests prüfen einzelne Komponenten isoliert, Integrationstests überprüfen das Zusammenspiel mehrerer Teile, und End-to-End-Tests simulieren vollständige Nutzerabläufe. Die Testpyramide beschreibt dabei, wie diese Ebenen sinnvoll gewichtet werden sollten: viele schnelle Unit-Tests als Basis, weniger Integrationstests und eine kleine Zahl an End-to-End-Tests an der Spitze \cite{Cohn2009}. Grundlage für die Strukturierung von Testprozessen bildet zudem \cite{IEEE29119_2_2021}. Wichtig für Unit-Tests ist außerdem die klare Trennung von Abhängigkeiten über sogenannte Test Doubles \cite{Fowler2007}.
+\subsection{Softwaretests im Allgemeinen}
+Softwaretests lassen sich unabhängig davon, ob sie manuell oder automatisiert durchgeführt werden, in drei Hauptebenen einteilen: Unit-Tests prüfen einzelne Komponenten isoliert, Integrationstests überprüfen das Zusammenspiel mehrerer Teile, und End-to-End-Tests simulieren vollständige Anwenderabläufe. Grundlage für die Strukturierung von Testprozessen bildet der IEEE Internationale Standard \cite{IEEE29119_2_2021}.
 
-\subsection{Azure DevOps und Azure Blob Storage}
-Azure DevOps ist eine Plattform von Microsoft für die Verwaltung von Softwareprojekten. Im Kontext dieser Arbeit ist vor allem Azure Pipelines relevant, das Build-, Test- und Deployment-Prozesse automatisiert \cite{MicrosoftAzurePipelines2026,MicrosoftAzurePipelinesArchitecture2026}. Azure Blob Storage dient zur Speicherung von Dateien und Artefakten in der Cloud. Für lokale Tests ohne echte Cloud-Anbindung bietet Microsoft mit Azurite einen Emulator, der das Speicherverhalten nachbildet \cite{MicrosoftAzurite2026}.
+Automatisierte Tests unterscheiden sich von manuellen Tests dadurch, dass sie ohne menschliches Eingreifen wiederholt ausgeführt werden können und dadurch schnelle, konsistente Rückmeldungen liefern. Die Testpyramide beschreibt, wie die drei Testebenen bei der Automatisierung sinnvoll gewichtet werden sollten: viele schnelle Unit-Tests als Basis, weniger Integrationstests und eine kleine Zahl an End-to-End-Tests an der Spitze.
 
-\subsection{Visual Studio}
-Visual Studio ist die primäre Entwicklungsumgebung für das Backend von \ac{ATLAS}. Neben der normalen Entwicklung bietet es integrierte Werkzeuge für Tests: Der Test Explorer ermöglicht das Ausführen und Auswerten von Unit-Tests direkt in der IDE, Code-Coverage zeigt, welche Codebereiche durch Tests abgedeckt sind \cite{MicrosoftTestExplorerBasics2026,MicrosoftTestingToolsOverview2026}.
+Im Gegensatz zu manuellen Tests, bei denen ein Tester das System explorativ oder nach geplanten Testfällen prüft, bieten automatisierte Tests den Vorteil schneller und wiederholbarer Rückmeldungen. Axelrod betont, dass das Ziel automatisierter Tests nicht primär das Finden möglichst vieler Fehler ist, sondern vielmehr die schnelle Rückmeldung darüber, ob sich das System wie erwartet verhält\footnote{\enquote{The sweet spot of automated testing is not to find as many bugs as possible, but rather to provide fast feedback about whether the system behaves in the way we expect, as defined in the tests.} \cite[S.~19]{Axelrod2018}}. Damit automatisierte Tests zuverlässig bleiben, müssen sie kurz, präzise und unabhängig voneinander sein. Längere Testfälle, die viele Aspekte auf einmal prüfen, erschweren die Fehleranalyse und erhöhen den Wartungsaufwand \cite[S.~25--26]{Axelrod2018}.
 
-\subsection{Angular}
-Angular ist ein TypeScript-basiertes Framework von Google für die Entwicklung von Webanwendungen und bildet das Frontend von \ac{ATLAS}. Für Tests stellt Angular das TestBed bereit, das eine isolierte Testumgebung für Komponenten und Services schafft. Als Test-Framework wird Jasmine eingesetzt, als Test-Runner Karma \cite{AngularTestingKarma2026,JasmineDocs2026,KarmaDocs2026}.
+\subsection{Microsoft Visual Studio 2026}
+Visual Studio 2026 ist die primäre Entwicklungsumgebung für das Backend von \ac{ATLAS}. Die Entwicklungsumgebung bietet neben den Funktionen zur Implementierung und Fehleranalyse auch integrierte Werkzeuge für die Durchführung und Auswertung von Softwaretests. Dadurch können Tests direkt innerhalb der Entwicklungsumgebung erstellt, ausgeführt und analysiert werden.
 
-\subsection{Docker}
+Eine zentrale Funktion ist der Test Explorer. Er ermöglicht die Ausführung von Unit-Tests und stellt deren Ergebnisse übersichtlich dar. Fehlgeschlagene Tests können dadurch direkt identifiziert und für die anschließende Fehleranalyse ausgewertet werden. Ergänzend zeigt die Code-Coverage-Auswertung, welche Codebereiche durch die vorhandenen Tests abgedeckt werden. Diese Funktionen unterstützen die Überprüfung der Testabdeckung und erleichtern die gezielte Erweiterung der Tests \cite{MicrosoftTestExplorerBasics2026,MicrosoftTestingToolsOverview2026}.
+
+\subsection{Microsoft .NET 8}
+.NET 8 ist ein quelloffenes Framework von Microsoft für die plattformübergreifende Entwicklung von Anwendungen mit C\#. Das Backend von \ac{ATLAS} basiert auf ASP.NET Core 8. Für die Testbarkeit bietet das Framework mehrere Konzepte: Die integrierte Dependency Injection ermöglicht das Ersetzen von Abhängigkeiten durch Test-Doubles, ohne den Produktivcode zu verändern. Die \texttt{WebApplicationFactory} startet die Anwendung in einem In-Memory-Testserver, wodurch HTTP-Anfragen ohne Netzwerkkommunikation getestet werden können \cite{MicrosoftTestingASPNETCore2026,MicrosoftTestASPNETCoreMVC2026}. Empfehlungen zur Teststruktur und Benennung sind in den offiziellen Best Practices beschrieben \cite{MicrosoftUnitTestingBestPractices2026}.
+
+\subsection{Google Angular}
+Angular ist ein TypeScript-basiertes Framework von Google für die Entwicklung von Webanwendungen und bildet das Frontend von \ac{ATLAS}. Zu Projektbeginn wurde Angular in Version 19 eingesetzt, im weiteren Projektverlauf erfolgte die Aktualisierung auf Version 20 und anschließend auf Version 21. Für Tests stellt Angular das TestBed bereit, das eine isolierte Testumgebung für Komponenten und Services schafft.
+
+\subsection{Microsoft Azure DevOps und Azure Blob Storage}
+Azure DevOps ist eine Plattform von Microsoft für die Verwaltung von Softwareprojekten. Im Kontext dieser Arbeit ist vor allem Azure Pipelines relevant, das Build-, Test- und Deployment-Prozesse automatisiert \cite{MicrosoftAzurePipelines2026,MicrosoftAzurePipelinesArchitecture2026}. Eine Pipeline besteht aus definierten Schritten, die bei jedem Code-Commit oder nach Zeitplan ausgeführt werden. Für Tests ermöglicht dies die automatische Ausführung nach jeder Codeänderung. Die Testergebnisse werden direkt in Azure DevOps visualisiert und können als Qualitätsgate dienen: Fehlgeschlagene Tests blockieren bei entsprechender Konfiguration den Merge in den Hauptbranch.
+
+Azure Blob Storage dient zur Speicherung von Dateien und Artefakten in der Cloud. Für lokale Tests ohne echte Cloud-Anbindung bietet Microsoft mit Azurite einen Emulator, der das Speicherverhalten nachbildet \cite{MicrosoftAzurite2026}. Dadurch können Tests, die Blob-Storage-Operationen ausführen, auch ohne Netzwerkverbindung und ohne Kosten für Cloud-Ressourcen lokal durchgeführt werden.
+
+\subsection{Docker von Docker Inc.}
 Docker dient zur Containerisierung von Anwendungen. Ein Container bündelt eine Anwendung mit allen ihren Abhängigkeiten und läuft dadurch auf jedem System gleich. Mit Docker Compose lassen sich mehrere Container gemeinsam verwalten, was das Aufsetzen von Testumgebungen vereinfacht \cite{DockerDocs2026,DockerComposeSpec2020}. Containeransätze eignen sich grundsätzlich gut für reproduzierbare und skalierbare Testinfrastrukturen \cite{Lemos2026}.
 
-\subsection{.NET Core}
-.NET Core ist ein quelloffenes Framework von Microsoft für die plattformübergreifende Entwicklung von Anwendungen mit C\#. Das Backend von \ac{ATLAS} basiert auf ASP.NET Core. Für Tests bietet das Framework unter anderem die \texttt{WebApplicationFactory}, mit der sich die Anwendung in einem In-Memory-Testserver starten lässt, ohne einen echten Server zu benötigen \cite{MicrosoftTestingASPNETCore2026,MicrosoftTestASPNETCoreMVC2026}. Empfehlungen zur Teststruktur und Benennung sind in den offiziellen Best Practices beschrieben \cite{MicrosoftUnitTestingBestPractices2026}.
-
-\subsection{Frameworks}
-Neben den genannten Technologien kommen im Projekt konkrete Test-Frameworks zum Einsatz, die im Folgenden kurz vorgestellt werden.
-
-\subsubsection{xUnit}
-xUnit ist ein weit verbreitetes Open-Source-Framework für Unit-Tests in .NET und wird von Microsoft in der offiziellen Dokumentation empfohlen. Im Vergleich zu Alternativen wie NUnit oder MSTest zeichnet sich xUnit durch eine modernere Architektur, bessere Unterstützung für Dependency Injection und parallele Testausführung aus \cite{xUnitDocs2026,MicrosoftUnitTestingBestPractices2026}.
-
-\subsubsection{Playwright}
+\subsection{Microsoft Playwright}
 Playwright ist ein Framework von Microsoft für automatisierte End-to-End-Tests im Browser. Es unterstützt Chromium, Firefox und WebKit über eine gemeinsame API und wartet automatisch auf Elemente, was Tests stabiler macht als ältere Ansätze \cite{PlaywrightDocs2026}.
 
-\subsection{VM}
-Eine virtuelle Maschine (VM) ist ein softwarebasiertes Abbild eines Computersystems, das auf echter Hardware läuft. Sie verhält sich wie ein eigenständiger Rechner mit eigenem Betriebssystem und isolierter Umgebung. Für Testinfrastrukturen sind VMs interessant, weil sie einen definierten, jederzeit wiederherstellbaren Ausgangszustand bieten. Mit Tools wie Vagrant lassen sich VMs automatisiert provisionieren \cite{VagrantDocs2026,Paleologu2008}.
+Playwright bietet mehrere Funktionen, die für die Testautomatisierung relevant sind: Die automatische Wartelogik (Auto-Wait) erkennt, wann ein Element interaktionsbereit ist, und reduziert damit die Notwendigkeit für explizite Wartezeiten im Testcode. Die Tracing-Funktion zeichnet Screenshots, DOM-Snapshots und Netzwerkaktivitäten während der Testausführung auf, was die Fehleranalyse bei fehlgeschlagenen Tests erheblich vereinfacht. Zusätzlich unterstützt Playwright das Abfangen und Mocken von Netzwerkanfragen, sodass Tests auch ohne echte Backend-Verbindung ausgeführt werden können.
+
+
+\subsection{Virtuelle Maschinen}
+Eine \ac{VM} ist ein softwarebasiertes Abbild eines Computersystems, das auf echter Hardware läuft. Sie verhält sich wie ein eigenständiger Rechner mit eigenem Betriebssystem und isolierter Umgebung. Für Testinfrastrukturen sind \acp{VM} interessant, weil sie einen definierten, jederzeit wiederherstellbaren Ausgangszustand bieten.
+
+Jede \ac{VM} verfügt über einen eigenen Kernel und kann ein beliebiges Betriebssystem ausführen. Für Tests, die Windows-spezifisches Verhalten oder bestimmte Systemkonfigurationen erfordern, bieten \acp{VM} daher eine realitätsnahe Umgebung. Snapshots ermöglichen das Speichern und Wiederherstellen von \ac{VM}-Zuständen, was für reproduzierbare Testläufe genutzt werden kann.
+
 
 
 
 \section{Verknüpfung zu möglichen Vorlesungsinhalten}
-softwareengineering (vorlseung welche testarten es gibt), datenbanken vorlesung (Postgresql, weil dort daten gespeichert werden)
+Die beschriebenen Testarten knüpfen an Inhalte der Vorlesung Software Engineering an. Der Einsatz von PostgreSQL zur Speicherung der Anwendungsdaten stellt zudem einen Bezug zu den Inhalten der Vorlesung Datenbanken her.

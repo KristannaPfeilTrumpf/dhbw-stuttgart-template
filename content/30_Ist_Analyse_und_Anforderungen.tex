@@ -2,9 +2,10 @@
 
 \chapter{Ist-Analyse und Anforderungen}
 \label{chap:ist-analyse-anforderungen}
+\todo{\cite[S.~89--95]{SpillnerLinz2022} -- Rollen und Verantwortlichkeiten (Testorganisation) einarbeiten}
 
 \section{Architektur von ATLAS aus Entwickler-Sicht}
-Die Architektur von \ac{ATLAS} umfasst ein Angular-Frontend, mehrere ASP.NET-Core-Backend-Services, eine relationale Datenbank sowie einen Objektspeicher (Blob Storage) für hochgeladene Dateien, Bilder und generierte Reports. Die hierfür relevanten technologischen Grundlagen wurden bereits in \autoref{chap:grundlagen} beschrieben.
+Die Architektur von \ac{ATLAS} umfasst zum Projektstart ein Angular-Frontend 19 und später 20 und 21, mehrere ASP.NET-Core-Backend-Services, eine relationale Datenbank sowie einen Objektspeicher (Blob Storage) für hochgeladene Dateien, Bilder und generierte Reports. Die hierfür relevanten technologischen Grundlagen wurden bereits in \autoref{chap:grundlagen} beschrieben.
 
 \subsection{Gesamtarchitektur}
 \ac{ATLAS} basiert auf einer Microservice-Architektur, bei der das System aus mehreren kleinen, unabhängigen Diensten besteht, die auf Basis von ASP.NET Core 8 entwickelt wurden. Das Frontend ist eine Angular-19-Single-Page-Application, bei der nach dem ersten Laden nur noch einzelne Inhalte aktualisiert werden, ohne die gesamte Seite neu zu laden. Jeder Backend-Service kann eigenständig auf einem Server veröffentlicht und betrieben werden und ist über HTTP erreichbar. Als einziger Eintrittspunkt für das Frontend fungiert ein API-Gateway-Service, der Authentifizierung, Autorisierung und das Routing zu den fachlichen Services übernimmt. Mehrere Services teilen sich gemeinsame Klassenbibliotheken (\texttt{LAC.Core}, \texttt{LAC.Web}, \texttt{LAC.Database}, \texttt{LAC.Authorization}, \texttt{LAC.Utility}).
@@ -104,10 +105,10 @@ Neue Tests müssen nahtlos mit den vorhandenen Testprojekten zusammenarbeiten. N
 Alle Tests sollen lokal ohne externe Abhängigkeiten ausführbar sein. Datenbankzugriffe werden über EF-Core-In-Memory oder SQLite-In-Memory simuliert; für Blob Storage steht Azurite als lokaler Emulator zur Verfügung.
 
 \subsubsection{Wartbarkeit und Clean Code}
-Testcode soll denselben Qualitätsstandards wie Produktionscode folgen: klare Benennung nach dem Muster \textit{Methode\_Bedingung\_Erwartung}, keine Duplizierung, sinnvoller Einsatz von DataProvi\-dern und Test-Fixtures. Dadurch bleibt die Testbasis auch bei Systemerweiterungen pflegbar.
+Testcode soll denselben Qualitätsstandards wie Produktionscode folgen: klare Benennung nach dem Muster \textit{Methode\_Bedingung\_Erwartung}, keine Duplizierung, sinnvoller Einsatz von DataProvi\-dern und Test-Fixtures. Dadurch bleibt die Testbasis auch bei Systemerweiterungen pflegbar. Diese Forderung berücksichtigt, dass automatisierte Tests im Gegensatz zu manuellen Testfällen jede noch so kleine Änderung an der Anwendung explizit nachvollziehen müssen und daher besonders wartungsintensiv sind \cite[S.~22]{Axelrod2018}.
 
 \subsubsection{Schnelle Feedbackzyklen}
-Unit-Tests sollen in unter 20~Sekunden, Integrationstests in unter 40~Sekunden durchlaufen. Kurze Laufzeiten ermöglichen regelmäßige lokale Ausführung und reduzieren Unterbrechungen im Entwicklungsfluss.
+Unit-Tests sollen in unter 20~Sekunden, Integrationstests in unter 40~Sekunden durchlaufen. Kurze Laufzeiten ermöglichen regelmäßige lokale Ausführung und reduzieren Unterbrechungen im Entwicklungsfluss. Damit folgt die Anforderung dem Grundgedanken, dass der eigentliche Mehrwert automatisierter Tests in der schnellen Rückmeldung über den Systemzustand liegt und nicht im nachträglichen Auffinden möglichst vieler Fehler\footnote{\enquote{The sweet spot of automated testing is not to find as many bugs as possible, but rather to provide fast feedback about whether the system behaves in the way we expect, as defined in the tests.} \cite[S.~19]{Axelrod2018}}.
 
 \subsubsection{Vorbereitung auf CI/CD-Integration}
 Die Tests sollen so strukturiert sein, dass der Hauptentwickler sie ohne größeren Aufwand in eine Azure-DevOps-Pipeline einbinden kann. Dies betrifft unter anderem konsistente Projektreferenzen, keine hardcodierten lokalen Pfade und die Unterstützung der .NET-CLI-Ausführung (\texttt{dotnet test}).

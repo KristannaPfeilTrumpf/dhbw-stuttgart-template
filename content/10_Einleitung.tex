@@ -3,26 +3,23 @@
 \chapter{Einleitung}
 \label{chap:einleitung}
 
-\section{Ausgangssituation}
-Die \ac{ATLAS} ist ein Projekt bei TRUMPF zur strukturierten Dokumentation von Laser-Applikationen und Versuchen. Die Anwendung unterstützt sowohl die interne Anwendungsentwicklung als auch die Kundenberatung. Aufgrund der fachlichen Bedeutung von \ac{ATLAS} ist eine hohe Zuverlässigkeit der Plattform erforderlich. was ist das LAC?
-Im \ac{LAC} werden diese Informationen genutzt, um Versuchsergebnisse zu bewerten, Kundenanfragen fundiert zu beantworten und Applikationswissen systematisch bereitzustellen.
+\section{Ausgangssituation und Problemstellung}
+\ac{ATLAS} ist eine im Laserapplikationszentrum (\ac{LAC}) der TRUMPF SE + Co. KG entwickelte Anwendung zur strukturierten Dokumentation von Laser-Applikationen und Versuchen. Die Anwendung ist bereits im Einsatz und dient als zentrale Sammelstelle für Informationen zu Experimenten, Versuchsergebnissen und verwendeten Parametern. Gleichzeitig befindet sich \ac{ATLAS} weiterhin in der Entwicklung und wird fortlaufend um neue Funktionen ergänzt. Zuvor speicherten die einzelnen Entwickler diese Informationen eigenständig, wodurch sie an verschiedenen Stellen abgelegt waren. Durch die zentrale Verwaltung unterstützt \ac{ATLAS} die Entwicklung und die Kundenberatung für die TRUMPF-Lasermaschinen, die an Kunden verkauft werden sollen.
 
-\section{Problemstellung und Zielsetzung}
-Die bestehende Testinfrastruktur war zu Projektbeginn nur eingeschränkt ausgebaut. In mehreren Bereichen fehlten Unit- und Integrationstests oder lagen nur rudimentär vor. Dies führte zu einer überwiegend manuellen Qualitätssicherung mit hohem Zeitaufwand, verlängerten Feedback-Zyklen und einem erhöhten Risiko, dass Fehler erst spät im Entwicklungsprozess erkannt werden.
+Das \ac{LAC} ist ein Bereich bei TRUMPF, in dem Laser-Applikationen entwickelt und untersucht werden. Die in \ac{ATLAS} gespeicherten Informationen unterstützen dort die Bewertung von Versuchsergebnissen, die Bearbeitung von Kundenanfragen und die Weitergabe von Applikationswissen.
 
-Ziel der Arbeit ist der Mitaufbau einer robusten und nachhaltigen Testinfrastruktur für \ac{ATLAS}. Dazu sollen Kernkomponenten in Frontend und Backend systematisch durch automatisierte Tests abgesichert und zentrale Abläufe reproduzierbar validiert werden. Ergänzend wird die technische Grundlage geschaffen, Testergebnisse perspektivisch in CI/CD-Prozessen konsistent zu nutzen. Konkrete Anforderungen an diese Infrastruktur werden in \autoref{chap:ist-analyse-anforderungen} beschrieben.
+Eine saubere, zuverlässige und vollständige Datenbasis ist dabei entscheidend, da fehlerhafte Einträge Entscheidungen bei Experimenten und in der Kundenberatung beeinträchtigen können. Um die korrekte Funktionsweise des Systems und seiner Funktionen zu gewährleisten, müssen diese systematisch geprüft und abgesichert werden. Dies erhöht zugleich die Akzeptanz der Nutzer und reduziert auftretende Fehler, zum Beispiel nach Änderungen oder Ergänzungen im Code.
 
-\section{Motivation}
-Die Motivation liegt in einer höheren Entwicklungsqualität, schnelleren Feedbackzyklen und einer stabileren Zusammenarbeit im Team.
+Die bestehende Testinfrastruktur ist nur eingeschränkt ausgebaut. In mehreren Bereichen fehlen Unit- und Integrationstests oder liegen nur rudimentär vor. Dadurch besteht ein erhöhtes Risiko, dass Fehler erst spät im Entwicklungsprozess erkannt werden. Für ihre nachträgliche Analyse und Behebung muss zusätzliche Zeit aufgewendet werden, die dadurch für eine effizientere Weiterentwicklung nicht zur Verfügung steht.
 
-\subsection{Warum ist es wichtig?}
-Mit zunehmendem Funktionsumfang steigt das Risiko für Regressionen. Ein systematischer Testansatz reduziert dieses Risiko und erhöht die Zuverlässigkeit von Releases.
+Aus dieser Ausgangslage ergibt sich der Handlungsbedarf für die vorliegende Arbeit.
 
-\subsection{Welcher Mehrwert entsteht?}
-Der Mehrwert zeigt sich in früher Fehlererkennung, besserer Wartbarkeit und einer objektiveren Bewertung der Softwarequalität über definierte Testläufe.
+\section{Zielsetzung}
+Ziel der Arbeit ist die Weiterentwicklung einer robusten und wartbaren Testinfrastruktur für \ac{ATLAS}. Dazu werden zunächst Tests für zentrale Komponenten des Frontends und Backends erstellt, um wichtige Abläufe abzusichern und reproduzierbar zu prüfen. Zusätzlich wird ein Konzept für die automatisierte Testausführung in einer eigenen Testumgebung entwickelt. Dieses Konzept soll eine Möglichkeit darstellen, wie die Tests unabhängig von den lokalen Entwicklungsumgebungen regelmäßig ausgeführt werden können. Die konkreten Anforderungen an die Testinfrastruktur werden in \autoref{chap:ist-analyse-anforderungen} beschrieben.
 
-\subsection{Für wen entsteht der Mehrwert?}
-Vom verbesserten Testprozess profitieren Entwicklerteam, Hauptentwickler, Stakeholder und Endnutzer durch stabilere Funktionalität und planbarere Auslieferungen.
+Die Testinfrastruktur soll die Entwicklungsqualität verbessern, Fehler frühzeitig erkennbar machen und die Wartung der Anwendung unterstützen. Dadurch kann das Entwicklungsteam neue Funktionen oder Änderungen zuverlässiger prüfen und weiterentwickeln.
+
+Um die Testinfrastruktur für ATLAS gezielt weiterzuentwickeln, werden zunächst die fachlichen und technischen Grundlagen der Anwendung betrachtet.
 
 \section{Aufbau der Arbeit}
-Diese Arbeit gliedert sich in sechs Kapitel: Nach der Einleitung werden in \autoref{chap:grundlagen} die fachlichen und technischen Grundlagen dargestellt. \autoref{chap:ist-analyse-anforderungen} beschreibt den Ausgangszustand und die Anforderungen an die Testinfrastruktur. Darauf aufbauend werden in \autoref{chap:konzeption} das Testkonzept und in \autoref{chap:umsetzung} die praktische Realisierung erläutert. Abschließend fasst \autoref{chap:reflexion-ausblick} die Ergebnisse zusammen und ordnet sie kritisch ein.
+Um das Ziel einer verbesserten Testabsicherung zu erreichen, werden zunächst in \autoref{chap:grundlagen} die Grundlagen und in \autoref{chap:ist-analyse-anforderungen} der aktuelle Zustand von \ac{ATLAS} betrachtet. Anschließend werden die Anforderungen an die Testinfrastruktur abgeleitet und in \autoref{chap:konzeption} in einem Konzept zusammengeführt. Die gewählten Maßnahmen und ihre praktische Umsetzung werden in \autoref{chap:umsetzung} erläutert. Abschließend wird in \autoref{chap:reflexion-ausblick} bewertet, inwieweit die Lösung zur Verbesserung der Testbarkeit beiträgt und welche Aufgaben noch offen sind.

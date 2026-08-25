@@ -21,6 +21,7 @@
     %TODO: Liste aller TODOs, auskommentieren für die Abgabe!
     \listoftodos
 
+
     %% Titelblatt
     \input{resources/cover}
 
@@ -37,11 +38,11 @@
     %% Erklärung
     \input{resources/declaration}
 
-    %% Anmerkung zur Nutzung von KI
-    \input{resources/ki_usage_notice}
-
     %% Anmerkung zum Genus des Substantivs
     \input{resources/genus}
+    
+    %% Anmerkung zur Nutzung von KI
+    \input{resources/ki_usage_notice}
 
     %% Abstract
     \input{resources/abstract}
@@ -55,19 +56,10 @@
     \end{spacing}
 
     \clearpage
-    \pagenumbering{arabic}
+    
 
     %% ABkürzungsverezeichnis
     \input{resources/acronyms}
-
-    \acresetall
-
-    %% Inhalt
-    \input{content/chapters}
-
-    %% Literaturverzeichnis
-    \printbibliography[title=Literaturverzeichnis]
-    \clearpage
 
     %% Abbildungsverzeichnis
     \listoffigures
@@ -80,6 +72,20 @@
     %% Skriptverzeichnis
     \lstlistoflistings
     \clearpage
+
+    \acresetall
+
+    \clearpage
+    \pagenumbering{arabic}
+    
+
+    %% Inhalt
+    \input{content/chapters}
+
+    %% Literaturverzeichnis
+    \printbibliography[title=Literaturverzeichnis]
+    \clearpage
+
 
     %% Anhang
     \appendix

@@ -4,8 +4,8 @@
 \documentclass[%
     paper=a4,           % DIN A4
     12pt,               % Schriftgröße 12
-    parskip=full,       % eine Zeile Absatzabstand
-    oneside             % einseitig
+    parskip=half,       % eine Zeile Absatzabstand
+    oneside,            % einseitig
     listof=totoc,		% alle Verzeichnisse in ToC einbinden
     bibliography=totoc,
     toc=listof,
@@ -17,7 +17,9 @@
 \usepackage[utf8]{inputenc}         	% Quelldateicodierung
 \usepackage[T1]{fontenc}	            % Fontmap-Kodierung, diese wird von der pdflatex-Engine benötigt
 \usepackage[english, ngerman]{babel}	% Sprache
-
+\usepackage{longtable}
+\usepackage{comment}
+\usepackage{siunitx}
 %% ifDocType Befehlsdefinition
 \newcommand{\ifDocType}[3]{%
 	\IfStrEq{\documentType}{#1}{#2}{#3}%
@@ -82,9 +84,24 @@
 \usepackage{amsfonts}               % Mathematische Schriftart der American Mathematical Society
 \usepackage{amsmath}                % Mathematische Schriftzeichen der American Mathematical Society
 \usepackage{fancyvrb}               % [für Quelltext]
+\usepackage{fvextra}               % Verbatim mit automatischem Zeilenumbruch
 \usepackage{xurl}                   % URL Umbruch
 \usepackage{pdflscape}              % Querformat
 \usepackage{enumitem}               % Aufzählungsstile
+\usepackage{microtype}              % bessere Zeilenumbrüche im Blocksatz
+\setlist[itemize]{itemsep=1pt, topsep=3pt, parsep=0pt, partopsep=0pt}
+\setlist[enumerate]{itemsep=1pt, topsep=3pt, parsep=0pt, partopsep=0pt}
+
+% Globale Umbruch-Reserve, damit Text nicht in den Seitenrand ragt.
+\setlength{\emergencystretch}{3em}
+\sloppy
+
+% Auch in Verbatim-Blöcken automatische Zeilenumbrüche erzwingen.
+\DefineVerbatimEnvironment{verbatim}{Verbatim}{
+    breaklines=true,
+    breakanywhere=true,
+    fontsize=\footnotesize
+}
 
 %% Bibliographie
 \usepackage[
@@ -134,9 +151,18 @@
     breaklines=true,
     captionpos=b,
     commentstyle=\color{comment},
+    extendedchars=true,
     keepspaces=true,
     keywordstyle=\color{keyword},
-    morekeywords={var}
+    literate=
+        {Ä}{{\"A}}1
+        {Ö}{{\"O}}1
+        {Ü}{{\"U}}1
+        {ä}{{\"a}}1
+        {ö}{{\"o}}1
+        {ü}{{\"u}}1
+        {ß}{{\ss}}1,
+    morekeywords={var},
     numbers=left,
     numbersep=1em,
     numberstyle=\tiny,
@@ -161,8 +187,9 @@
 \addtokomafont{subsubsection}{\color{chapterBlue}}
 \RedeclareSectionCommand[beforeskip=0pt,afterindent=false,afterskip=1em]{chapter}
 \RedeclareSectionCommand[beforeskip=0pt,afterindent=false,afterskip=1em]{section}
-\RedeclareSectionCommand[beforeskip=0pt,afterindent=false,afterskip=1em]{subsection}
+\RedeclareSectionCommand[beforeskip=0pt,afterindent=false,afterskip=0.02em]{subsection}
 \RedeclareSectionCommand[beforeskip=0pt,afterindent=false,afterskip=1em]{subsubsection}
+\RedeclareSectionCommand[beforeskip=0.2em,afterindent=false,afterskip=0.1pt]{paragraph}
 
 %% Caption Style (Bsp.: Bilderunterschrift)
 \addtokomafont{caption}{\small}
