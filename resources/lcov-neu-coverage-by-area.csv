@@ -1,0 +1,11 @@
+Bereich,Dateien,Branches,Functions,Lines,Lines getroffen,Lines gesamt
+Shared,5,88.6%,100.0%,94.7%,54,57
+Guards,3,85.7%,83.3%,89.5%,17,19
+features/experiment-dashboard,16,38.9%,45.6%,44.9%,262,584
+features/experiment-report-preview,3,60.9%,77.8%,74.7%,127,170
+features/experiment-wizard,46,43.9%,34.3%,51.8%,3088,5957
+features/search-strategie,51,70.8%,60.7%,78.0%,2106,2699
+features/tools,11,59.9%,40.5%,53.9%,292,542
+services,21,60.3%,55.3%,63.4%,885,1397
+layout,4,68.0%,61.5%,70.7%,82,116
+UI-Components,49,81.6%,76.0%,84.3%,1275,1512

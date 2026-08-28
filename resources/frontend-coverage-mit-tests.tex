@@ -1,0 +1,121 @@
+% Erweiterte Test-Abdeckungs-Tabelle mit Test-Informationen
+% Generiert für wissenschaftliche Arbeit T2000-Teil-2
+
+% Benötigte Pakete:
+% \usepackage{tabularx}
+% \usepackage{booktabs}
+% \usepackage{xcolor}
+% \usepackage{array}
+
+\begin{table}[H]
+\centering
+\caption{Test-Abdeckung Frontend mit Unit-Test-Übersicht}
+\label{tab:frontend-coverage-mit-tests}
+\renewcommand{\arraystretch}{1.3}
+\small % Schriftgröße reduzieren für bessere Lesbarkeit
+\begin{tabularx}{\textwidth}{@{}lrrrX@{}}
+\toprule
+\textbf{Bereich} & \textbf{Coverage} & \textbf{Getestet/Gesamt} & \textbf{Unit-Tests} & \textbf{Test-Typen} \\
+\midrule
+\textbf{Shared} & \cellcolor{green!20}94,7\,\% & 54 / 57 & 3 & Validation, Directives \\
+\addlinespace[1pt]
+\textbf{Guards} & \cellcolor{green!20}89,5\,\% & 17 / 19 & 3 & Route Guards, CanDeactivate \\
+\addlinespace[1pt]
+\textbf{UI-Components} & \cellcolor{yellow!20}84,3\,\% & 1\,275 / 1\,512 & 20 & Atlas Design System, Forms \\
+\addlinespace[1pt]
+\textbf{Search-Strategie} & \cellcolor{yellow!20}78,0\,\% & 2\,106 / 2\,699 & 25 & Filter, Grid-Logic, Services \\
+\addlinespace[1pt]
+\textbf{Report-Preview} & \cellcolor{yellow!20}74,7\,\% & 127 / 170 & 1 & Preview-Components \\
+\addlinespace[1pt]
+\textbf{Layout} & \cellcolor{yellow!20}70,7\,\% & 82 / 116 & 2 & Main-Layout, Tools-Layout \\
+\addlinespace[1pt]
+\textbf{Services} & \cellcolor{orange!20}63,4\,\% & 885 / 1\,397 & 18 & API, State, Domain Services \\
+\addlinespace[1pt]
+\textbf{Tools-Features} & \cellcolor{red!20}53,9\,\% & 292 / 542 & 6 & AI-Tools, BO-Tools, Debug \\
+\addlinespace[1pt]
+\textbf{Experiment-Wizard} & \cellcolor{red!20}51,8\,\% & 3\,088 / 5\,957 & 21 & Setup, Parameters, Task, Result \\
+\addlinespace[1pt]
+\textbf{Dashboard} & \cellcolor{red!20}44,9\,\% & 262 / 584 & 6 & Grid-Config, Navigation \\
+\midrule
+\textbf{Gesamt Frontend} & \textbf{67,2\,\%} & \textbf{8\,188 / 12\,183} & \textbf{105} & \textbf{Unit-Tests} \\
+\addlinespace[1pt]
+\textit{Zusätzlich:} & -- & -- & \textbf{6} & \textbf{E2E-Tests (Playwright)} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\vspace{0.5cm}
+
+% Erläuterung der Test-Typen
+\textbf{Erläuterung zu Test-Typen:}
+\begin{itemize}[noitemsep]
+	\item \textbf{Unit-Tests:} Isolierte Tests einzelner Komponenten/Services (Vitest, co-lokalisiert als \texttt{*.spec.ts})
+	\item \textbf{E2E-Tests:} End-to-End Browser-Tests (Playwright) für kritische User-Journeys
+	\item \textbf{Farbcodierung:}
+	\begin{itemize}[noitemsep]
+		\item \colorbox{green!20}{Grün} (>85\,\%): Sehr gut abgesichert
+		\item \colorbox{yellow!20}{Gelb} (65--85\,\%): Akzeptable Grundabsicherung
+		\item \colorbox{orange!20}{Orange} (60--65\,\%): Verbesserungswürdig
+		\item \colorbox{red!20}{Rot} (<60\,\%): Kritischer Handlungsbedarf
+	\end{itemize}
+\end{itemize}
+
+\vspace{0.5cm}
+
+% Detaillierte Übersicht der Test-Verteilung
+\subsection*{Verteilung der Unit-Tests nach Bereichen}
+
+\begin{table}[H]
+\centering
+\caption{Detaillierte Unit-Test-Verteilung}
+\label{tab:unit-test-details}
+\renewcommand{\arraystretch}{1.2}
+\small
+\begin{tabular}{@{}lrl@{}}
+\toprule
+\textbf{Bereich} & \textbf{Anzahl Tests} & \textbf{Wichtigste getestete Funktionen} \\
+\midrule
+\textbf{Auth} (Teil von Guards/Shared) & 7 & Auth-Interceptor, Role-Guard, OAuth-Storage, Token-Refresh \\
+\textbf{Search-Strategie} & 25 & Filter-Rules, Grid-Config, Search-Services, API-Integration \\
+\textbf{Experiment-Wizard} & 21 & Setup-Calc, Parameter-Table, Task-Logic, Result-Capture \\
+\textbf{UI-Components (common)} & 20 & Atlas-Buttons, Forms, Autocomplete, Dialogs \\
+\textbf{Services} & 18 & Experiment, Material, User, Master-Data, State-Services \\
+\textbf{Utilities} & 7 & Helper-Functions, Formatters, Validators \\
+\textbf{Dashboard} & 6 & Grid-Configuration, Filter-Logic \\
+\textbf{Guards} & 3 & Route-Protection, Unsaved-Changes, Before-Unload \\
+\textbf{Shared (Validation)} & 3 & Server-Validation, HTML-Tag-Validator, Max-Length \\
+\textbf{Layout} & 2 & Main-Layout, Tools-Layout \\
+\textbf{Tools-Features} & 2 & AI-Tools, Debug-Page \\
+\textbf{Report-Preview} & 1 & Preview-Components \\
+\midrule
+\textbf{Gesamt} & \textbf{105} & \textbf{Unit-Tests (*.spec.ts)} \\
+\addlinespace
+\textbf{E2E-Tests} & \textbf{6} & Login, Wizard-Flow, Search, Navigation \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{0.5cm}
+
+% Qualitative Bewertung
+\subsection*{Qualitative Test-Analyse}
+
+\textbf{Gut getestet:}
+\begin{itemize}[noitemsep]
+	\item \textbf{Auth \& Guards:} Umfassende Tests für sicherheitskritische Funktionen (Token-Refresh, 401-Handling, Reauth-Loop-Breaker)
+	\item \textbf{Shared/Validation:} Server-Validation-Interceptor mit Edge-Cases (PascalCase-Mapping, Toast-Skipping)
+	\item \textbf{Search-Strategie:} Gute Test-Dichte für Filter-Rules und Grid-Konfiguration
+\end{itemize}
+
+\textbf{Verbesserungspotenzial:}
+\begin{itemize}[noitemsep]
+	\item \textbf{Experiment-Wizard:} Nur 21 Tests für fast 6.000 Zeilen Code -- kritische Beam-Calculations und Panel-Logik unzureichend abgedeckt
+	\item \textbf{Services:} Domain-Services (ExperimentService, ParameterService) haben Lücken bei API-Error-Handling
+	\item \textbf{Dashboard:} Einstiegspunkt mit niedriger Coverage -- Grid-Interaktionen fehlen
+\end{itemize}
+
+\textbf{E2E-Test-Lücken:}
+\begin{itemize}[noitemsep]
+	\item Nur 6 Playwright-Tests für gesamte User-Journeys
+	\item Empfehlung: Kritische Flows wie \textit{Experiment-Import}, \textit{Beam-Calculation-Workflow}, \textit{Parameter-Copy} sollten End-to-End getestet werden
+\end{itemize}

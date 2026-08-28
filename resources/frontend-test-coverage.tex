@@ -1,0 +1,181 @@
+% Aktuelle Test-Abdeckung des LAC Atlas Frontends
+% Generiert für wissenschaftliche Arbeit T2000-Teil-2
+% Datenbasis: Coverage-Report (Stand: Projekt-Status)
+
+% Benötigte Pakete (in Präambel einbinden):
+% \usepackage{tabularx}
+% \usepackage{booktabs}
+% \usepackage{xcolor}
+% \usepackage{pifont}
+% \usepackage{tcolorbox}
+
+% ============================================================
+% Executive Summary Box
+% ============================================================
+
+\begin{tcolorbox}[colback=red!5!white, colframe=red!75!black, title=Test-Abdeckung Frontend: Handlungsbedarf]
+\textbf{Kernproblem:} Der kritische \texttt{Experiment-Wizard} (5.959 Zeilen Code) 
+hat nur \textbf{47,5\,\% Test-Abdeckung} -- 3.129 Zeilen sind ungetestet.
+
+\vspace{0.3cm}
+\begin{tabular}{@{}ll@{}}
+\textbf{Stärkster Bereich:} & Interfaces (96,5\,\%) \\
+\textbf{Schwächster Bereich:} & Experiment-Dashboard (44,9\,\%) \\
+\textbf{Größtes Risiko:} & Experiment-Wizard (47,5\,\%, 3.129 ungetestete Zeilen) \\
+\textbf{Durchschnitt (gewichtet):} & ca. 62\,\% (geschätzt)
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{1cm}
+
+% ============================================================
+% Vollständige Übersichtstabelle mit Ampel-Bewertung
+% ============================================================
+
+\begin{table}[H]
+\centering
+\caption{Aktuelle Test-Abdeckung des Frontends nach Bereichen}
+\label{tab:test-coverage-aktuell-frontend}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}lrXrr@{}}
+\toprule
+\textbf{Bereich} & \textbf{Coverage} & \textbf{Bewertung} & \textbf{Getestet} & \textbf{Gesamt} \\
+\midrule
+Interfaces & \textbf{96,5\,\%} & \textcolor{green!70!black}{\ding{108}} Sehr gut & 139 & 144 \\
+\addlinespace[2pt]
+Shared (Validierung) & \textbf{94,7\,\%} & \textcolor{green!70!black}{\ding{108}} Sehr gut & 54 & 57 \\
+\addlinespace[2pt]
+Guards (Zugriffsschutz) & \textbf{89,5\,\%} & \textcolor{green!70!black}{\ding{108}} Sehr gut & 17 & 19 \\
+\addlinespace[2pt]
+Search-Strategie & \textbf{77,5\,\%} & \textcolor{orange}{\ding{72}} Gut & 2\,093 & 2\,699 \\
+\addlinespace[2pt]
+Common-Components (UI) & \textbf{75,3\,\%} & \textcolor{orange}{\ding{72}} Gut & 1\,049 & 1\,394 \\
+\addlinespace[2pt]
+Report-Preview & \textbf{73,5\,\%} & \textcolor{orange}{\ding{72}} Gut & 125 & 170 \\
+\addlinespace[2pt]
+Components (allgemein) & \textbf{71,3\,\%} & \textcolor{orange}{\ding{72}} Akzeptabel & 82 & 115 \\
+\addlinespace[2pt]
+Layout & \textbf{70,7\,\%} & \textcolor{orange}{\ding{72}} Akzeptabel & 82 & 116 \\
+\addlinespace[2pt]
+Utilities & \textbf{68,1\,\%} & \textcolor{orange}{\ding{72}} Akzeptabel & 126 & 185 \\
+\addlinespace[2pt]
+Authentifizierung & \textbf{65,6\,\%} & \textcolor{orange}{\ding{72}} Akzeptabel & 149 & 227 \\
+\addlinespace[2pt]
+Services (Backend-API) & \textbf{57,7\,\%} & \textcolor{red}{\ding{56}} Unzureichend & 806 & 1\,397 \\
+\addlinespace[2pt]
+Tools-Features & \textbf{53,9\,\%} & \textcolor{red}{\ding{56}} Unzureichend & 292 & 542 \\
+\addlinespace[2pt]
+\textbf{Experiment-Wizard} & \textbf{47,5\,\%} & \textcolor{red}{\ding{56}} \textbf{Kritisch} & \textbf{2\,830} & \textbf{5\,959} \\
+\addlinespace[2pt]
+Experiment-Dashboard & \textbf{44,9\,\%} & \textcolor{red}{\ding{56}} Kritisch & 262 & 584 \\
+\addlinespace[2pt]
+App-Root (app.component) & \textbf{33,3\,\%} & \textcolor{red}{\ding{56}} Kritisch & 1 & 3 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\textbf{Legende:}
+\begin{itemize}[noitemsep]
+	\item \textcolor{green!70!black}{\ding{108}} \textbf{Sehr gut} (>85\,\%): Entspricht Best Practices für kritische Anwendungen
+	\item \textcolor{orange}{\ding{72}} \textbf{Gut/Akzeptabel} (65--85\,\%): Grundabsicherung vorhanden, jedoch Verbesserungspotenzial
+	\item \textcolor{red}{\ding{56}} \textbf{Unzureichend/Kritisch} (<65\,\%): Erhöhtes Fehlerrisiko, dringender Handlungsbedarf
+\end{itemize}
+
+\vspace{1cm}
+
+% ============================================================
+% Interpretation für Laien
+% ============================================================
+
+\subsection*{Interpretation der Test-Abdeckung}
+
+\textbf{Was bedeutet Test-Abdeckung (Coverage)?}
+
+Die Test-Abdeckung gibt an, wie viel Prozent des Quellcodes durch automatisierte Tests geprüft wird. Ein hoher Wert bedeutet, dass Änderungen am Code mit geringerem Risiko durchgeführt werden können, da Tests automatisch prüfen, ob bestehende Funktionen noch korrekt arbeiten.
+
+\textbf{Aktuelle Situation des LAC Atlas Frontends:}
+
+\begin{itemize}
+	\item \textbf{Stärken:} Zugriffskontrollen (\texttt{Guards}, 89,5\,\%), Datenvalidierung (\texttt{Shared}, 94,7\,\%) und Schnittstellen (\texttt{Interfaces}, 96,5\,\%) sind hervorragend abgesichert.
+
+	\item \textbf{Mittelfeld:} Such-Funktionen (\texttt{Search-Strategie}, 77,5\,\%) und wiederverwendbare UI-Komponenten (\texttt{Common-Components}, 75,3\,\%) haben eine solide Grundabsicherung.
+
+	\item \textbf{Kritische Schwachstellen:}
+	\begin{itemize}
+		\item Der \textbf{Experiment-Wizard} -- das zentrale Feature der Anwendung mit einem mehrstufigen Workflow zur Experiment-Erfassung -- umfasst 5.959 Codezeilen, von denen nur 2.830 Zeilen (47,5\,\%) getestet sind. \textbf{3.129 Zeilen sind ohne automatisierte Absicherung.}
+		\item \textbf{Backend-Services} (57,7\,\%), die für die Kommunikation mit der REST-API zuständig sind, liegen ebenfalls unter dem Zielwert.
+		\item Das \textbf{Experiment-Dashboard} (44,9\,\%) als Einstiegspunkt für Nutzer ist unzureichend getestet.
+	\end{itemize}
+\end{itemize}
+
+\textbf{Risikobewertung:}
+
+Die niedrige Test-Abdeckung im \texttt{Experiment-Wizard} stellt ein erhebliches Risiko dar, da dieser Bereich:
+\begin{enumerate}
+	\item komplexe Geschäftslogik (Beam-Berechnungen, dynamische Panel-Steuerung) enthält,
+	\item kritische Experimentdaten erfasst und validiert,
+	\item bei Fehlern zu teuren Wiederholungen von Schweißversuchen führen kann.
+\end{enumerate}
+
+\textbf{Empfehlung:}
+
+Priorisierung der Test-Erweiterung für \texttt{Experiment-Wizard} (Ziel: >75\,\%) und \texttt{Services} (Ziel: >75\,\%), um die Anwendungsstabilität signifikant zu erhöhen.
+
+% ============================================================
+% Alternative: Mermaid-Diagramm (als Kommentar für Markdown)
+% ============================================================
+
+% Für Markdown/HTML-Visualisierung (nicht in LaTeX kompilierbar):
+%
+% ```mermaid
+% %%{init: {'theme':'base'}}%%
+% gantt
+%     title Test-Abdeckung Frontend (Lines Coverage)
+%     dateFormat X
+%     axisFormat %s%%
+%     
+%     section Sehr gut (>85%)
+%     Interfaces (96,5%)           :done, 0, 96
+%     Shared (94,7%)               :done, 0, 94
+%     Guards (89,5%)               :done, 0, 89
+%     
+%     section Gut/Akzeptabel (65-85%)
+%     Search-Strategie (77,5%)     :active, 0, 77
+%     UI-Komponenten (75,3%)       :active, 0, 75
+%     Report-Preview (73,5%)       :active, 0, 73
+%     Layout (70,7%)               :active, 0, 70
+%     Auth (65,6%)                 :active, 0, 65
+%     
+%     section Kritisch (<65%)
+%     Services (57,7%)             :crit, 0, 57
+%     Tools (53,9%)                :crit, 0, 53
+%     Experiment-Wizard (47,5%)    :crit, 0, 47
+%     Dashboard (44,9%)            :crit, 0, 44
+% ```
+
+% ============================================================
+% Vollständige Rohdaten (als Referenz)
+% ============================================================
+
+% Vollständiger Datensatz für Nachvollziehbarkeit:
+%
+% Bereich                          | Dateien | Branches | Functions | Lines  | Getestet | Gesamt
+% ---------------------------------|---------|----------|-----------|--------|----------|-------
+% Interfaces                       | 13      | 88,6%    | 100,0%    | 96,5%  | 139      | 144
+% app.component.html               | 1       | 0,0%     | 0,0%      | 33,3%  | 1        | 3
+% app.component.ts                 | 1       | 75,0%    | 66,7%     | 54,5%  | 6        | 11
+% auth                             | 8       | 63,5%    | 62,3%     | 65,6%  | 149      | 227
+% components                       | 8       | 70,1%    | 45,5%     | 71,3%  | 82       | 115
+% components/common                | 41      | 77,2%    | 71,3%     | 75,3%  | 1049     | 1394
+% features/experiment-dashboard    | 16      | 38,9%    | 45,6%     | 44,9%  | 262      | 584
+% features/experiment-report-preview| 3      | 59,1%    | 66,7%     | 73,5%  | 125      | 170
+% features/experiment-wizard       | 46      | 38,9%    | 28,8%     | 47,5%  | 2830     | 5959
+% features/search-strategie        | 51      | 70,7%    | 59,1%     | 77,5%  | 2093     | 2699
+% features/tools                   | 11      | 59,9%    | 40,5%     | 53,9%  | 292      | 542
+% guards                           | 3       | 85,7%    | 83,3%     | 89,5%  | 17       | 19
+% layout                           | 4       | 68,0%    | 61,5%     | 70,7%  | 82       | 116
+% other                            | 4       | 0,0%     | 0,0%      | 100,0% | 13       | 13
+% services                         | 21      | 55,8%    | 52,0%     | 57,7%  | 806      | 1397
+% shared                           | 5       | 88,6%    | 100,0%    | 94,7%  | 54       | 57
+% util                             | 11      | 59,4%    | 57,1%     | 68,1%  | 126      | 185
+% utils                            | 1       | 50,0%    | 100,0%    | 50,0%  | 8        | 16

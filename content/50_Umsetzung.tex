@@ -32,7 +32,11 @@ Darzustellen sind durchgängige API-nahe Szenarien, insbesondere für Authentifi
 
 \section{Frontend}
 
+\subsection{UnitTests}
 
+Die zugehörigen Dateien sind im Verzeichnis \texttt{src/app/features} organisiert. Zu den zentralen Funktionsbereichen gehören \path{experiment-wizard}, \path{experiment-dashboard}, \path{search-strategie}, \path{tools} und \path{experiment-report-preview}. Die jeweiligen Ansichten werden über \texttt{loadComponent} beziehungsweise \texttt{loadChildren} bedarfsgerecht und verzögert geladen. Der Zugriff auf die fachlichen Anwendungsbereiche erfolgt über das \texttt{MainLayoutComponent}, während interne Werkzeuge über das \texttt{ToolsLayoutComponent} bereitgestellt werden.
+
+Der Bereich \path{experiment-wizard} unterstützt das schrittweise Anlegen und Bearbeiten von Experimenten. \path{experiment-dashboard} dient der Übersicht und Verwaltung von Experimenten. Die erweiterte Suche nach Experimenten und Parametern ist im Bereich \path{search-strategie} gebündelt. \path{tools} umfasst interne Werkzeuge für Betriebs- und Administrationsaufgaben. Der Bereich \path{experiment-report-preview} stellt die Vorschau und den Zugriff auf erzeugte Experimentberichte bereit.
 
 \subsection{Integration}
 Darzustellen sind Integrationsszenarien, beteiligte Komponenten und die gewählte Strategie für Testdaten und Abhängigkeiten.

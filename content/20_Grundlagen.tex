@@ -48,6 +48,7 @@ In \ac{ATLAS} existieren insgesamt fünf Rollen mit unterschiedlichen Funktions-
 Die weiteren Rollen Application Administrator, R\&D Engineer und External Engineer werden im System ebenfalls eingesetzt, stehen in diesem Kontext jedoch nicht im Fokus.
 
 \section{Stand der Technik}
+\label{sec:stand-der-technik}
 Für den Aufbau einer geeigneten Testinfrastruktur in \ac{ATLAS} kommen verschiedene Technologien zum Einsatz. Der folgende Abschnitt stellt diese Technologien vor und erläutert ihre Bedeutung für den Testprozess. Die genaue Einordnung in die Systemarchitektur von \ac{ATLAS} folgt in \autoref{chap:ist-analyse-anforderungen}.
 
 \subsection{Softwaretests im Allgemeinen}
@@ -65,13 +66,13 @@ Eine zentrale Funktion ist der Test Explorer. Er ermöglicht die Ausführung von
 \subsection{Microsoft .NET 8}
 .NET 8 ist ein quelloffenes Framework von Microsoft für die plattformübergreifende Entwicklung von Anwendungen mit C\#. Das Backend von \ac{ATLAS} basiert auf ASP.NET Core 8. Für die Testbarkeit bietet das Framework mehrere Konzepte: Die integrierte Dependency Injection ermöglicht das Ersetzen von Abhängigkeiten durch Test-Doubles, ohne den Produktivcode zu verändern. Die \texttt{WebApplicationFactory} startet die Anwendung in einem In-Memory-Testserver, wodurch HTTP-Anfragen ohne Netzwerkkommunikation getestet werden können \cite{MicrosoftTestingASPNETCore2026,MicrosoftTestASPNETCoreMVC2026}. Empfehlungen zur Teststruktur und Benennung sind in den offiziellen Best Practices beschrieben \cite{MicrosoftUnitTestingBestPractices2026}.
 
-\subsection{Google Angular}
-Angular ist ein TypeScript-basiertes Framework von Google für die Entwicklung von Webanwendungen und bildet das Frontend von \ac{ATLAS}. Zu Projektbeginn wurde Angular in Version 19 eingesetzt, im weiteren Projektverlauf erfolgte die Aktualisierung auf Version 20 und anschließend auf Version 21. Für Tests stellt Angular das TestBed bereit, das eine isolierte Testumgebung für Komponenten und Services schafft.
+\subsection{Google Angular und TypeScript}
+Angular ist ein von Google entwickeltes Framework zur Erstellung von Webanwendungen und bildet das Frontend von \ac{ATLAS}. Die Anwendung verwendet TypeScript 5.9 als Programmiersprache. TypeScript erweitert JavaScript um eine optionale statische Typisierung und wird vor der Ausführung in JavaScript übersetzt \cite{MicrosoftTypeScript2026}. Zu Projektbeginn wurde Angular in Version 19 eingesetzt, im weiteren Projektverlauf erfolgte die Aktualisierung auf Version 20 und anschließend auf Version 21. Für Tests stellt Angular das TestBed bereit, das eine isolierte Testumgebung für Komponenten und Services schafft.
 
 \subsection{Microsoft Azure DevOps und Azure Blob Storage}
-Azure DevOps ist eine Plattform von Microsoft für die Verwaltung von Softwareprojekten. Im Kontext dieser Arbeit ist vor allem Azure Pipelines relevant, das Build-, Test- und Deployment-Prozesse automatisiert \cite{MicrosoftAzurePipelines2026,MicrosoftAzurePipelinesArchitecture2026}. Eine Pipeline besteht aus definierten Schritten, die bei jedem Code-Commit oder nach Zeitplan ausgeführt werden. Für Tests ermöglicht dies die automatische Ausführung nach jeder Codeänderung. Die Testergebnisse werden direkt in Azure DevOps visualisiert und können als Qualitätsgate dienen: Fehlgeschlagene Tests blockieren bei entsprechender Konfiguration den Merge in den Hauptbranch.
+Azure DevOps ist eine Plattform von Microsoft für die Unterstützung des gesamten Entwicklungsprozesses von Softwareprojekten \cite{MicrosoftAzureDevOpsWhatIs2026}. Im vorliegenden Projekt wird Azure DevOps in zwei zentralen Rollen genutzt: als Planungswerkzeug über Azure Boards zur Aufgaben- und Sprintsteuerung sowie als Git-basierte Versionsverwaltung über Azure Repos zur Ablage des Quellcodes und für Branching, Commits und Merge-Prozesse \cite{MicrosoftAzureBoardsPlanTrack2026,MicrosoftAzureReposGitOverview2026}. Ergänzend können Azure Pipelines für Pipeline-Zwecke eingesetzt werden, um Build-, Test- und Deployment-Prozesse zu automatisieren \cite{MicrosoftAzurePipelines2026,MicrosoftAzurePipelinesArchitecture2026}. 
 
-Azure Blob Storage dient zur Speicherung von Dateien und Artefakten in der Cloud. Für lokale Tests ohne echte Cloud-Anbindung bietet Microsoft mit Azurite einen Emulator, der das Speicherverhalten nachbildet \cite{MicrosoftAzurite2026}. Dadurch können Tests, die Blob-Storage-Operationen ausführen, auch ohne Netzwerkverbindung und ohne Kosten für Cloud-Ressourcen lokal durchgeführt werden.
+Azure Blob Storage dient zur Speicherung von Dateien und Artefakten in der Cloud. Für lokale Tests ohne direkte Cloud-Anbindung stellt Microsoft mit Azurite einen offiziellen Emulator bereit, der die Blob-Storage-Schnittstellen lokal nachbildet \cite{MicrosoftAzurite2026}. Dadurch lassen sich Speicheroperationen reproduzierbar testen, ohne produktive Cloud-Ressourcen zu verwenden.
 
 \subsection{Docker von Docker Inc.}
 Docker dient zur Containerisierung von Anwendungen. Ein Container bündelt eine Anwendung mit allen ihren Abhängigkeiten und läuft dadurch auf jedem System gleich. Mit Docker Compose lassen sich mehrere Container gemeinsam verwalten, was das Aufsetzen von Testumgebungen vereinfacht \cite{DockerDocs2026,DockerComposeSpec2020}. Containeransätze eignen sich grundsätzlich gut für reproduzierbare und skalierbare Testinfrastrukturen \cite{Lemos2026}.
@@ -91,4 +92,4 @@ Jede \ac{VM} verfügt über einen eigenen Kernel und kann ein beliebiges Betrieb
 
 
 \section{Verknüpfung zu möglichen Vorlesungsinhalten}
-Die beschriebenen Testarten knüpfen an Inhalte der Vorlesung Software Engineering an. Der Einsatz von PostgreSQL zur Speicherung der Anwendungsdaten stellt zudem einen Bezug zu den Inhalten der Vorlesung Datenbanken her.
+Die beschriebenen Testarten knüpfen an Inhalte der Vorlesung Software Engineering an. Die Inhalte der Vorlesung Web Engineering unterstützten zudem die Analyse des Frontend-Quellcodes und das Verständnis der verwendeten Strukturen und Technologien. Der Einsatz von PostgreSQL zur Speicherung der Anwendungsdaten stellt zudem einen Bezug zu den Inhalten der Vorlesung Datenbanken her.
