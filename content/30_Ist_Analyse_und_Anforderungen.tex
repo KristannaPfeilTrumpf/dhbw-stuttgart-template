@@ -2,20 +2,16 @@
 
 \chapter{Ist-Analyse und Anforderungen}
 \label{chap:ist-analyse-anforderungen}
-\todo{\cite[S.~89--95]{SpillnerLinz2022} -- Rollen und Verantwortlichkeiten (Testorganisation) einarbeiten}
-
 Zunächst wird das methodische Vorgehen beschrieben, anschließend die Systemarchitektur und der Ausgangszustand der vorhandenen Testinfrastruktur. Darauf aufbauend werden die funktionalen und nicht-funktionalen Anforderungen hergeleitet.
 
 \section{Vorgehensweise}
-Die Durchführung des Projekts erfolgte in mehreren aufeinander aufbauenden Schritten. Zunächst wurde die Entwicklungsumgebung eingerichtet, sodass die Anwendung und die Tests lokal ausgeführt werden konnten. Gleichzeitig erfolgte eine erste Orientierung in der Gesamtarchitektur von ATLAS und dessen Quellcode.
+Die Durchführung des Projekts erfolgte in mehreren aufeinander aufbauenden Schritten. Zunächst wurde die Entwicklungsumgebung eingerichtet und eine erste Orientierung in der Gesamtarchitektur von \ac{ATLAS} sowie dessen Quellcode vorgenommen, ergänzt um eine fachliche Einarbeitung in die verwendeten Technologien Visual Studio, .NET Core und Angular.
 
-Anschließend wurde eine fachliche Einarbeitung in die verwendeten Technologien Visual Studio, .NET Core und Angular vorgenommen.
-
-Darauf aufbauend wurde der Quellcode genauer analysiert, um die Systemarchitektur und die Beziehungen zwischen den einzelnen Komponenten zu verstehen. Dabei wurde untersucht, welche Bestandteile des Frontends und Backends miteinander kommunizieren und wie Anfragen, Daten sowie Zuständigkeiten innerhalb des Systems verteilt sind.
+Darauf aufbauend wurde der Quellcode genauer analysiert, um die Systemarchitektur und die Beziehungen zwischen den einzelnen Komponenten zu verstehen, insbesondere welche Bestandteile des Frontends und Backends miteinander kommunizieren und wie Anfragen, Daten sowie Zuständigkeiten innerhalb des Systems verteilt sind.
 
 Im nächsten Schritt erfolgte die Analyse der bestehenden Testabdeckung im Frontend und Backend. Ergänzend wurde mit der Projektleitung und dem Hauptentwickler abgestimmt, welche genauen Ziele mit dem Projekt verfolgt werden. Auf dieser Grundlage konnten die vorhandenen Abdeckungslücken und der daraus resultierende Handlungsbedarf eingeordnet werden.
 
-Anschließend wurde ein erstes Testkonzept erstellt. Die Priorisierung der Testabdeckungslücken erfolgte anhand der fachlichen Kritikalität, der bestehenden Coverage-Werte sowie der Abstimmung mit dem Hauptentwickler. Die praktische Umsetzung begann mit der Entwicklung und Erweiterung von Backend-Unit-Tests der Priorität nach. Im Laufe der Testenwicklung wurde das Testkonzept anhand der gewonnenen Erkenntnisse überarbeitet und weiter konkretisiert. Parallel dazu wurde ein Konzept für eine mögliche zentrale Testumgebung erstellt.
+Anschließend wurde ein erstes Testkonzept erstellt, dessen Priorisierung anhand der fachlichen Kritikalität, der bestehenden Coverage-Werte sowie der Abstimmung mit dem Hauptentwickler erfolgte. Die praktische Umsetzung begann mit der Entwicklung und Erweiterung von Backend-Unit-Tests der Priorität nach. Im weiteren Verlauf wurde das Testkonzept anhand der dabei gewonnenen Erkenntnisse überarbeitet und weiter konkretisiert. Parallel dazu wurde ein Konzept für eine mögliche zentrale Testumgebung erstellt.
 
 Die Vorgehensweise endet mit der Analyse des Ausgangszustands und der Ableitung der Anforderungen an die Testinfrastruktur. Die daraus gewonnenen Erkenntnisse bilden die Grundlage für die in \autoref{chap:konzeption} beschriebenen Testkonzepte. Die Entwicklung und Ausführung der Tests wird anschließend in \autoref{chap:umsetzung} behandelt.
 
@@ -37,21 +33,21 @@ Der Frontend-Code ist primär nach fachlichen Funktionen gegliedert. Diese Glied
 \caption{Schichtenarchitektur des Frontends}
 \label{tab:frontend-architektur}
 \renewcommand{\arraystretch}{1.3}
-\begin{tabularx}{\textwidth}{@{}lX@{}}
+\begin{tabularx}{\textwidth}{@{}p{0.3\textwidth}X@{}}
 \toprule
 \textbf{Schicht} & \textbf{Aufgabe} \\
 \midrule
-Domänen & Die fachliche Ebene der Anwendung ist in eigenständige, thematisch abgeschlossene Domänen gegliedert. Jede Domäne hat einen eigenen Aufgabenbereich und bündelt die zugehörigen Oberflächenelemente und Regeln. Dadurch können Änderungen gezielt vorgenommen werden, ohne andere Domänen zu beeinflussen. \\
+Domänen (\texttt{features/}) & Die fachliche Ebene der Anwendung ist in eigenständige, thematisch abgeschlossene Domänen gegliedert. Jede Domäne hat einen eigenen Aufgabenbereich und bündelt die zugehörigen Oberflächenelemente und Regeln. Dadurch können Änderungen gezielt vorgenommen werden, ohne andere Domänen zu beeinflussen. \\
 \addlinespace
-Seitenlayout & Definiert den übergeordneten visuellen Rahmen der Anwendung. Dazu gehören die Anordnung der Navigationsleiste und des Inhaltsbereichs. Diese Schicht ist unabhängig von den fachlichen Inhalten und stellt die Grundstruktur für alle anderen Bereiche bereit. \\
+Seitenlayout (\texttt{layout/}) & Definiert den übergeordneten visuellen Rahmen der Anwendung. Dazu gehören die Anordnung der Navigationsleiste und des Inhaltsbereichs. Diese Schicht ist unabhängig von den fachlichen Inhalten und stellt die Grundstruktur für alle anderen Bereiche bereit. \\
 \addlinespace
-Gemeinsame Bedienelemente & Enthält einheitliche und fachlich neutrale Oberflächenelemente wie Schaltflächen, Eingabefelder oder Hinweisboxen. Diese Elemente werden anwendungsweit wiederverwendet und gewährleisten ein konsistentes Erscheinungsbild. \\
+Gemeinsame Bedienelemente (\texttt{components/common/}) & Enthält einheitliche und fachlich neutrale Oberflächenelemente wie Schaltflächen, Eingabefelder oder Hinweisboxen. Diese Elemente werden anwendungsweit wiederverwendet und gewährleisten ein konsistentes Erscheinungsbild. \\
 \addlinespace
-Services & Sie bilden die Schnittstelle zwischen Frontend und Backend. Sie rufen Daten ab (z. B. Experimente, Materialien, Ergebnisse), speichern den aktuellen Zustand der Oberfläche und stellen übergreifende Funktionen wie Navigation, Nutzereinstellungen und KI-gestützte Analysen bereit. \\
+Services (\texttt{services/}) & Sie bilden die Schnittstelle zwischen Frontend und Backend. Sie rufen Daten ab (z. B. Experimente, Materialien, Ergebnisse), speichern den aktuellen Zustand der Oberfläche und stellen übergreifende Funktionen wie Navigation, Nutzereinstellungen und KI-gestützte Analysen bereit. \\
 \addlinespace
-Geteilte Funktionen & Stellen allgemeine Hilfsfunktionen bereit, die in mehreren Bereichen benötigt werden. Dazu gehört insbesondere die Prüfung von Nutzereingaben auf Vollständigkeit und Korrektheit. \\
+Geteilte Funktionen (\texttt{shared/}) & Stellen allgemeine Hilfsfunktionen bereit, die in mehreren Bereichen benötigt werden. Dazu gehört insbesondere die Prüfung von Nutzereingaben auf Vollständigkeit und Korrektheit. \\
 \addlinespace
-Zugriffssteuerung & Regelt, auf welche Bereiche der Anwendung die einzelnen Anwender zugreifen dürfen. Außerdem stellt sie sicher, dass jede Anfrage an den Server mit den Anmeldedaten des jeweiligen Anwenders versehen wird. \\
+Zugriffssteuerung (\texttt{auth/}) & Regelt, auf welche Bereiche der Anwendung die einzelnen Anwender zugreifen dürfen. Außerdem stellt sie sicher, dass jede Anfrage an den Server mit den Anmeldedaten des jeweiligen Anwenders versehen wird. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -68,7 +64,7 @@ Der fachliche Kern des Frontends ist die in \autoref{tab:frontend-architektur} g
     \item \texttt{tools}: Interne Operations- und Administrationsfunktionen, darunter Aktivitätsübersichten, Werkzeuge für künstliche Intelligenz sowie Debugging- und Log-Ansichten.
 \end{itemize}
 
-Änderungen innerhalb einer Domäne können dadurch weitgehend unabhängig von anderen Domänen vorgenommen werden. Diese Kapselung ergänzt die in \autoref{tab:frontend-architektur} dargestellte Trennung der Schichten um eine klare Abgrenzung auch innerhalb des fachlichen Kerns.
+Änderungen innerhalb einer Domäne können dadurch weitgehend unabhängig von anderen Domänen vorgenommen werden. Diese Kapselung ergänzt die dargestellte Trennung der Schichten um eine klare Abgrenzung auch innerhalb des fachlichen Kerns.
 
 \subsection{Backendarchitektur}
 
@@ -80,24 +76,24 @@ Das Backend besteht aus sieben Services, die über \ac{HTTPS} erreichbar sind un
     \centering
     \caption{Übersicht der Backend-Services in \ac{ATLAS}}
     \label{tab:services}
-    \begin{tabularx}{\textwidth}{|p{4.2cm}|X|}
-        \hline
+    \begin{tabularx}{\textwidth}{@{}p{4.2cm}X@{}}
+        \toprule
         \textbf{Service} & \textbf{Aufgabe} \\
-        \hline
-        GatewayService & Zentraler Eintrittspunkt für Anfragen aus dem Frontend, zuständig für Authentifizierung, Autorisierung und Weiterleitung an die passenden Fachservices. \\
-        \hline
-        ExperimentService & Verwaltet Experimente, unter anderem Anlegen, Bearbeiten und Abrufen, sowie zugehörige Parameterberechnungen. \\
-        \hline
-        SearchService & Ermöglicht die Suche und Filterung von Experimenten und Parameterdaten sowie die Verwaltung gespeicherter Suchansichten. \\
-        \hline
-        FileService & Speichert, verwaltet und stellt Experimentdateien und Report-Artefakte in Azure Blob Storage bereit. \\
-        \hline
-        ReportService & Erstellt Berichte und Exporte, beispielsweise als PowerPoint- oder Excel-Datei, aus den vorhandenen Experimentdaten. \\
-        \hline
-        AiService & Führt KI-gestützte Analysen und Auswertungen aus und verwaltet dafür benötigte Skripte und KI-Artefakte in Azure Blob Storage. \\
-        \hline
-        ApplicationLoggingService & Protokolliert Abläufe, Ereignisse und Fehler der übrigen Services, damit der Systembetrieb nachvollziehbar bleibt. \\
-        \hline
+        \midrule
+        Gateway-Service & Zentraler Eintrittspunkt für Anfragen aus dem Frontend, zuständig für Authentifizierung, Autorisierung und Weiterleitung an die passenden Fachservices. \\
+        \addlinespace
+        Experiment-Service & Verwaltet Experimente, unter anderem Anlegen, Bearbeiten und Abrufen, sowie zugehörige Parameterberechnungen. \\
+        \addlinespace
+        Search-Service & Ermöglicht die Suche und Filterung von Experimenten und Parameterdaten sowie die Verwaltung gespeicherter Suchansichten. \\
+        \addlinespace
+        File-Service & Speichert, verwaltet und stellt Experimentdateien und Report-Artefakte in Azure Blob Storage bereit. \\
+        \addlinespace
+        Report-Service & Erstellt Berichte und Exporte, beispielsweise als PowerPoint- oder Excel-Datei, aus den vorhandenen Experimentdaten. \\
+        \addlinespace
+        AI-Service & Führt KI-gestützte Analysen und Auswertungen aus und verwaltet dafür benötigte Skripte und KI-Artefakte in Azure Blob Storage. \\
+        \addlinespace
+        Application-Logging-Service & Protokolliert Abläufe, Ereignisse und Fehler der übrigen Services, damit der Systembetrieb nachvollziehbar bleibt. \\
+        \bottomrule
     \end{tabularx}
 \end{table}
 
@@ -120,16 +116,16 @@ Strukturierte Fach- und Verwaltungsdaten werden in einer PostgreSQL-Datenbank ge
     \centering
     \caption{Services mit direktem Zugriff auf die PostgreSQL-Datenbank}
     \label{tab:postgres-zugriff}
-    \begin{tabularx}{\textwidth}{|p{4.2cm}|X|}
-        \hline
+    \begin{tabularx}{\textwidth}{@{}p{4.2cm}X@{}}
+        \toprule
         \textbf{Service} & \textbf{Rolle in Bezug auf PostgreSQL} \\
-        \hline
+        \midrule
         ExperimentService & Liest und schreibt Experimentdaten direkt in die Datenbank. \\
-        \hline
+        \addlinespace
         ReportService & Liest Daten direkt aus der Datenbank, um Berichte und Exporte zu erzeugen. \\
-        \hline
+        \addlinespace
         SearchService & Greift direkt auf Daten zu, um Suchfunktionen bereitzustellen. \\
-        \hline
+        \bottomrule
     \end{tabularx}
 \end{table}
 
@@ -214,8 +210,6 @@ Zusammenfassend zeigt sich für das Frontend ein zweigeteiltes Bild. Auf Ebene d
 Insgesamt liefert die bestehende Testinfrastruktur damit eine erste, aber ausbaufähige Grundlage, insbesondere im Hinblick auf eine gezieltere Abdeckung der Kernbereiche sowie auf systemübergreifende Tests ohne Mocking der Backend-Kommunikation.
 
 \subsection{Backend-Testabdeckung}
-Zur Ermittlung der Code-Coverage wurde das in Visual Studio 2026 integrierte Werkzeug zur Analyse der Code-Coverage verwendet. Die Messung bezog sechs Testprojekte ein, die jeweils einen Backend-Service prüften. \autoref{tab:backend-coverage} zeigt die ermittelten Werte für die sechs erfassten Bereiche des produktiven Anwendungscodes.
-
 Zur Ermittlung der Code-Coverage wurde das in Visual Studio 2026 integrierte Werkzeug zur Analyse der Code-Coverage verwendet. Die Messung bezog sechs Testprojekte ein, die jeweils prüften, wie stark der zugehörige Backend-Service durch das eigene Testprojekt bereits mit Tests abgedeckt war. Ein Service, der in der Messung nicht aufgeführt ist, verfügte demnach zum betrachteten Zeitpunkt noch über kein eigenes Testprojekt. \autoref{tab:backend-coverage} zeigt die ermittelten Werte für die sechs erfassten Bereiche des produktiven Anwendungscodes.
 
 
@@ -244,37 +238,46 @@ Sowohl im Frontend als auch im Backend zeigt sich damit ein uneinheitliches Bild
 
 
 \section{Anforderungen an die Testinfrastruktur}
+\label{sec:anforderungen-testinfrastruktur}
 Die Anforderungen an die Testinfrastruktur wurden aus mehreren Quellen abgeleitet: Gesprächen mit der Projektleitung und dem Hauptentwickler, der Analyse des bestehenden Codes sowie Beobachtungen aus Review-Meetings mit weiteren Personen. Daraus ergaben sich die folgenden funktionalen und nicht-funktionalen Anforderungen an die Testinfrastruktur.
 
 \subsection{Funktionale Anforderungen}
 Die funktionalen Anforderungen legen fest, welche Testarten für welche Komponenten der Anwendung entwickelt werden sollen. Grundlage dafür sind die bereits in \autoref{sec:bestehende-testinfrastruktur} eingeführten Testebenen Unit-, Integrations- und End-to-End-Tests.
 
-\textbf{Unit-Tests}\\
-Für die zentralen Fachservices und Bibliotheken, insbesondere \texttt{ExperimentService}, \texttt{Authorization} und \texttt{Core} (vgl. \autoref{tab:services}), sollen Unit-Tests implementiert werden. Sie müssen isoliert, ohne Datenbankverbindung und lokal ausführbar sein. Im Frontend sollen Unit-Tests für Services, Guards und ausgewählte Komponenten der in \autoref{tab:frontend-architektur} genannten Schichten ergänzt werden.
+\textbf{Unit-Tests (Backend)} \hfill \textbf{Priorität: Muss}\\
+Für die zentralen Services (vgl. \autoref{tab:services}) und Klassenbibliotheken sollen Unit-Tests implementiert werden. Sie müssen isoliert, ohne Datenbankverbindung und lokal ausführbar sein.
 
-\textbf{Integrationstests}\\
-Das Zusammenspiel von \ac{HTTP}-Endpunkten, Datenbankschicht und Services soll durch Integrationstests abgesichert werden. Bestehende Integrationstests, beispielsweise für den \texttt{ExperimentService} und \texttt{SearchService}, dienen dabei als Muster. Fehlende Services sind entsprechend zu ergänzen.
+\textbf{Unit-Tests (Frontend)} \hfill \textbf{Priorität: Muss}\\
+Im Frontend sollen Unit-Tests für Services, Guards und ausgewählte Komponenten der in \autoref{tab:frontend-architektur} genannten Schichten ergänzt werden.
 
-\textbf{End-to-End-Tests}\\
-Kritische Nutzerabläufe, insbesondere Login, Experiment anlegen, Wizard-Navigation und Suche, sollen als UI-nahe End-to-End-Tests auf Frontend-Ebene automatisiert werden, in Fortführung des bereits bestehenden Ansatzes mit teilweise gemockten Backend-Aufrufen. Das Frontend bietet dafür bereits einen \texttt{e2e}-Ordner mit ersten Testdateien, der um weitere relevante Szenarien zu erweitern ist. \todo{Begründung: Es bleibt offen, ob im Rahmen dieser Arbeit ausschließlich der bestehende Ansatz mit UI-nahen, teilweise gemockten End-to-End-Tests fortgeführt werden soll, oder ob zusätzlich echte, systemweite End-to-End-Tests ohne Mocking der Backend-Kommunikation angestrebt werden. Letzteres wurde im Abschnitt zur Backend-Testabdeckung als bislang nicht vorhanden benannt. Lösungsvorschlag: Klären, ob echte systemweite End-to-End-Tests Teil der Zielsetzung dieser Arbeit sind, und die Anforderung entsprechend präzisieren.}
+\textbf{Integrationstests} \hfill \textbf{Priorität: Muss}\\
+Das Zusammenspiel von \ac{HTTP}-Endpunkten, Datenbankschicht und Services soll durch Integrationstests abgesichert werden. Bestehende Integrationstests, beispielsweise für den \texttt{ExperimentService} und \texttt{SearchService}, dienen dabei als Muster. Fehlende Services sind entsprechend zu ergänzen, insbesondere im Backend.
 
-\textbf{Kompatibilität mit bestehenden Tests}\\
-Neue Tests müssen nahtlos mit den vorhandenen Testprojekten zusammenarbeiten. Namenskonventionen, Teststruktur und der Einsatz von \texttt{WebApplicationFactory} sollen einheitlich weitergeführt werden. Assertions sollen dabei konsistent mit der im Projekt bereits verwendeten Bibliothek Shouldly formuliert werden, anstelle eines klassischen Mock-Frameworks sollen weiterhin manuelle Fakes und Test-Doubles nach dem bestehenden Muster eingesetzt werden.
+\textbf{UI-Tests} \hfill \textbf{Priorität: Soll}\\
+Zentrale Bedienabläufe der Benutzeroberfläche, etwa die Navigation innerhalb des Experiment-Wizards und weitere Interaktionen, sollen durch UI-nahe Tests auf Frontend-Ebene abgesichert werden, in Fortführung des bereits bestehenden Ansatzes mit teilweise gemockten Backend-Aufrufen.
+
+\textbf{End-to-End-Tests} \hfill \textbf{Priorität: Kann}\\
+Kritische Nutzerabläufe, insbesondere Login, Experiment anlegen, Wizard-Navigation und Suche, sollen zusätzlich als echte End-to-End-Tests über das Gesamtsystem hinweg, das heißt ohne Mocking der Backend-Kommunikation, abgesichert werden.
+
+\textbf{Kompatibilität mit bestehenden Tests} \hfill \textbf{Priorität: Muss}\\
+Neue Tests müssen nahtlos mit den vorhandenen Testprojekten zusammenarbeiten. Namenskonventionen und Teststruktur sollen einheitlich weitergeführt werden. Für neue Backend-Tests soll dabei, entsprechend der Empfehlung des Hauptentwicklers, ein einheitliches Test-Framework verwendet werden.
 
 \subsection{Nicht-funktionale Anforderungen}
 Die nicht-funktionalen Anforderungen legen fest, unter welchen Rahmenbedingungen die zuvor beschriebenen Tests ausgeführt und gepflegt werden sollen, etwa hinsichtlich Ausführbarkeit, Wartbarkeit, Laufzeit und Einbindung in eine automatisierte Umgebung.
 
-\textbf{Lokale Ausführbarkeit}\\
-Alle Tests sollen lokal ohne externe Abhängigkeiten ausführbar sein. Datenbankzugriffe werden über EF-Core-In-Memory oder SQLite-In-Memory simuliert. Für Blob Storage steht Azurite als lokaler Emulator zur Verfügung.
+\textbf{Lokale Ausführbarkeit} \hfill \textbf{Priorität: Muss}\\
+Alle Tests sollen in der lokalen Entwicklungsumgebung ausführbar sein.
 
-\textbf{Wartbarkeit und Clean Code}\\
-Testcode soll denselben Qualitätsstandards wie Produktionscode folgen: klare Benennung nach dem Muster \textit{Methode\_Bedingung\_Erwartung}, keine Duplizierung, sinnvoller Einsatz von DataProvidern und Test-Fixtures. Dadurch bleibt die Testbasis auch bei Systemerweiterungen pflegbar. Diese Forderung berücksichtigt, dass automatisierte Tests im Gegensatz zu manuellen Testfällen jede noch so kleine Änderung an der Anwendung explizit nachvollziehen müssen und daher besonders wartungsintensiv sind \cite[S.~22]{Axelrod2018}.
+\textbf{Wartbarkeit und Clean Code} \hfill \textbf{Priorität: Muss}\\
+Testcode soll denselben Qualitätsstandards wie Produktionscode folgen: klare Benennung nach dem Muster \textit{Methode\_Bedingung\_Erwartung}, keine unnötige Duplizierung sowie sinnvoller Einsatz von DataProvidern (wiederverwendbare Testdaten) und Test-Fixtures (definierter Ausgangszustand vor und nach einem Test). Dadurch bleibt die Testbasis auch bei Systemerweiterungen pflegbar, da automatisierte Tests jede noch so kleine Änderung an der Anwendung explizit nachvollziehen müssen und daher besonders wartungsintensiv sind \cite[S.~22]{Axelrod2018}.
 
-\textbf{Schnelle Feedbackzyklen}\\
-Unit-Tests sollen in unter 20~Sekunden, Integrationstests in unter 40~Sekunden durchlaufen. Kurze Laufzeiten ermöglichen regelmäßige lokale Ausführung und reduzieren Unterbrechungen im Entwicklungsfluss. Damit folgt die Anforderung dem Grundgedanken, dass der eigentliche Mehrwert automatisierter Tests in der schnellen Rückmeldung über den Systemzustand liegt und nicht im nachträglichen Auffinden möglichst vieler Fehler\footnote{\enquote{The sweet spot of automated testing is not to find as many bugs as possible, but rather to provide fast feedback about whether the system behaves in the way we expect, as defined in the tests.} \cite[S.~19]{Axelrod2018}}.
+\textbf{Schnelle Feedbackzyklen} \hfill \textbf{Priorität: Soll}\\
+Unit- und Integrationstests sollen so kurz laufen, dass eine regelmäßige lokale oder zentral-automatisierte Ausführung während der Entwicklung ohne spürbare Unterbrechung des Arbeitsflusses möglich ist. Damit folgt die Anforderung dem Grundgedanken, dass der eigentliche Mehrwert automatisierter Tests in der schnellen Rückmeldung über den Systemzustand liegt und nicht im nachträglichen Auffinden möglichst vieler Fehler\footnote{\enquote{The sweet spot of automated testing is not to find as many bugs as possible, but rather to provide fast feedback about whether the system behaves in the way we expect, as defined in the tests.} \cite[S.~19]{Axelrod2018}}.
 
-\textbf{Vorbereitung auf CI/CD-Integration}\\
-Die Tests sollen so strukturiert sein, dass der Hauptentwickler sie ohne größeren Aufwand in eine Azure-DevOps-Pipeline einbinden kann. Dies betrifft unter anderem konsistente Projektreferenzen, keine hardcodierten lokalen Pfade und die Unterstützung der \ac{NET}-CLI-Ausführung (\texttt{dotnet test}).
+\textbf{Automatisierte Ausführbarkeit} \hfill \textbf{Priorität: Soll}\\
+Alle Tests sollen automatisiert ausführbar sein, beispielsweise über eine Azure-DevOps-Pipeline, und nicht auf eine manuelle Ausführung durch einzelne Entwickler angewiesen sein. Damit der Hauptentwickler die Tests ohne größeren Aufwand in eine bestehende oder neue Pipeline einbinden kann.
 
-\textbf{Automatisierte Testausführung in einer eigenen Testumgebung}\\
-Zusätzlich zur lokalen Ausführbarkeit soll ein Konzept entwickelt werden, wie die Tests regelmäßig und automatisiert in einer eigenen Testumgebung ausgeführt werden können, unabhängig von den lokalen Entwicklungsumgebungen einzelner Teammitglieder. Dadurch soll sichergestellt werden, dass Testergebnisse nicht vom Zustand oder von der Konfiguration eines einzelnen Arbeitsplatzes abhängen, und dass Testläufe auch dann regelmäßig stattfinden, wenn keine manuelle lokale Ausführung erfolgt. \todo{Begründung: Es liegt noch keine konkrete Information vor, wie diese eigene Testumgebung technisch ausgestaltet werden soll, etwa ob sie auf der bestehenden Azure-DevOps-Pipeline, einem separaten Agent, einem Container-basierten Ansatz oder einer anderen Lösung aufbaut. Diese Anforderung beschreibt daher bislang nur das Ziel, nicht den Lösungsweg. Lösungsvorschlag: Sobald das Konzept für die Testumgebung konkretisiert ist, hier die wesentlichen technischen Eckpunkte ergänzen, oder auf das entsprechende spätere Kapitel verweisen, in dem das Konzept im Detail beschrieben wird.}
+\textbf{Automatisierte Testausführung in einer eigenen Testumgebung} \hfill \textbf{Priorität: Kann}\\
+Zusätzlich zur lokalen und pipeline-basierten Ausführbarkeit soll ein Konzept entwickelt werden, wie die Tests regelmäßig und automatisiert in einer zentralen Testumgebung ausgeführt werden können, unabhängig von den lokalen Entwicklungsumgebungen einzelner Teammitglieder. Dadurch soll sichergestellt werden, dass Testergebnisse nicht vom Zustand oder von der Konfiguration eines einzelnen Arbeitsplatzes abhängen, und dass Testläufe auch dann regelmäßig stattfinden, wenn keine manuelle lokale Ausführung erfolgt.
+
+Auf Grundlage dieser funktionalen und nicht-funktionalen Anforderungen wird im folgenden Kapitel ein Konzept für die schrittweise Umsetzung der Testinfrastruktur entwickelt, beginnend mit einer lokal beherrschbaren Testumgebung.

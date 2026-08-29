@@ -56,9 +56,9 @@
 		{T3\_1000}{Projektarbeit T1000}%
 		{T3\_2000}{Projektarbeit T2000}%
 		{T3\_2001}{Projektarbeit T2000, Teil 1}%
-		{T3\_2002}{Projektarbeit T2000, Teil 2}%
+		{T3\_2002}{Projektarbeit T2000, Teil 2}
 		{T3\_3000}{Projektarbeit T3000}%
-		{T3\_3100}{Studienarbeit}
+        {T3\_3100}{Studienarbeit}%
 		{T3\_3200}{Studienarbeit}%
 		{T3\_3300}{Bachelorarbeit}%
 	}
@@ -76,6 +76,7 @@
 \graphicspath{{resources/images/}}  % Standard Bilderpfad
 \usepackage{subcaption}             % Mehrere Bilder/Tabllen in einer Figure
 \usepackage{tikz}                   % für komplexe Bilderstellung
+\usetikzlibrary{arrows.meta}        % Moderne Pfeilspitzen für TikZ
 \usepackage{pgfplots}               % Diagramme und Datenvisualisierung
 \usepackage{tabularx}               % Tabellen
 \usepackage{pdfpages}               % PDF Dateien / Seiten
@@ -86,8 +87,12 @@
 \usepackage{amsfonts}               % Mathematische Schriftart der American Mathematical Society
 \usepackage{amsmath}                % Mathematische Schriftzeichen der American Mathematical Society
 \usepackage{fancyvrb}               % [für Quelltext]
+\usepackage{tikz}                   % für komplexe Bilderstellung
 \usepackage{fvextra}               % Verbatim mit automatischem Zeilenumbruch
 \usepackage{xurl}                   % URL Umbruch
+\usepackage{listings}
+\usepackage{xcolor} \lstset{ language=[Sharp]C, basicstyle=\ttfamily\small, keywordstyle=\color{blue}, commentstyle=\color{green!50!black}, stringstyle=\color{red} }
+
 \usepackage{pdflscape}              % Querformat
 \usepackage{enumitem}               % Aufzählungsstile
 \usepackage{microtype}              % bessere Zeilenumbrüche im Blocksatz

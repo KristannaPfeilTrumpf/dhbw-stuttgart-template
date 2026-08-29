@@ -19,46 +19,12 @@
 
 \refsection{0}
   \datalist[entry]{none/global//global/global/global}
-    \entry{SpillnerLinz2022}{book}{}{}
-      \name{author}{2}{}{%
-        {{hash=58e3123e6a8cd02bbdaa0e86c09a9b61}{%
-           family={Spillner},
-           familyi={S\bibinitperiod},
-           given={Andreas},
-           giveni={A\bibinitperiod}}}%
-        {{hash=1179c3246fee23f1879c2285201a2e76}{%
-           family={Linz},
-           familyi={L\bibinitperiod},
-           given={Tilo},
-           giveni={T\bibinitperiod}}}%
-      }
-      \list{publisher}{1}{%
-        {Springer Vieweg}%
-      }
-      \strng{namehash}{9a77db97040fcb98a8110de1ae5f0b8a}
-      \strng{fullhash}{9a77db97040fcb98a8110de1ae5f0b8a}
-      \strng{fullhashraw}{9a77db97040fcb98a8110de1ae5f0b8a}
-      \strng{bibnamehash}{9a77db97040fcb98a8110de1ae5f0b8a}
-      \strng{authorbibnamehash}{9a77db97040fcb98a8110de1ae5f0b8a}
-      \strng{authornamehash}{9a77db97040fcb98a8110de1ae5f0b8a}
-      \strng{authorfullhash}{9a77db97040fcb98a8110de1ae5f0b8a}
-      \strng{authorfullhashraw}{9a77db97040fcb98a8110de1ae5f0b8a}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Strategy, Planning and Organization of Test Processes: Basis for Successful Project Execution in Software Testing}
-      \field{year}{2022}
-      \verb{doi}
-      \verb 10.1007/978-3-658-36981-1
-      \endverb
-    \endentry
     \entry{IEEE29119_2_2021}{standard}{}{}
       \list{organization}{1}{%
         {IEEE}%
       }
-      \field{sortinit}{7}
-      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labeltitlesource}{title}
       \field{number}{IEEE 29119-2:2021}
       \field{title}{Software and systems engineering -- Software testing -- Part 2: Test processes}
@@ -68,6 +34,33 @@
       \endverb
       \verb{url}
       \verb https://standards.ieee.org/ieee/29119-2/7498/
+      \endverb
+    \endentry
+    \entry{QFTest2024}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=e9ed15f803d381336d8f213346251187}{%
+           family={{MATE GmbH}},
+           familyi={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{e9ed15f803d381336d8f213346251187}
+      \strng{fullhash}{e9ed15f803d381336d8f213346251187}
+      \strng{fullhashraw}{e9ed15f803d381336d8f213346251187}
+      \strng{bibnamehash}{e9ed15f803d381336d8f213346251187}
+      \strng{authorbibnamehash}{e9ed15f803d381336d8f213346251187}
+      \strng{authornamehash}{e9ed15f803d381336d8f213346251187}
+      \strng{authorfullhash}{e9ed15f803d381336d8f213346251187}
+      \strng{authorfullhashraw}{e9ed15f803d381336d8f213346251187}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Testpyramide}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.qftest.com/glossary/testpyramide.html
+      \endverb
+      \verb{url}
+      \verb https://www.qftest.com/glossary/testpyramide.html
       \endverb
     \endentry
     \entry{Axelrod2018}{book}{}{}
@@ -89,8 +82,8 @@
       \strng{authornamehash}{0e79861892593a8b8570ee5641c6aa89}
       \strng{authorfullhash}{0e79861892593a8b8570ee5641c6aa89}
       \strng{authorfullhashraw}{0e79861892593a8b8570ee5641c6aa89}
-      \field{sortinit}{8}
-      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Complete Guide to Test Automation: Techniques, Practices, and Patterns for Building and Maintaining Effective Software Projects}
@@ -114,8 +107,8 @@
       \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
       \field{extraname}{1}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Unit test basics with Test Explorer}
@@ -142,8 +135,8 @@
       \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
       \field{extraname}{2}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Overview of testing tools}
@@ -170,8 +163,8 @@
       \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
       \field{extraname}{3}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Testing ASP.NET Core services and web apps}
@@ -198,8 +191,8 @@
       \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
       \field{extraname}{4}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Test ASP.NET Core MVC apps}
@@ -226,8 +219,8 @@
       \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
       \field{extraname}{5}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Best practices for writing unit tests}
@@ -254,8 +247,8 @@
       \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
       \field{extraname}{6}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{TypeScript: JavaScript With Syntax For Types}
@@ -282,8 +275,8 @@
       \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
       \field{extraname}{7}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{What is Azure DevOps?}
@@ -323,7 +316,7 @@
       \verb https://learn.microsoft.com/en-us/azure/devops/boards/get-started/plan-track-work
       \endverb
     \endentry
-    \entry{MicrosoftAzureReposGitOverview2026}{online}{}{}
+    \entry{MicrosoftAzurePipelines2026}{online}{}{}
       \name{author}{1}{}{%
         {{hash=140864078aeca1c7c35b4beb33c53c34}{%
            family={Microsoft},
@@ -342,34 +335,6 @@
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{Azure Repos: Get unlimited, cloud-hosted private Git repos}
-      \field{year}{2026}
-      \verb{urlraw}
-      \verb https://learn.microsoft.com/en-us/azure/devops/repos/get-started/what-is-repos
-      \endverb
-      \verb{url}
-      \verb https://learn.microsoft.com/en-us/azure/devops/repos/get-started/what-is-repos
-      \endverb
-    \endentry
-    \entry{MicrosoftAzurePipelines2026}{online}{}{}
-      \name{author}{1}{}{%
-        {{hash=140864078aeca1c7c35b4beb33c53c34}{%
-           family={Microsoft},
-           familyi={M\bibinitperiod}}}%
-      }
-      \strng{namehash}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{fullhash}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{fullhashraw}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{bibnamehash}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{authorbibnamehash}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{authornamehash}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
-      \field{extraname}{10}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
       \field{title}{What is Azure Pipelines?}
       \field{year}{2026}
       \verb{urlraw}
@@ -377,34 +342,6 @@
       \endverb
       \verb{url}
       \verb https://learn.microsoft.com/en-us/azure/devops/pipelines/get-started/what-is-azure-pipelines
-      \endverb
-    \endentry
-    \entry{MicrosoftAzurePipelinesArchitecture2026}{online}{}{}
-      \name{author}{1}{}{%
-        {{hash=140864078aeca1c7c35b4beb33c53c34}{%
-           family={Microsoft},
-           familyi={M\bibinitperiod}}}%
-      }
-      \strng{namehash}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{fullhash}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{fullhashraw}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{bibnamehash}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{authorbibnamehash}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{authornamehash}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
-      \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
-      \field{extraname}{11}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Azure Pipelines baseline architecture}
-      \field{year}{2026}
-      \verb{urlraw}
-      \verb https://learn.microsoft.com/en-us/azure/devops/pipelines/architectures/devops-pipelines-baseline-architecture
-      \endverb
-      \verb{url}
-      \verb https://learn.microsoft.com/en-us/azure/devops/pipelines/architectures/devops-pipelines-baseline-architecture
       \endverb
     \endentry
     \entry{MicrosoftAzurite2026}{online}{}{}
@@ -421,7 +358,7 @@
       \strng{authornamehash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
-      \field{extraname}{12}
+      \field{extraname}{10}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
@@ -552,9 +489,9 @@
       \strng{authornamehash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
-      \field{extraname}{13}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{extraname}{11}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Fast and reliable end-to-end testing for modern web apps}
@@ -589,8 +526,8 @@
       \strng{authornamehash}{78503dce4327d50f4448e74d45599a72}
       \strng{authorfullhash}{78503dce4327d50f4448e74d45599a72}
       \strng{authorfullhashraw}{78503dce4327d50f4448e74d45599a72}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{IEEE Software}
@@ -600,6 +537,74 @@
       \field{year}{2007}
       \field{pages}{22\bibrangedash 27}
       \range{pages}{6}
+    \endentry
+    \entry{FowlerLewis2014}{misc}{}{}
+      \name{author}{2}{}{%
+        {{hash=312ac886938a9b2be4f8eb607567fe4c}{%
+           family={Fowler},
+           familyi={F\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+        {{hash=bc0d2dbdc2f0a7a80ec11019d6142dbb}{%
+           family={Lewis},
+           familyi={L\bibinitperiod},
+           given={James},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{416876065d6eb7d05b219dfec144635d}
+      \strng{fullhash}{416876065d6eb7d05b219dfec144635d}
+      \strng{fullhashraw}{416876065d6eb7d05b219dfec144635d}
+      \strng{bibnamehash}{416876065d6eb7d05b219dfec144635d}
+      \strng{authorbibnamehash}{416876065d6eb7d05b219dfec144635d}
+      \strng{authornamehash}{416876065d6eb7d05b219dfec144635d}
+      \strng{authorfullhash}{416876065d6eb7d05b219dfec144635d}
+      \strng{authorfullhashraw}{416876065d6eb7d05b219dfec144635d}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Microservices: a definition of this new architectural term}
+      \field{year}{2014}
+      \verb{urlraw}
+      \verb https://martinfowler.com/articles/microservices.html
+      \endverb
+      \verb{url}
+      \verb https://martinfowler.com/articles/microservices.html
+      \endverb
+    \endentry
+    \entry{DiFrancesco2017}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=7a19d99b31f8e0480bc08850ea535e72}{%
+           family={Di\bibnamedelima Francesco},
+           familyi={D\bibinitperiod\bibinitdelim F\bibinitperiod},
+           given={Paolo},
+           giveni={P\bibinitperiod}}}%
+        {{hash=3ff6e286502b85077eabb7e86849d893}{%
+           family={Malavolta},
+           familyi={M\bibinitperiod},
+           given={Ivano},
+           giveni={I\bibinitperiod}}}%
+        {{hash=b7e3fc29bccdf8a7639daddb302e1545}{%
+           family={Lago},
+           familyi={L\bibinitperiod},
+           given={Patricia},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{a4fcee185bb682dcaa3f0e042bae7de6}
+      \strng{fullhash}{c8d97be6e0b2483e0be3e8855b17fdc5}
+      \strng{fullhashraw}{c8d97be6e0b2483e0be3e8855b17fdc5}
+      \strng{bibnamehash}{c8d97be6e0b2483e0be3e8855b17fdc5}
+      \strng{authorbibnamehash}{c8d97be6e0b2483e0be3e8855b17fdc5}
+      \strng{authornamehash}{a4fcee185bb682dcaa3f0e042bae7de6}
+      \strng{authorfullhash}{c8d97be6e0b2483e0be3e8855b17fdc5}
+      \strng{authorfullhashraw}{c8d97be6e0b2483e0be3e8855b17fdc5}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Systems and Software}
+      \field{title}{Architecting with microservices: A systematic mapping study}
+      \field{year}{2017}
     \endentry
     \entry{MicrosoftEntraWhatIs2026}{online}{}{}
       \name{author}{1}{}{%
@@ -615,9 +620,9 @@
       \strng{authornamehash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
       \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
-      \field{extraname}{14}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{extraname}{12}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{What is Microsoft Entra?}
@@ -627,6 +632,93 @@
       \endverb
       \verb{url}
       \verb https://learn.microsoft.com/en-us/entra/fundamentals/what-is-entra
+      \endverb
+    \endentry
+    \entry{JonesBradleySakimura2015}{standard}{}{}
+      \name{author}{3}{}{%
+        {{hash=5a25bc91f524ca6dfc2ecf9f4a13903c}{%
+           family={Jones},
+           familyi={J\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=81e40ae87af997090fa9a9696e364c65}{%
+           family={Bradley},
+           familyi={B\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+        {{hash=34e6848475fd66697bfcb80787f2aef0}{%
+           family={Sakimura},
+           familyi={S\bibinitperiod},
+           given={Nat},
+           giveni={N\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Internet Engineering Task Force}%
+      }
+      \strng{namehash}{8c74f36d6695ec51f419b547a3316502}
+      \strng{fullhash}{48d544cafb60a3ced64569d686a33135}
+      \strng{fullhashraw}{48d544cafb60a3ced64569d686a33135}
+      \strng{bibnamehash}{48d544cafb60a3ced64569d686a33135}
+      \strng{authorbibnamehash}{48d544cafb60a3ced64569d686a33135}
+      \strng{authornamehash}{8c74f36d6695ec51f419b547a3316502}
+      \strng{authorfullhash}{48d544cafb60a3ced64569d686a33135}
+      \strng{authorfullhashraw}{48d544cafb60a3ced64569d686a33135}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{RFC 7519}
+      \field{title}{JSON Web Token (JWT)}
+      \field{year}{2015}
+      \verb{doi}
+      \verb 10.17487/RFC7519
+      \endverb
+      \verb{urlraw}
+      \verb https://www.rfc-editor.org/rfc/rfc7519
+      \endverb
+      \verb{url}
+      \verb https://www.rfc-editor.org/rfc/rfc7519
+      \endverb
+    \endentry
+    \entry{ZhuHallMay1997}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=50f10f09174d83ca7fae4d7d22fb5495}{%
+           family={Zhu},
+           familyi={Z\bibinitperiod},
+           given={Hong},
+           giveni={H\bibinitperiod}}}%
+        {{hash=9bd750302f8f4f2e9060eb3cf072dd58}{%
+           family={Hall},
+           familyi={H\bibinitperiod},
+           given={Patrick\bibnamedelimb A.\bibnamedelimi V.},
+           giveni={P\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=96f46f1c537ff4d2dfef9c69750fc5fb}{%
+           family={May},
+           familyi={M\bibinitperiod},
+           given={John\bibnamedelimb H.\bibnamedelimi R.},
+           giveni={J\bibinitperiod\bibinitdelim H\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \strng{namehash}{0adf773d9a6998617b1cf0548a9f2d3d}
+      \strng{fullhash}{48119b56f7d59aeac1db99a74ebfa11f}
+      \strng{fullhashraw}{48119b56f7d59aeac1db99a74ebfa11f}
+      \strng{bibnamehash}{48119b56f7d59aeac1db99a74ebfa11f}
+      \strng{authorbibnamehash}{48119b56f7d59aeac1db99a74ebfa11f}
+      \strng{authornamehash}{0adf773d9a6998617b1cf0548a9f2d3d}
+      \strng{authorfullhash}{48119b56f7d59aeac1db99a74ebfa11f}
+      \strng{authorfullhashraw}{48119b56f7d59aeac1db99a74ebfa11f}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{ACM Computing Surveys}
+      \field{number}{4}
+      \field{title}{Software unit test coverage and adequacy}
+      \field{volume}{29}
+      \field{year}{1997}
+      \field{pages}{366\bibrangedash 427}
+      \range{pages}{62}
+      \verb{doi}
+      \verb 10.1145/267580.267590
       \endverb
     \endentry
     \entry{Pfeil2026Testkonzept}{misc}{}{}
@@ -645,14 +737,68 @@
       \strng{authornamehash}{c6e73934f3b908298fc377cb30e2137c}
       \strng{authorfullhash}{c6e73934f3b908298fc377cb30e2137c}
       \strng{authorfullhashraw}{c6e73934f3b908298fc377cb30e2137c}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{howpublished}{Unver{"o}ffentlichtes Projektdokument}
       \field{note}{Stand 19.06.2026, intern}
       \field{title}{Testkonzept f{"u}r ATLAS: Aufbau von Testinfrastruktur und automatisierten Tests (Angular 19 + ASP.NET Core WebApp)}
       \field{year}{2026}
+    \endentry
+    \entry{IEEE829}{report}{}{}
+      \name{author}{1}{}{%
+        {{hash=472abfae8142fdb6f39d081303e8af85}{%
+           family={{IEEE}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{institution}{2}{%
+        {Institute of Electrical}%
+        {Electronics Engineers}%
+      }
+      \strng{namehash}{472abfae8142fdb6f39d081303e8af85}
+      \strng{fullhash}{472abfae8142fdb6f39d081303e8af85}
+      \strng{fullhashraw}{472abfae8142fdb6f39d081303e8af85}
+      \strng{bibnamehash}{472abfae8142fdb6f39d081303e8af85}
+      \strng{authorbibnamehash}{472abfae8142fdb6f39d081303e8af85}
+      \strng{authornamehash}{472abfae8142fdb6f39d081303e8af85}
+      \strng{authorfullhash}{472abfae8142fdb6f39d081303e8af85}
+      \strng{authorfullhashraw}{472abfae8142fdb6f39d081303e8af85}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{829-1998}
+      \field{title}{IEEE Standard for Software Test Documentation}
+      \field{type}{techreport}
+      \field{year}{1998}
+    \endentry
+    \entry{Testriq2024}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=c09de6439e05ac24eb908b8b06c7ca3a}{%
+           family={{Testriq}},
+           familyi={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{c09de6439e05ac24eb908b8b06c7ca3a}
+      \strng{fullhash}{c09de6439e05ac24eb908b8b06c7ca3a}
+      \strng{fullhashraw}{c09de6439e05ac24eb908b8b06c7ca3a}
+      \strng{bibnamehash}{c09de6439e05ac24eb908b8b06c7ca3a}
+      \strng{authorbibnamehash}{c09de6439e05ac24eb908b8b06c7ca3a}
+      \strng{authornamehash}{c09de6439e05ac24eb908b8b06c7ca3a}
+      \strng{authorfullhash}{c09de6439e05ac24eb908b8b06c7ca3a}
+      \strng{authorfullhashraw}{c09de6439e05ac24eb908b8b06c7ca3a}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Test Plan Template --- IEEE 829-Aligned Test Plan Structure}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.testriq.com/test-plan-template
+      \endverb
+      \verb{url}
+      \verb https://www.testriq.com/test-plan-template
+      \endverb
     \endentry
   \enddatalist
 \endrefsection

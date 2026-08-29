@@ -2,48 +2,155 @@
 
 \chapter{Konzeption der Testinfrastruktur}
 \label{chap:konzeption}
-\todo{\cite[S.~45--52]{SpillnerLinz2022} -- Risikobasiertes Testen (Teststrategie) einarbeiten}
-\todo{\cite[S.~110--118]{SpillnerLinz2022} -- Testinfrastruktur-Anforderungen (Testumgebung) einarbeiten}
 
-\section{Zwei-Phasen-Rollout-Konzept (lokal zu zentralisiert)}
-Die Konzeption folgt einem zweistufigen Vorgehen: zuerst eine belastbare lokale Testinfrastruktur, anschließend die Überführung in eine zentrale Ausführungsumgebung.
+Die Konzeption der Testinfrastruktur folgt einem zweistufigen Vorgehen. Zunächst wird eine lokal ausführbare und reproduzierbare Testumgebung betrachtet. Anschließend wird der Aufbau einer zentralen Ausführungsumgebung konzipiert.
 
-\textbf{Leitgedanke:}
-Lokale Stabilität und Teamakzeptanz sind Voraussetzung für eine erfolgreiche Zentralisierung.
-
-\subsection{Konzept der lokalen Testumgebung}
-Das Konzept orientiert sich an den in \autoref{chap:ist-analyse-anforderungen} beschriebenen Anforderungen und priorisiert zunächst lokal beherrschbare, reproduzierbare Testläufe.
-
-\subsubsection{Einordnung des ersten Testkonzepts}
-Das erste Testkonzept (Stand: Juni 2026) definiert den Einstieg in eine strukturierte Teststrategie für ATLAS. Es beschreibt eine klare Priorisierung kritischer Komponenten, eine Zuordnung von Unit-, Integrations- und End-to-End-Tests sowie ein zweistufiges Zielbild aus lokaler Umsetzung und späterer CI/CD-Einbindung.
-
-Für den initialen Stack waren unter anderem xUnit, WebApplicationFactory und Moq im Backend, Angular TestBed im Frontend sowie Playwright für End-to-End-Szenarien vorgesehen. Im frühen Entwurf wurden bei E2E-Tests zusätzlich Alternativen betrachtet; im weiteren Projektverlauf wurde die Umsetzung auf Playwright fokussiert.
-Die Einordnung dieses Entwicklungsstands basiert auf dem projektspezifischen Testkonzeptentwurf \cite{Pfeil2026Testkonzept}.
+\section{Konzept der lokalen Testumgebung}
+Dieser Abschnitt beschreibt das Konzept für die erste, lokal ausführbare Stufe der Testinfrastruktur, ausgehend vom ursprünglichen Testkonzeptentwurf, den darin priorisierten Komponenten sowie den zugrunde gelegten Testarten und Zielwerten.
 
 
-Beschrieben werden Setup, Ausführungsabläufe, Testgrenzen und die Übergabe an den Main-Entwickler zur Pipeline-Integration.
+\subsection{Einordnung des ersten Testkonzepts}
+Das erste Testkonzept definiert den Einstieg in eine strukturierte Teststrategie für \ac{ATLAS}. Es beschreibt eine Priorisierung kritischer Komponenten, eine Zuordnung von Unit-, Integrations- und End-to-End-Tests sowie ein Zielbild aus lokaler Umsetzung und späterer CI/CD-Einbindung. Die Einordnung dieses Entwicklungsstands basiert auf dem projektspezifischen Testkonzeptentwurf \cite{Pfeil2026Testkonzept}.
 
-Das initiale Konzept priorisiert im Backend zuerst GatewayService, ExperimentService und FileService (Priorität 1), danach ReportService und SearchService (Priorität 2). Im Frontend wurden zunächst die fachkritischen Bereiche Features, Services, Auth und Guards priorisiert; wiederverwendbare Komponenten und Layout-Bausteine wurden nachgelagert betrachtet.
+Das Testkonzept orientiert sich inhaltlich an zentralen Bestandteilen eines klassischen Testplans nach dem historischen Standard IEEE~829 \autocite{IEEE829}. Der Standard wurde 2013 durch ISO/IEC/IEEE~29119 abgelöst. Seine Gliederung wird jedoch bis heute häufig als Orientierungsrahmen für Testpläne genutzt \autocite{Testriq2024}. Dazu zählen unter anderem Zweck und Testumfang, zu testende Komponenten, Testansatz, Testumgebung sowie Rollen und Zeitplan. Diese Elemente finden sich auch im beschriebenen Testkonzept wieder, etwa in Form von Qualitätszielen, priorisierten Komponenten, Testpyramide, Test-Stack sowie Rollen- und Zeitplan.
 
-Methodisch wurde eine Testpyramide als Zielbild angesetzt: hoher Anteil schneller Unit-Tests, ergänzende Integrations-Tests und ein kleiner, stabiler Anteil End-to-End-Tests für kritische User Journeys.
+Für die im Testkonzept vorgeschlagene Werkzeugauswahl war zum einen vorgesehen, die im Bestand bereits eingesetzten Frameworks weiterzuführen. Zum anderen wurden auf Empfehlung des Hauptentwicklers, auf Basis von Reviews sowie eigener Recherche gezielt neue Werkzeuge ausgewählt. Im Backend waren dies laut Testkonzept unter anderem \texttt{xUnit}, \texttt{WebApplicationFactory} und \texttt{Moq}. Im Frontend war für explizite UI- und End-to-End-Tests Playwright vorgesehen. Im weiteren Projektverlauf hat sich für Unit- und Integrationstests im Frontend das Framework Vitest ergeben.
 
-\textbf{Zu konkretisieren:}
+\subsection{Priorisierung der zu testenden Komponenten}
+Für Backend und Frontend wurden die zu testenden Komponenten jeweils in zwei Prioritätsstufen eingeteilt. \autoref{tab:testkonzept-prioritaeten} fasst die wichtigsten Komponenten je Priorität zusammen.
+
+\begin{table}[H]
+    \centering
+    \caption{Priorisierung der zu testenden Komponenten laut Testkonzept}
+    \label{tab:testkonzept-prioritaeten}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\textwidth}{@{}llX@{}}
+        \toprule
+        \textbf{Bereich} & \textbf{Priorität} & \textbf{Komponenten} \\
+        \midrule
+        Backend & 1 & \texttt{GatewayService}, \texttt{ExperimentService}, \texttt{FileService} \\
+        \addlinespace
+        Backend & 2 & \texttt{ReportService}, \texttt{SearchService} \\
+        \addlinespace
+        Frontend & 1 & \texttt{features/}, \texttt{services/}, \texttt{auth/ (inkl. Guards)} \\
+        \addlinespace
+        Frontend & 2 & \texttt{components/common/}, \texttt{layout/} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Die Priorisierung wurde gemeinsam mit dem Hauptentwickler festgelegt, anhand der fachlichen Kritikalität sowie der bereits ermittelten Testabdeckung der jeweiligen Services. \texttt{GatewayService}, \texttt{ExperimentService} und \texttt{FileService} wurden dabei als kritischste Prozesse mit den größten Datenmengen zuerst priorisiert. Im Frontend steuern die Priorität-1-Komponenten Datenfluss und Zugriffsschutz, während die Priorität-2-Komponenten vor allem Bedienbarkeit und Wiederverwendbarkeit betreffen.
+
+\subsection{End-to-End- und UI-Testfälle}
+Ergänzend sieht das Konzept eine Reihe konkreter End-to-End-Szenarien sowie UI-Testfälle vor, die zentrale Nutzerabläufe über mehrere Services beziehungsweise Frontend-Bereiche hinweg abbilden. Die wichtigsten Kategorien sind:
 \begin{itemize}
-	\item lokale Ausführung aller relevanten Testarten
-	\item einheitliche Projektstruktur und Namenskonventionen
-	\item Übergabepunkte für die Integration in CI
+    \item Login und rollenbasierter Zugriff, einschließlich Weiterleitung nicht berechtigter Anwender
+    \item Anlegen von Experimenten samt zugehöriger Tasks und Setups, inklusive Validierung von Pflichtfeldern
+    \item Datei-Upload, -Suche und -Download über den \texttt{FileService}
+    \item Report-Erstellung und Anzeige der Report-Vorschau
+    \item Parametersuche inklusive Speichern und Wiederherstellen von Suchfiltern
 \end{itemize}
 
-\subsection{Konzept für die zentrale Testumgebung (Agent/VM)}
-Dieser Abschnitt beschreibt das Zielbild einer zentralisierten Testausführung und definiert Entscheidungskriterien für den Umsetzungsgrad.
+\subsection{Testpyramide und Zielwerte}
+Methodisch wurde eine Testpyramide als Zielbild angesetzt. Eine solche Verteilung sieht einen Großteil eng begrenzter, schneller Unit-Tests vor, ergänzt um einen kleineren Anteil an Integrationstests sowie einen noch kleineren Anteil an End-to-End-Tests, wobei die genaue Aufteilung vom jeweiligen Projektkontext, der Systemarchitektur und dem Risikoprofil abhängt \autocite{QFTest2024}. \autoref{fig:testpyramide} zeigt die im Testkonzept angestrebte, entsprechend pyramidenförmige Verteilung der Testebenen.
 
-Im ersten Konzept war die zentrale Ausführung über Azure DevOps mit Agents vorgesehen. Geplant war, Testläufe früh im Pull-Request-Prozess auszuführen und die Ergebnisse als Qualitätsindikator für Merge-Entscheidungen zu nutzen.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+    % Spitze: E2E/UI-Tests
+    \fill[teal!30] (0,4) -- (-2.6,2) -- (2.6,2) -- cycle;
+    \node at (0,3.1) {\small End-to-End-/UI-Tests};
 
-\subsubsection{Bewertungsoption: 1:1 gesamte Infrastruktur duplizieren}
-Vorteil: hohe Realitätsnähe. Nachteil: höherer Betriebs- und Pflegeaufwand.
+    % Mitte: Integrationstests
+    \fill[purple!25] (-2.6,2) -- (2.6,2) -- (4.2,0) -- (-4.2,0) -- cycle;
+    \node at (0,1.1) {\small Integrationstests};
 
-\subsubsection{Bewertungsoption: alles außer Datenbank und Schnittstellen duplizieren}
-Vorteil: geringere Komplexität. Nachteil: reduzierte Aussagekraft für bestimmte Integrationsszenarien.
+    % Basis: Unit-Tests
+    \fill[orange!30] (-4.2,0) -- (4.2,0) -- (5.4,-2) -- (-5.4,-2) -- cycle;
+    \node at (0,-0.9) {\small Unit-Tests};
 
-\subsubsection{Kritische Reflexion der zentralen Umsetzungsvariante}
-Hier wird transparent bewertet, welche Variante unter den Projektbedingungen wirtschaftlich und technisch tragfähig ist.
+    % Pfeil: zunehmende Ausführungsdauer
+    \draw[-{Latex[length=2mm]}] (6,-2) -- (6,2);
+    \node[rotate=90] at (6.6,0) {\footnotesize Zunehmende Ausführungsdauer};
+\end{tikzpicture}
+\caption{Testpyramide, eigene Darstellung nach \textcite{QFTest2024}}
+\label{fig:testpyramide}
+\end{figure}
+
+Als übergeordnete Ziele des Konzepts sind zudem genannt:
+\begin{itemize}
+    \item kurze Testausführungszeiten für Unit- und Integrationstests, um regelmäßige lokale Ausführung ohne spürbare Unterbrechung des Arbeitsflusses zu ermöglichen
+    \item eine mit zunehmender Testabdeckung sinkende Fehlerdichte
+    \item eine spürbar erhöhte Testabdeckung in den priorisierten Kernbereichen
+    \item eine saubere Architektur, um mögliche Erweiterungen effizient integrieren zu können
+\end{itemize}
+
+
+\section{Konzept für die zentrale Testumgebung (Agent/VM)}
+Nachdem im vorherigen Abschnitt das Konzept für die lokale Testumgebung beschrieben wurde, widmet sich dieser Abschnitt der zweiten Stufe der Konzeption, dem Aufbau einer zentralen, automatisierten Testumgebung.
+
+\subsection{Bewertung möglicher Umsetzungsvarianten und gewählte Lösung}
+Für die zentrale Testausführung wurden zwei Varianten hinsichtlich des Umfangs der duplizierten Infrastruktur betrachtet. \autoref{tab:zentrale-varianten} stellt sie mit ihren jeweiligen Vor- und Nachteilen gegenüber.
+
+\begin{table}[H]
+    \centering
+    \caption{Bewertung möglicher Varianten für die zentrale Testausführung}
+    \label{tab:zentrale-varianten}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\textwidth}{@{}p{0.25\textwidth}XX@{}}
+        \toprule
+        \textbf{Variante} & \textbf{Vorteil} & \textbf{Nachteil} \\
+        \midrule
+        Gesamte Infrastruktur duplizieren & Hohe Realitätsnähe & Hoher Betriebs- und Pflegeaufwand \\
+        \addlinespace
+        Ohne Datenbank und externe Schnittstellen abbilden & Geringere Komplexität & Geringere Aussagekraft für Integrationsszenarien \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+Unabhängig vom Umfang der Infrastruktur stellt sich zusätzlich die Frage nach dem Betriebsmodell: Soll die Umgebung dauerhaft laufen oder erst bei Bedarf gestartet werden? Ein dauerhaft laufender Server, etwa ein dedizierter PC, wäre jederzeit ohne Kaltstart verfügbar und eignet sich besonders für viele parallele oder regelmäßige Testläufe gegen dieselbe URL, verursacht dafür aber laufende Betriebskosten sowie höheren Wartungs- und Sicherheitsaufwand. Diese Entscheidung ist unabhängig vom Infrastrukturumfang zu treffen, ein dauerhafter Server könnte ebenso die gesamte wie auch nur eine reduzierte Infrastruktur bereitstellen.
+
+Für die gewählte Lösung wird beim Umfang der Infrastruktur ein Mittelweg verfolgt: Backend-Services und Frontend werden vollständig bereitgestellt, während Datenbank und externe Schnittstellen durch lokale Emulatoren beziehungsweise Fakes ersetzt werden. Beim Betriebsmodell wird ein hybrider Ansatz gewählt, der Host selbst läuft dauerhaft, die eigentliche Infrastruktur wird jedoch je Testlauf neu gestartet und danach wieder beendet. Damit steht die Ausführungsumgebung jederzeit bereit, ohne dass Infrastrukturkomponenten dauerhaft aktiv gehalten werden müssen. Dieser Kompromiss wurde nach Gesprächen mit dem Hauptentwickler gewählt, entscheidend war dabei ein angemessenes Verhältnis zwischen Realitätsnähe, Aussagekraft und Betriebsaufwand.
+
+Als konkrete Umsetzung wird eine Test-VM mit einem Azure-DevOps-Self-Hosted-Agent gewählt. Sie ermöglicht reproduzierbare Testläufe und kann die benötigten Infrastrukturkomponenten bedarfsgerecht bereitstellen. Die Ausführung der Tests und die Veröffentlichung der Ergebnisse bleiben in Azure DevOps nachvollziehbar.
+
+\subsection{Zielbild der Test-VM}
+Die Test-VM stellt den Azure-DevOps-Self-Hosted-Agent dauerhaft bereit, der bei jedem Testlauf die erforderlichen Schritte startet. Sowohl die Infrastruktur als auch Backend und Frontend laufen dagegen nicht dauerhaft, sondern werden je Testlauf gestartet und nach dessen Abschluss wieder beendet. Die Infrastruktur wird über Docker Compose bereitgestellt und umfasst PostgreSQL, Azurite sowie einen Fake-Auth-Service. Der Fake-Auth-Service ersetzt für die rollenbasierten Tests den externen Dienst SalesPoint und läuft dabei ausschließlich auf der Test-VM. 
+
+Backend und Frontend werden ebenfalls auf der VM gestartet. Dabei werden alle benötigten Backend-Services sowie die Angular-Anwendung des Frontends hochgefahren. \autoref{tab:vm-testumgebung-ebenen} ordnet diese Komponenten den drei Betriebsebenen der VM zu.
+
+\begin{table}[H]
+\centering
+\caption{Zuordnung der Komponenten zu den Betriebsebenen der Test-VM}
+\label{tab:vm-testumgebung-ebenen}
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+\textbf{Ebene} & \textbf{Komponenten} \\
+\midrule
+Docker Compose & PostgreSQL, Azurite und Fake-Auth-Service \\
+\addlinespace
+VM-Prozesse & Backend-Services und Angular-Frontend \\
+\addlinespace
+Test-Runner & \texttt{dotnet test} (xUnit), Vitest und Playwright \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Pipeline-Ablauf}
+Der geplante Pipeline-Ablauf gliedert sich in folgende Schritte:
+
+\begin{enumerate}
+\item Auslösen des Laufs durch Push, Zeitplan oder manuellen Start
+\item Prüfung der relevanten Änderungen anhand eines Pfadfilters
+\item Start der Infrastruktur über eine Docker-Compose-Konfiguration
+\item Start der Backend-Services und des Frontends
+\item Prüfung, ob alle gestarteten Services betriebsbereit sind, bevor die Tests beginnen
+\item Vorbereitung der Datenbank, indem sie auf den aktuellen Stand gebracht und mit den für die Tests benötigten Ausgangsdaten befüllt wird
+\item Ausführung der ausgewählten Tests, entweder vollständig oder selektiv nur für die von einer Änderung betroffenen Bereiche
+\item Veröffentlichung von Reports und Artefakten
+\item Bereinigung der Testumgebung nach dem Testlauf
+\end{enumerate}
+
+Ein vollständiger Lauf führt dabei alle Unit-, Integrations- und End-to-End-Tests aus und eignet sich für nächtliche Läufe, Releases sowie Änderungen mit unklarem Einfluss. Ein selektiver Lauf beschränkt sich dagegen auf die von einer Änderung betroffenen Tests, ermittelt über einen Vergleich der geänderten Dateien mit einer festen Zuordnung zu den zugehörigen Testprojekten oder Playwright-Spezifikationen. 
+
+Auf Grundlage dieses Konzepts für die lokale und die zentrale Testumgebung werden im folgenden Kapitel die priorisierten Tests praktisch umgesetzt.
