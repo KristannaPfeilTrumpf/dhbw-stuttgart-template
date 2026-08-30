@@ -6,6 +6,129 @@
 	\item \ref{apx:2} Anhang 2 \dotfill{} \pageref{apx:2}
 \end{itemize}
 
+\chapter{Code-Beispiele zu den erstellten Tests}
+\label{app:code-beispiele}
+
+\section{Unit-Test für den ExperimentService mit gemocktem Repository}
+\label{app:experimentservice-unit-test}
+\begin{lstlisting}[language=C]
+[Fact]
+public async Task CreateOrUpdate_GivenNewExperiment_InsertsExperiment()
+{
+	// Arrange
+	var model = CreateExperimentModel(id: Guid.Empty);
+	var experimentRepository = new Mock<IExperimentRepository>();
+	experimentRepository
+		.Setup(r => r.Insert(It.IsAny<ExperimentEntity>()))
+		.ReturnsAsync((ExperimentEntity e) => e);
+	var service = new ExperimentService(experimentRepository.Object);
+
+	// Act
+	var result = await service.CreateOrUpdate(model);
+
+	// Assert
+	result.Title.Should().Be(model.Title);
+	experimentRepository.Verify(r => r.Insert(It.IsAny<ExperimentEntity>()), Times.Once);
+	experimentRepository.Verify(r => r.Update(It.IsAny<ExperimentEntity>()), Times.Never);
+}
+\end{lstlisting}
+
+\section{Unit-Test für den ApplicationLoggingService ohne externe Abhängigkeiten}
+\label{app:applicationloggingservice-unit-test}
+\begin{lstlisting}[language=C]
+[Theory]
+[InlineData("Test title", "Test error", "Test stacktrace", 500)]
+[InlineData("Only title", null, null, null)]
+public void Add_GivenEmptyLog_WithApplicationLogData_StoresSingleEntry(
+	string title, string? error, string? stackTrace, int? statusCode)
+{
+	// Arrange
+	var service = new ApplicationLogService();
+
+	// Act
+	service.Add(title, error, stackTrace, statusCode);
+
+	// Assert
+	var logs = service.GetAll();
+	logs.Count.Should().Be(1);
+	logs[0].Title.Should().Be(title);
+	logs[0].StatusCode.Should().Be(statusCode);
+}
+\end{lstlisting}
+
+\section{Integrationstest für den GatewayService mit In-Memory-Server}
+\label{app:gateway-integration-test}
+\begin{lstlisting}[language=C]
+[Fact]
+public async Task SearchPage_WhenUserMaySearch_EnrichesRequestWithUserContext()
+{
+	// Arrange
+	var currentUser = new UserModel
+	{
+		Id = Guid.NewGuid(),
+		Email = "engineer@trumpf.com",
+		Roles = [UserRole.AppEngineer]
+	};
+
+	SearchPageRequest? forwardedRequest = null;
+	var searchGatewayServiceMock = new Mock<ISearchGatewayService>();
+	searchGatewayServiceMock
+		.Setup(s => s.SearchPage(It.IsAny<SearchPageRequest>()))
+		.Callback<SearchPageRequest>(r => forwardedRequest = r)
+		.ReturnsAsync(new SearchPageResponse { Rows = [], HasMore = false });
+
+	await using var factory = CreateFactory(
+		currentUser, searchGatewayServiceMock.Object,
+		GatewayTestData.CreateUserPermissions(canSearchExperiments: true));
+	var client = factory.CreateClient();
+
+	// Act
+	var response = await client.PostAsJsonAsync(
+		GatewayTestData.Routes.SearchPage,
+		new SearchPageRequest { PageSize = 25 });
+
+	// Assert
+	response.StatusCode.Should().Be(HttpStatusCode.OK);
+	forwardedRequest!.UserId.Should().Be(currentUser.Id);
+	forwardedRequest.UserEmail.Should().Be(currentUser.Email);
+	forwardedRequest.UserRoles.Should().BeEquivalentTo(currentUser.Roles);
+}
+\end{lstlisting}
+
+\section{Integrationstest für den FileService mit Testcontainers.Azurite}
+\label{app:fileservice-integration-test}
+\begin{lstlisting}[language=C]
+public class FileUploadDownloadTests : IClassFixture<AzuriteWebApplicationFactory>
+{
+	private readonly HttpClient _client;
+
+	public FileUploadDownloadTests(AzuriteWebApplicationFactory factory)
+	{
+		_client = factory.CreateClient();
+	}
+
+	[Fact]
+	public async Task UploadAndGetById_GivenUploadedFile_ReturnsSameContent()
+	{
+		// Arrange
+		var content = new ByteArrayContent(Encoding.UTF8.GetBytes("Testinhalt"));
+		content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+		using var form = new MultipartFormDataContent { { content, "file", "test.txt" } };
+
+		// Act
+		var uploadResponse = await _client.PostAsync("/files", form);
+		var uploaded = await uploadResponse.Content.ReadFromJsonAsync<FileUploadResult>();
+		var downloadResponse = await _client.GetAsync($"/files/{uploaded!.Id}");
+
+		// Assert
+		uploadResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+		downloadResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+		var downloadedContent = await downloadResponse.Content.ReadAsStringAsync();
+		downloadedContent.Should().Be("Testinhalt");
+	}
+}
+\end{lstlisting}
+
 \chapter{Anhang 1}
 \label{apx:1}
 

@@ -126,7 +126,45 @@ public async Task SearchPage_WhenUserMaySearch_EnrichesRequestWithUserContext()
 \end{lstlisting}
 
 \subsubsection{FileService}
-\todo{Begründung: Für den \texttt{FileService} liegen bislang keine konkreten Informationen zu den umgesetzten Integrationstests vor, weder zu den getesteten Szenarien noch zur genauen Nutzung von Azurite und Containern. Ursprünglich wurde angegeben, dass bei den Backend-Integrationstests \enquote{Azurite und Container} zum Einsatz kamen, dies trifft laut den nun vorliegenden Informationen jedoch nachweislich nicht auf den \texttt{GatewayService} zu. Es ist daher zu klären, ob sich diese Aussage stattdessen auf den \texttt{FileService} bezieht. Lösungsvorschlag: Für den \texttt{FileService} analog zum \texttt{GatewayService} zusammenstellen, welche Szenarien getestet wurden, ob und wie genau Azurite (lokal oder über Testcontainers) sowie gegebenenfalls weitere Container eingesetzt wurden, und mindestens ein repräsentatives Code-Beispiel ergänzen.}
+Für den \texttt{FileService} wurden Integrationstests für die zentralen Datei-Workflows umgesetzt. Getestet werden das grundlegende Hoch- und Herunterladen einer Datei im Round-Trip, das Löschen bereits hochgeladener Dateien, das Hochladen von Report-Artefakten zu einem Experiment einschließlich der Kompensationslogik bei teilweise fehlgeschlagenen Uploads sowie der gebündelte Download mehrerer Dateien anhand ihrer IDs.
+
+Im Unterschied zum \texttt{GatewayService} kommt für den \texttt{FileService} eine echte Azure-Blob-Storage-Umgebung zum Einsatz. Über Testcontainers.Azurite wird für die Dauer der Testausführung automatisiert ein isolierter Azurite-Container gestartet, gegen den der produktive \texttt{FileStorageService} unverändert läuft. In Kombination mit der \texttt{WebApplicationFactory} aus ASP.NET Core wird dabei die vollständige Anwendung inklusive HTTP-Schicht gestartet, sodass der Produktivcode ohne Mocks oder Fakes gegen eine reale Speicherumgebung getestet wird.
+
+\autoref{lst:fileservice-integration-test} zeigt exemplarisch den grundlegenden Round-Trip-Test, der prüft, ob eine zuvor hochgeladene Datei anschließend korrekt über ihre ID wieder abgerufen werden kann.
+
+\begin{lstlisting}[language=C, caption={Integrationstest für den \texttt{FileService} mit Testcontainers.Azurite}, label=lst:fileservice-integration-test]
+public class FileUploadDownloadTests : IClassFixture<AzuriteWebApplicationFactory>
+{
+    private readonly HttpClient _client;
+
+    public FileUploadDownloadTests(AzuriteWebApplicationFactory factory)
+    {
+        _client = factory.CreateClient();
+    }
+
+    [Fact]
+    public async Task UploadAndGetById_GivenUploadedFile_ReturnsSameContent()
+    {
+        // Arrange
+        var content = new ByteArrayContent(Encoding.UTF8.GetBytes("Testinhalt"));
+        content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+        using var form = new MultipartFormDataContent { { content, "file", "test.txt" } };
+
+        // Act
+        var uploadResponse = await _client.PostAsync("/files", form);
+        var uploaded = await uploadResponse.Content.ReadFromJsonAsync<FileUploadResult>();
+        var downloadResponse = await _client.GetAsync($"/files/{uploaded!.Id}");
+
+        // Assert
+        uploadResponse.StatusCode.Should().Be(HttpStatusCode.Created);
+        downloadResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var downloadedContent = await downloadResponse.Content.ReadAsStringAsync();
+        downloadedContent.Should().Be("Testinhalt");
+    }
+}
+\end{lstlisting}
+
+Die \texttt{AzuriteWebApplicationFactory} startet dabei vor der Testausführung automatisiert einen Azurite-Container über Testcontainers und konfiguriert die Anwendung so, dass sie gegen diese isolierte Instanz statt gegen die produktive Azure-Umgebung läuft. Nach Abschluss der Tests wird der Container automatisch wieder entfernt, sodass jeder Testlauf mit einem sauberen, reproduzierbaren Ausgangszustand startet.
 
 \section{Frontend}
 
@@ -138,37 +176,39 @@ Innerhalb der Domänen-Schicht wurden Tests für zentrale Abläufe in drei Berei
 Ergänzend wurden applikationsweite Services getestet, die von mehreren Domänen gemeinsam genutzt werden: die Verwaltung von Medien wie Bildern, die Navigation innerhalb des Experiment-Wizards sowie die zentrale Protokollierung von Meldungen in der Konsole. Auch der für die Zugriffssteuerung zuständige Baustein, der Anmeldedaten automatisch an Anfragen an das Backend anhängt, sowie ein wiederverwendbares Bedienelement zur Bildvermessung wurden mit Tests versehen.
 
 \subsection{End-to-End-Tests mit Playwright}
-\todo{Begründung: Es fehlen noch konkrete Angaben dazu, welche zusätzlichen UI-nahen End-to-End-Testfälle mit Playwright im Rahmen dieser Arbeit erstellt wurden, über die bereits im Abschnitt zur bestehenden Testinfrastruktur beschriebenen sechs vorhandenen Testdateien hinaus. Lösungsvorschlag: Neu erstellte Playwright-Testfälle benennen, kurz beschreiben, welche User Journey sie abdecken, und angeben, ob und in welchem Umfang dabei weiterhin Backend-Aufrufe gemockt werden.}
+Ergänzend zu den bereits in \autoref{sec:bestehende-testinfrastruktur} beschriebenen sechs vorhandenen Playwright-Testdateien wurde im Rahmen dieser Arbeit die Testsuite \texttt{Create experiment (UI only)} mit zwei weiteren End-to-End-Tests erstellt. Wie bei den bestehenden Tests werden dabei alle Backend-API-Aufrufe über \texttt{page.route('/api/**')} abgefangen, sodass es sich um UI-nahe Tests handelt, nicht um vollständige End-to-End-Tests über das Gesamtsystem. Zusätzlich wird vor jedem Test ein simulierter JSON Web Token im lokalen Speicher des Browsers hinterlegt, sodass die Anwendung einen angemeldeten Anwender erkennt, ohne dass eine echte Anmeldung bei Microsoft Entra ID erforderlich ist.
+
+Der erste Test bildet den vollständigen, vierstufigen Experiment-Wizard rein auf Ebene der Benutzeroberfläche nach. Im ersten Schritt werden allgemeine Angaben zum Experiment wie Projektname, Firmenname und Beschreibung ausgefüllt, anschließend wird geprüft, dass die daraufhin gesendete Anfrage korrekt aufgebaut ist und die Anwendung zur neu angelegten Experiment-ID weiterleitet. Im zweiten Schritt werden der Name des Versuchsrahmens, die Art der Verbindung und Schweißung über Auswahlfelder sowie die verwendeten Materialien erfasst, auch hier wird die anschließende Weiterleitung anhand der erzeugten ID geprüft. Im dritten Schritt werden Maschine, Laser und Optik sowie zugehörige Prozessparameter wie Leistung, Kollimation, Brennweite und Faserdurchmesser konfiguriert, ebenfalls mit anschließender Prüfung der Weiterleitung. Der vierte Schritt zur Parametererfassung schließt den Ablauf fort.
+
+Der zweite Test prüft das Verhalten bei unvollständigen Pflichtangaben: Bleiben erforderliche Felder leer, darf keine Anfrage zum Anlegen eines Experiments gesendet werden, stattdessen muss die Anwendung entsprechende Validierungshinweise anzeigen.
 
 
 
 \section{Ergebnisse}
-Für das Frontend zeigt der Vergleich der Unit-Test-Coverage zwischen dem in \autoref{chap:ist-analyse-anforderungen} dokumentierten Ausgangswert und dem aktuellen Messstand eine durchgängig positive Entwicklung. Die Statement-Coverage stieg von 57\,\% auf 60{,}72\,\% (+3{,}72 Prozentpunkte), die Branch-Coverage von 53\,\% auf 57{,}09\,\% (+4{,}09 Prozentpunkte), die Function-Coverage von 47\,\% auf 50{,}88\,\% (+3{,}88 Prozentpunkte) und die Line-Coverage von 60\,\% auf 63{,}32\,\% (+3{,}32 Prozentpunkte). Damit ist eine messbare Verbesserung erreicht, gleichzeitig bleibt weiterer Ausbau erforderlich, um die weiterhin bestehenden Abdeckungslücken systematisch zu reduzieren.
-
-Auch im Backend zeigt sich für die im Rahmen dieser Arbeit bearbeiteten Services eine deutliche Verbesserung gegenüber dem in \autoref{tab:backend-coverage} dokumentierten Ausgangszustand. \autoref{tab:backend-coverage-ergebnis} stellt die Ausgangswerte den nach Abschluss der Umsetzung gemessenen Werten gegenüber.
+Sowohl im Frontend als auch im Backend zeigt sich für die im Rahmen dieser Arbeit bearbeiteten Bereiche eine messbare Verbesserung der Testabdeckung gegenüber dem in \autoref{chap:ist-analyse-anforderungen} dokumentierten Ausgangszustand. \autoref{tab:coverage-ergebnis} stellt die jeweiligen Ausgangswerte den nach Abschluss der Umsetzung gemessenen Werten gegenüber.
 
 \begin{table}[H]
     \centering
-    \caption{Vergleich der Backend-Coverage vor und nach der Umsetzung}
-    \label{tab:backend-coverage-ergebnis}
+    \caption{Vergleich der Testabdeckung vor und nach der Umsetzung}
+    \label{tab:coverage-ergebnis}
     \renewcommand{\arraystretch}{1.3}
-    \begin{tabularx}{\textwidth}{@{}Xrr@{}}
+    \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrr@{}}
         \toprule
-        \textbf{Service} & \textbf{Vor der Umsetzung} & \textbf{Nach der Umsetzung} \\
+        \textbf{Bereich} & \textbf{Vor der Umsetzung} & \textbf{Nach der Umsetzung} & \textbf{Veränderung} \\
         \midrule
-        \texttt{ExperimentService} & 9,8\,\% & 77,2\,\% \\
+        \multicolumn{4}{@{}l}{\textit{Frontend (Statement/Branch/Function/Line)}} \\
+        Statement-Coverage & 57,0\,\% & 60,72\,\% & +3,72 \\
+        Branch-Coverage & 53,0\,\% & 57,09\,\% & +4,09 \\
+        Function-Coverage & 47,0\,\% & 50,88\,\% & +3,88 \\
+        Line-Coverage & 60,0\,\% & 63,32\,\% & +3,32 \\
         \addlinespace
-        \texttt{FileService} & 18,6\,\% & 51,5\,\% \\
-        \addlinespace
-        \texttt{GatewayService} & Kein eigenes Testprojekt & 79,7\,\% \\
-        \addlinespace
-        \texttt{ApplicationLoggingService} & Kein eigenes Testprojekt & 60,6\,\% \\
+        \multicolumn{4}{@{}l}{\textit{Backend (je Service)}} \\
+        \texttt{ExperimentService} & 9,8\,\% & 77,2\,\% & +67,4 \\
+        \texttt{FileService} & 18,6\,\% & 51,5\,\% & +32,9 \\
+        \texttt{GatewayService} & Kein Testprojekt & 79,7\,\% & neu \\
+        \texttt{ApplicationLoggingService} & Kein Testprojekt & 60,6\,\% & neu \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Für den \texttt{ExperimentService} und den \texttt{GatewayService} konnte damit eine besonders deutliche Steigerung erzielt werden, beide Services liegen nun über 75\,\%. \texttt{FileService} und \texttt{ApplicationLoggingService} wurden ebenfalls spürbar verbessert, liegen jedoch mit rund 51\,\% beziehungsweise 61\,\% noch unterhalb dieses Niveaus. Für \texttt{GatewayService} und \texttt{ApplicationLoggingService} existierte vor der Umsetzung noch kein eigenes Testprojekt, sodass die gesamte dort ausgewiesene Coverage im Rahmen dieser Arbeit neu aufgebaut wurde.
-
-
-\section{Abgleich mit dem Erstkonzept und Herausforderungen}
-Das erste Testkonzept diente als Leitlinie, wurde jedoch während der Implementierung an reale Randbedingungen angepasst. Bei der zentralen Umgebung wurde die operative Pipeline-Weiterentwicklung mit dem Hauptentwickler abgestimmt, die studentische Umsetzung konzentrierte sich auf lokale Teststruktur und testbare Artefakte. Der End-to-End-Fokus wurde auf Playwright konsolidiert, um einen einheitlichen und wartbaren UI-Testpfad zu sichern, auf zusätzliche backend-nahe End-to-End-Szenarien sowie auf Cross-Browser-Tests wurde aufgrund des begrenzten Zeitrahmens zugunsten der priorisierten Unit- und Integrationstests verzichtet. 
+Im Frontend verbesserten sich alle vier Kennzahlen um jeweils rund drei bis vier Prozentpunkte, im Backend fiel die Steigerung bei den bearbeiteten Services deutlich stärker aus. \texttt{ExperimentService} und \texttt{GatewayService} liegen nun über 75\,\%, für \texttt{GatewayService} und \texttt{ApplicationLoggingService} wurde die Coverage vollständig neu aufgebaut, da vor der Umsetzung noch kein eigenes Testprojekt existierte. \texttt{FileService} und \texttt{ApplicationLoggingService} wurden ebenfalls spürbar verbessert, liegen mit rund 51\,\% beziehungsweise 61\,\% jedoch noch unterhalb der übrigen bearbeiteten Bereiche. Trotz dieser Fortschritte bleibt weiterer Ausbau erforderlich, um die verbleibenden Abdeckungslücken systematisch zu reduzieren.
