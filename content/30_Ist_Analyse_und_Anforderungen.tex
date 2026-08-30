@@ -5,26 +5,23 @@
 Zunächst wird das methodische Vorgehen beschrieben, anschließend die Systemarchitektur und der Ausgangszustand der vorhandenen Testinfrastruktur. Darauf aufbauend werden die funktionalen und nicht-funktionalen Anforderungen hergeleitet.
 
 \section{Vorgehensweise}
-Die Durchführung des Projekts erfolgte in mehreren aufeinander aufbauenden Schritten. Zunächst wurde die Entwicklungsumgebung eingerichtet und eine erste Orientierung in der Gesamtarchitektur von \ac{ATLAS} sowie dessen Quellcode vorgenommen, ergänzt um eine fachliche Einarbeitung in die verwendeten Technologien Visual Studio, .NET Core und Angular.
+Die Durchführung des Projekts erfolgte in mehreren aufeinander aufbauenden Schritten. Zunächst wurden die Entwicklungsumgebung eingerichtet, eine erste Orientierung in der Gesamtarchitektur von \ac{ATLAS} sowie dessen Quellcode vorgenommen und eine fachliche Einarbeitung in die verwendeten Technologien Visual Studio, .NET Core und Angular durchgeführt. Darauf aufbauend wurde der Quellcode genauer analysiert, insbesondere welche Bestandteile des Frontends und Backends miteinander kommunizieren und wie Anfragen, Daten sowie Zuständigkeiten innerhalb des Systems verteilt sind.
 
-Darauf aufbauend wurde der Quellcode genauer analysiert, um die Systemarchitektur und die Beziehungen zwischen den einzelnen Komponenten zu verstehen, insbesondere welche Bestandteile des Frontends und Backends miteinander kommunizieren und wie Anfragen, Daten sowie Zuständigkeiten innerhalb des Systems verteilt sind.
+Im nächsten Schritt erfolgte die Analyse der bestehenden Testabdeckung im Frontend und Backend. Ergänzend wurde mit der Projektleitung und dem Hauptentwickler abgestimmt, welche genauen Ziele mit dem Projekt verfolgt werden. Auf dieser Grundlage konnten die vorhandenen Abdeckungslücken eingeordnet und die Anforderungen an die Testinfrastruktur abgeleitet werden.
 
-Im nächsten Schritt erfolgte die Analyse der bestehenden Testabdeckung im Frontend und Backend. Ergänzend wurde mit der Projektleitung und dem Hauptentwickler abgestimmt, welche genauen Ziele mit dem Projekt verfolgt werden. Auf dieser Grundlage konnten die vorhandenen Abdeckungslücken und der daraus resultierende Handlungsbedarf eingeordnet werden.
+Auf Basis dieser Anforderungen wurde anschließend ein erstes Testkonzept erstellt, dessen Priorisierung anhand der fachlichen Kritikalität, der bestehenden Coverage-Werte sowie der Abstimmung mit dem Hauptentwickler erfolgte. Die praktische Umsetzung begann mit der Entwicklung und Erweiterung von Backend-Unit-Tests der Priorität nach. Im weiteren Verlauf wurde das Testkonzept anhand der dabei gewonnenen Erkenntnisse überarbeitet und weiter konkretisiert. Parallel dazu wurde ein Konzept für eine mögliche zentrale Testumgebung erstellt.
 
-Anschließend wurde ein erstes Testkonzept erstellt, dessen Priorisierung anhand der fachlichen Kritikalität, der bestehenden Coverage-Werte sowie der Abstimmung mit dem Hauptentwickler erfolgte. Die praktische Umsetzung begann mit der Entwicklung und Erweiterung von Backend-Unit-Tests der Priorität nach. Im weiteren Verlauf wurde das Testkonzept anhand der dabei gewonnenen Erkenntnisse überarbeitet und weiter konkretisiert. Parallel dazu wurde ein Konzept für eine mögliche zentrale Testumgebung erstellt.
-
-Die Vorgehensweise endet mit der Analyse des Ausgangszustands und der Ableitung der Anforderungen an die Testinfrastruktur. Die daraus gewonnenen Erkenntnisse bilden die Grundlage für die in \autoref{chap:konzeption} beschriebenen Testkonzepte. Die Entwicklung und Ausführung der Tests wird anschließend in \autoref{chap:umsetzung} behandelt.
+Die im Folgenden dargestellte Systemarchitektur sowie die Analyse der bestehenden Testinfrastruktur und der daraus abgeleiteten Anforderungen bilden somit die Grundlage für die in \autoref{chap:konzeption} beschriebenen Testkonzepte. Die Entwicklung und Ausführung der Tests wird anschließend in \autoref{chap:umsetzung} behandelt.
 
 
 \section{Systemarchitektur von ATLAS}
-Die Architektur von \ac{ATLAS} umfasst ein Angular-Frontend, das zunächst in Version 19 entwickelt und im Projektverlauf auf die Versionen 20 und 21 aktualisiert wurde, mehrere ASP.NET-Core-Backend-Services, ein \ac{API}-Gateway, eine PostgreSQL-Datenbank sowie Azure Blob Storage als Objektspeicher. Microsoft Entra ID dient zur Benutzerverwaltung und Authentifizierung. \todo{Begründung: Die Technologien werden hier auf \autoref{sec:stand-der-technik} und im nächsten Absatz auf \autoref{chap:grundlagen} verwiesen. Für den Leser bleibt unklar, ob es sich um dieselbe Stelle in der Arbeit handelt oder um zwei unterschiedliche Kapitel mit jeweils eigenem Inhalt. Lösungsvorschlag: Prüfen, ob beide Verweise auf denselben Abschnitt zeigen sollen. Falls ja, einheitlich nur ein Label verwenden. Falls es sich tatsächlich um zwei unterschiedliche Kapitel handelt, kurz benennen, worin sich deren Inhalte unterscheiden.} Die eingesetzten Technologien und ihre grundlegenden Konzepte sind in \autoref{sec:stand-der-technik} erläutert.
+Die Architektur von \ac{ATLAS} umfasst ein Angular-Frontend, mehrere ASP.NET-Core-Backend-Services, eine PostgreSQL-Datenbank sowie Azure Blob Storage als Objektspeicher. Das Frontend wurde zunächst mit Angular 19 entwickelt und im Projektverlauf auf die Versionen 20 und 21 aktualisiert. Microsoft Entra ID dient zur Benutzerverwaltung und Authentifizierung. Die eingesetzten Technologien und ihre grundlegenden Konzepte sind in \autoref{sec:stand-der-technik} erläutert.
 
-Die nachfolgenden Unterabschnitte konkretisieren die Architektur getrennt für das Frontend, das Backend einschließlich der Kommunikation und Autorisierung sowie die Datenhaltung. Das gesamte Repository wird in Azure DevOps verwaltet. Die hierfür relevanten technologischen Grundlagen sind bereits in \autoref{chap:grundlagen} beschrieben.
+Die nachfolgenden Unterabschnitte konkretisieren die Architektur für Frontend, Backend und Datenhaltung. Das gesamte Repository wird in Azure DevOps verwaltet.
 
-\todo{Abbildung Gesamtarchitektur}
 
 \subsection{Frontendarchitektur}
-Das Frontend ist als \ac{SPA} auf Basis von Angular 21 und TypeScript 5.9 umgesetzt. Bei diesem Anwendungsmodell wird die Benutzeroberfläche zunächst einmalig geladen. Weitere Ansichten und Inhalte werden anschließend clientseitig aktualisiert oder asynchron nachgeladen, ohne dass für jede Navigation eine vollständige HTML-Seite vom Server angefordert werden muss \cite{MesbahVanDeursen2007}. Die Datenversorgung erfolgt über Services und \ac{API}-Aufrufe an das Backend.
+Das Frontend ist als \ac{SPA} auf Basis von Angular 21 umgesetzt. Bei diesem Anwendungsmodell wird die Benutzeroberfläche zunächst einmalig geladen. Weitere Ansichten und Inhalte werden anschließend clientseitig aktualisiert oder asynchron nachgeladen, ohne dass für jede Navigation eine vollständige \ac{HTML}-Seite vom Server angefordert werden muss \cite{MesbahVanDeursen2007}. Die Datenversorgung erfolgt über Services und \ac{API}-Aufrufe an das Backend.
 
 Der Frontend-Code ist primär nach fachlichen Funktionen gegliedert. Diese Gliederung spiegelt sich unmittelbar in der Verzeichnisstruktur wider. \autoref{tab:frontend-architektur} zeigt die daraus resultierenden Schichten mit ihren jeweiligen Aufgaben.
 
@@ -37,7 +34,7 @@ Der Frontend-Code ist primär nach fachlichen Funktionen gegliedert. Diese Glied
 \toprule
 \textbf{Schicht} & \textbf{Aufgabe} \\
 \midrule
-Domänen (\texttt{features/}) & Die fachliche Ebene der Anwendung ist in eigenständige, thematisch abgeschlossene Domänen gegliedert. Jede Domäne hat einen eigenen Aufgabenbereich und bündelt die zugehörigen Oberflächenelemente und Regeln. Dadurch können Änderungen gezielt vorgenommen werden, ohne andere Domänen zu beeinflussen. \\
+Domänen (\texttt{features/}) & Die fachliche Ebene der Anwendung ist in eigenständige, thematisch abgeschlossene Domänen gegliedert. Jede Domäne hat eine eigene Funktion und bündelt die zugehörigen Oberflächenelemente und Regeln. Dadurch können Änderungen gezielt vorgenommen werden, ohne andere Domänen zu beeinflussen. \\
 \addlinespace
 Seitenlayout (\texttt{layout/}) & Definiert den übergeordneten visuellen Rahmen der Anwendung. Dazu gehören die Anordnung der Navigationsleiste und des Inhaltsbereichs. Diese Schicht ist unabhängig von den fachlichen Inhalten und stellt die Grundstruktur für alle anderen Bereiche bereit. \\
 \addlinespace
@@ -54,13 +51,13 @@ Zugriffssteuerung (\texttt{auth/}) & Regelt, auf welche Bereiche der Anwendung d
 
 Durch die in \autoref{tab:frontend-architektur} dargestellte Trennung der Schichten werden Abhängigkeiten zwischen den Bereichen reduziert und es wird ermöglicht, layoutbezogene, funktionelle und sicherheitsrelevante Aspekte zentral und einheitlich zu pflegen.
 
-Der fachliche Kern des Frontends ist die in \autoref{tab:frontend-architektur} genannte Domänen-Schicht. Jede Domäne ist eine eigenständige, thematisch abgeschlossene Einheit, die eine vollständige Funktion der Anwendung abbildet. Im Folgenden werden die fünf Domänen mit ihren jeweiligen fachlichen Schwerpunkten vorgestellt:
+Der fachliche Kern des Frontends ist die in \autoref{tab:frontend-architektur} genannte Domänen-Schicht. Im Folgenden werden die fünf Domänen mit ihren jeweiligen fachlichen Schwerpunkten vorgestellt:
 
 \begin{itemize}
     \item \texttt{experiment-dashboard}: Rollenabhängige Übersicht, Suche und Verwaltung von Experimenten.
     \item \texttt{experiment-report-preview}: Anzeige einer Bildvorschau und Download des zu einem Experiment erzeugten PowerPoint-Reports.
     \item \texttt{experiment-wizard}: Geführter, mehrstufiger Ablauf zur Erstellung und Bearbeitung eines Experiments.
-    \item \texttt{search-strategie}: Parametersuche für Laser-Schweißversuche mit geführtem Wizard, Filter-Sidebar und paginiertem AG-Grid-Ergebnisraster.
+    \item \texttt{search-strategie}: Parametersuche für Laser-Schweißversuche mit geführtem Wizard, seitlich eingeblendeter Filterleiste und paginierter tabellarischer Ergebnisansicht.
     \item \texttt{tools}: Interne Operations- und Administrationsfunktionen, darunter Aktivitätsübersichten, Werkzeuge für künstliche Intelligenz sowie Debugging- und Log-Ansichten.
 \end{itemize}
 
@@ -80,97 +77,52 @@ Das Backend besteht aus sieben Services, die über \ac{HTTPS} erreichbar sind un
         \toprule
         \textbf{Service} & \textbf{Aufgabe} \\
         \midrule
-        Gateway-Service & Zentraler Eintrittspunkt für Anfragen aus dem Frontend, zuständig für Authentifizierung, Autorisierung und Weiterleitung an die passenden Fachservices. \\
+        \texttt{\seqsplit{GatewayService}} & Zentraler Eintrittspunkt für Anfragen aus dem Frontend, zuständig für Weiterleitung an die passenden Fachservices und Microsoft-Entra-ID. \\
         \addlinespace
-        Experiment-Service & Verwaltet Experimente, unter anderem Anlegen, Bearbeiten und Abrufen, sowie zugehörige Parameterberechnungen. \\
+        \texttt{\seqsplit{ExperimentService}} & Verwaltet Experimente, unter anderem Anlegen, Bearbeiten und Abrufen, sowie zugehörige Parameterberechnungen. \\
         \addlinespace
-        Search-Service & Ermöglicht die Suche und Filterung von Experimenten und Parameterdaten sowie die Verwaltung gespeicherter Suchansichten. \\
+        \texttt{\seqsplit{SearchService}} & Ermöglicht die Suche und Filterung von Experimenten und Parameterdaten sowie die Verwaltung gespeicherter Suchansichten. \\
         \addlinespace
-        File-Service & Speichert, verwaltet und stellt Experimentdateien und Report-Artefakte in Azure Blob Storage bereit. \\
+        \texttt{\seqsplit{FileService}} & Speichert, verwaltet und stellt Experimentdateien und Report-Artefakte in Azure Blob Storage bereit. \\
         \addlinespace
-        Report-Service & Erstellt Berichte und Exporte, beispielsweise als PowerPoint- oder Excel-Datei, aus den vorhandenen Experimentdaten. \\
+        \texttt{\seqsplit{ReportService}} & Erstellt Berichte und Exporte, beispielsweise als PowerPoint-Datei, aus den vorhandenen Experimentdaten. \\
         \addlinespace
-        AI-Service & Führt KI-gestützte Analysen und Auswertungen aus und verwaltet dafür benötigte Skripte und KI-Artefakte in Azure Blob Storage. \\
+        \texttt{\seqsplit{AiService}} & Führt KI-gestützte Analysen und Auswertungen aus und verwaltet dafür benötigte Skripte und KI-Artefakte in Azure Blob Storage. \\
         \addlinespace
-        Application-Logging-Service & Protokolliert Abläufe, Ereignisse und Fehler der übrigen Services, damit der Systembetrieb nachvollziehbar bleibt. \\
+        \texttt{\seqsplit{ApplicationLoggingService}} & Protokolliert Abläufe, Ereignisse und Fehler der übrigen Services, damit der Systembetrieb nachvollziehbar bleibt. \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
 Die genannten Services teilen sich gemeinsame Klassenbibliotheken (\texttt{LAC.Core}, \texttt{LAC.Web}, \texttt{LAC.Database}, \texttt{LAC.Authorization}, \texttt{LAC.Utility}), in denen zentrale und wiederverwendbare Funktionen gebündelt sind, damit nicht jeder Service dieselben Grundlagen selbst implementieren muss.
 
-Der Aufruf der einzelnen Services beginnt beim Anwender, der über das Angular-Frontend auf die Anwendung zugreift. Beim Aufruf des Frontends wird zunächst geprüft, ob eine gültige Anmeldung vorliegt. Ist dies nicht der Fall, erfolgt eine Weiterleitung zur Anmeldung bei Microsoft Entra ID, einem cloudbasierten Dienst zur Verwaltung digitaler Identitäten und zur Steuerung des Zugriffs auf Anwendungen und Ressourcen \cite{MicrosoftEntraWhatIs2026}.
+Der Zugriff erfolgt über das Angular-Frontend, das sich zunächst über Microsoft Entra ID authentifiziert, einen cloudbasierten Dienst zur Verwaltung digitaler Identitäten und zur Steuerung des Zugriffs auf Anwendungen und Ressourcen \cite{MicrosoftEntraWhatIs2026}. Das dabei ausgestellte JSON Web Token (\ac{JWT}) wird bei jeder Anfrage an das \ac{API}-Gateway mitgesendet und enthält unter anderem Informationen zur Identität und zu den Berechtigungen des Anwenders \autocite{JonesBradleySakimura2015}. Nach erfolgreicher Prüfung des Tokens leitet das Gateway die Anfrage an den zuständigen Service weiter, etwa an den \texttt{ExperimentService}, den \texttt{SearchService} für Such- und Filteranfragen oder den \texttt{ReportService} für Report- und Vorschauanfragen. Bei Bedarf greifen der \texttt{FileService} und der \texttt{AiService} zusätzlich auf Azure Blob Storage zu, bevor die Antwort über das Gateway an das Frontend zurückgegeben wird.
 
-Nach erfolgreicher Anmeldung liegt ein JSON Web Token (\ac{JWT}) vor, ein digital signierter Datensatz, mit dem sich das Frontend gegenüber dem Backend authentifiziert und der unter anderem Informationen zur Identität und zu den Berechtigungen des Anwenders enthalten kann \autocite{JonesBradleySakimura2015}. Mit diesem Token ruft das Frontend anschließend über \ac{HTTPS} den Endpunkt \texttt{/api} des \ac{API}-Gateways auf, wobei das \ac{JWT} in der Anfrage mitgesendet wird.
+Die Kommunikation zwischen Frontend und Gateway erfolgt ausschließlich über \ac{REST} auf Basis von \ac{HTTP}(S) mit \ac{JSON} als Datenformat.
 
-Die Rollen und Berechtigungen des Anwenders werden aus den Tokeninformationen abgeleitet. Nach erfolgreicher Prüfung autorisiert das Gateway die Anfrage und leitet sie synchron per REST an den zuständigen Service weiter, etwa an den \texttt{ExperimentService}, den \texttt{SearchService} für Such- und Filteranfragen, den \texttt{ReportService} für Report- und Vorschauanfragen, den \texttt{FileService}, den \texttt{AiService} oder den \texttt{ApplicationLoggingService}. Der jeweilige Service verarbeitet die Anfrage. Bei Bedarf greifen der \texttt{FileService} für Experimentdateien und Report-Artefakte sowie der \texttt{AiService} für Skripte und KI-Artefakte auf Azure Blob Storage zu. Die Antwort wird anschließend über das Gateway an das Frontend zurückgegeben.
-
-Die Kommunikation zwischen Frontend und Gateway erfolgt ausschließlich über REST auf Basis von \ac{HTTP}(S) mit \ac{JSON} als Datenformat.
 
 \subsection{Datenhaltung}
-Strukturierte Fach- und Verwaltungsdaten werden in einer PostgreSQL-Datenbank gespeichert. Dazu zählen insbesondere Experimente, technische Setups, Parameter, Ergebnisse, Benutzerinformationen und Protokolldaten.
+Strukturierte Fach- und Verwaltungsdaten werden in einer PostgreSQL-Datenbank gespeichert. Dazu zählen Experimente, technische Setups, Parameter, Ergebnisse und weitere Daten.
 
-\autoref{tab:postgres-zugriff} zeigt, welche Services nach der Projektstruktur direkt mit der PostgreSQL-Datenbank arbeiten.
 
-\begin{table}[H]
-    \centering
-    \caption{Services mit direktem Zugriff auf die PostgreSQL-Datenbank}
-    \label{tab:postgres-zugriff}
-    \begin{tabularx}{\textwidth}{@{}p{4.2cm}X@{}}
-        \toprule
-        \textbf{Service} & \textbf{Rolle in Bezug auf PostgreSQL} \\
-        \midrule
-        ExperimentService & Liest und schreibt Experimentdaten direkt in die Datenbank. \\
-        \addlinespace
-        ReportService & Liest Daten direkt aus der Datenbank, um Berichte und Exporte zu erzeugen. \\
-        \addlinespace
-        SearchService & Greift direkt auf Daten zu, um Suchfunktionen bereitzustellen. \\
-        \bottomrule
-    \end{tabularx}
-\end{table}
 
-Die übrigen Services, insbesondere \texttt{GatewayService}, \texttt{FileService}, \texttt{AiService} und \texttt{ApplicationLoggingService}, greifen nach der Projektstruktur nicht direkt auf PostgreSQL zu.
-
-Unstrukturierte Daten werden durch den \texttt{FileService} und den \texttt{AiService} in Azure Blob Storage abgelegt. Der \texttt{FileService} speichert dort Experimentdateien und Report-Artefakte. Der \texttt{AiService} speichert dort Skripte und KI-Artefakte. Für die lokale Entwicklung steht der Azurite-Emulator zur Verfügung, ein lokal lauffähiger Nachbau von Azure Blob Storage, der den produktiven Cloud-Dienst während der Entwicklung ersetzt.
+Unstrukturierte Daten werden durch den \texttt{FileService} und den \texttt{AiService} in Azure Blob Storage abgelegt. Der \texttt{FileService} speichert dort Experimentdateien und Report-Artefakte. Der \texttt{AiService} speichert dort seine Skripte und KI-Artefakte. 
+Für die lokale Entwicklung steht der Azurite-Emulator zur Verfügung, ein lokal lauffähiger Nachbau von Azure Blob Storage, der den produktiven Cloud-Dienst während der Entwicklung ersetzt.
 
 Die dargestellte Systemarchitektur bildet die Grundlage für die anschließende Analyse der vorhandenen Testinfrastruktur. Dabei werden sowohl die Backend-Services als auch die zentralen Frontend-Bereiche hinsichtlich ihrer bestehenden Testabdeckung und der eingesetzten Testverfahren betrachtet.
 
 \section{Bestehende Testinfrastruktur}
 \label{sec:bestehende-testinfrastruktur}
-So wie das Gesamtsystem, so gliedert sich auch die Testabdeckung in Frontend und Backend. In Azure DevOps waren bereits mehrere Pipelines eingerichtet und wurden für verschiedene Entwicklungsprozesse verwendet. Eine dedizierte Testpipeline, die die Tests aller Backend-Services und des Frontends automatisiert ausführt, war jedoch nicht vorhanden. In einzelnen Pipelines wurden teilweise Tests einzelner Backend-Services, beispielsweise des \texttt{ExperimentService}, ausgeführt. Eine automatische  und vollständige Testausführung des Frontends und Backends war dadurch nicht gewährleistet. 
+So wie das Gesamtsystem, so gliedert sich auch die Testabdeckung in Frontend und Backend. In Azure DevOps waren bereits mehrere Pipelines eingerichtet und wurden für verschiedene Entwicklungsprozesse verwendet. Eine dedizierte Testpipeline, die die Tests aller Backend-Services und des Frontends automatisiert ausführt, war jedoch nicht vorhanden. In einzelnen Pipelines wurden teilweise Tests einzelner Backend-Services, beispielsweise des \texttt{ExperimentService}, ausgeführt. Eine automatische und vollständige Testausführung des Frontends und Backends war dadurch nicht gewährleistet.
 
 \subsection{Frontend-Testabdeckung}
 
-Für die Frontend-Tests kamen zwei Testarten zum Einsatz, Unit-Tests mit Vitest und UI-End-to-End-Tests mit Playwright. Im Rahmen der Ausführung von \texttt{ng test --coverage} wurden 122 Unit-Testdateien mit insgesamt 953 Tests erfolgreich durchlaufen. Die während der Testausführung ermittelte Code-Coverage ergab für das erfasste Frontend eine Statement-Coverage von 57\,\%, eine Branch-Coverage von 53\,\%, eine Function-Coverage von 47\,\% und eine Line-Coverage von 60\,\%.
+Für die Frontend-Tests kamen zwei Testarten zum Einsatz, Unit-Tests mit Vitest und UI-End-to-End-Tests mit Playwright. Die während der Testausführung ermittelte Code-Coverage ergab für das erfasste Frontend eine Statement-Coverage von 57\,\%, eine Branch-Coverage von 53\,\%, eine Function-Coverage von 47\,\% und eine Line-Coverage von 60\,\%.
 
 Es existiert keine allgemeingültige Norm, die festlegt, dass eine bestimmte Testabdeckung, beispielsweise 60\,\%, grundsätzlich unzureichend oder ein anderer Wert, beispielsweise 80\,\%, grundsätzlich ausreichend ist \autocite{ZhuHallMay1997}. Die angemessene Testabdeckung hängt vielmehr von der Kritikalität der Anwendung, dem Projektkontext und den jeweiligen Qualitätsanforderungen ab. In der Praxis werden für viele Unternehmensanwendungen Zielwerte zwischen 70\,\% und 80\,\% als sinnvoll angesehen, wobei höhere Werte insbesondere bei komplexer Geschäftslogik empfohlen werden.
 
 Gemessen an diesem Zielkorridor liegt das erfasste Frontend mit allen vier Kennzahlen darunter, insbesondere die Function-Coverage von 47\,\% und die Branch-Coverage von 53\,\% weichen deutlich ab. Ob dies im konkreten Fall von \ac{ATLAS} als kritisch einzustufen ist, hängt von der Kritikalität der betroffenen Bereiche und etwaigen projektspezifischen Qualitätszielen ab.
-
-Zur Klärung der Ursachen für diesen Gesamt-Coverage-Wert werden im Folgenden die einzelnen fachlichen Domänen des Frontends betrachtet, die bereits im Abschnitt zur Frontendarchitektur vorgestellt wurden. Wie \autoref{fig:frontend-coverage-domaenen} zeigt, verteilte sich die Coverage nicht gleichmäßig auf diese fünf Domänen. Grundlage dafür ist die Auswertung der Datei \texttt{resources/lcov.info}, aus der die Coverage-Werte je Domäne durch Zusammenfassung der jeweils enthaltenen Dateien gebildet wurden.
-
-% \begin{table}[H]
-%     \centering
-%     \caption{Testabdeckung der Frontend-Domänen}
-%     \label{tab:frontend-coverage-domaenen}
-%     \begin{tabularx}{\textwidth}{|X|r|r|r|}
-%         \hline
-%         \textbf{Domäne} & \textbf{Branches} & \textbf{Functions} & \textbf{Lines} \\
-%         \hline
-%         \texttt{experiment-dashboard} & 40\,\% & 48\,\% & 46\,\% \\
-%         \hline
-%         \texttt{experiment-report-preview} & 56\,\% & 75\,\% & 71\,\% \\
-%         \hline
-%         \texttt{experiment-wizard} & 38\,\% & 38\,\% & 43\,\% \\
-%         \hline
-%         \texttt{search-strategie} & 72\,\% & 73\,\% & 78\,\% \\
-%         \hline
-%         \texttt{tools} & 64\,\% & 51\,\% & 60\,\% \\
-%         \hline
-%         \textbf{Gesamtwert Frontend} & 53\,\% & 47\,\% & 60\,\% \\
-%         \hline
-%     \end{tabularx}
-% \end{table}
+Da die Domänen den fachlichen Kern und zugleich die kritischsten Bereiche der Anwendung bilden, wird dort zuerst nach den Ursachen für diesen Gesamt-Coverage-Wert gesucht. Im Folgenden werden daher die einzelnen fachlichen Domänen des Frontends betrachtet, die bereits im Abschnitt zur Frontendarchitektur vorgestellt wurden. Wie \autoref{fig:frontend-coverage-domaenen} zeigt, verteilte sich die Coverage nicht gleichmäßig auf diese fünf Domänen. Grundlage dafür ist die Auswertung der Datei \texttt{resources/lcov.info}, aus der die Coverage-Werte je Domäne durch Zusammenfassung der jeweils enthaltenen Dateien gebildet wurden.
 
 \begin{figure}[H]
 \centering
@@ -205,12 +157,12 @@ Neben den Unit-Tests lagen im Frontend-Repository zusätzlich sechs Testdateien 
 
 Die sechs Testdateien decken jeweils ein einzelnes, klar abgegrenztes Verhalten der Anwendung ab. So wird etwa geprüft, ob sich die Ergebnisliste der Parametersuche in der tabellarischen Ansicht korrekt scrollen lässt, ob unangemeldete Anwender zur Anmeldung umgeleitet werden oder ob vorhandene Anmeldedaten beim Start der Anwendung korrekt wiederhergestellt werden. Da diese Tests über einen separaten Playwright-Testlauf auszuführen waren, flossen sie nicht in die zuvor beschriebene \texttt{ng test}-Coverage-Auswertung ein und bleiben in den oben genannten Prozentwerten unberücksichtigt.
 
-Zusammenfassend zeigt sich für das Frontend ein zweigeteiltes Bild. Auf Ebene der Unit-Tests liegt die Coverage in allen vier Kennzahlen unterhalb des in der Praxis verbreiteten Zielkorridors von 70\,\% bis 80\,\%, wobei sich diese Unterdeckung nicht gleichmäßig verteilt, sondern insbesondere die Domänen \texttt{experiment-wizard} und \texttt{experiment-dashboard} betrifft. Da diese beiden Domänen zentrale fachliche Abläufe der Anwendung abbilden, ergibt sich daraus ein konkreter Ansatzpunkt für die künftige Verbesserung der Testabdeckung. Ergänzend dazu liegen mit den sechs Playwright-Tests bereits UI-nahe End-to-End-Tests vor, die einzelne zentrale Abläufe wie Scrollverhalten, Authentifizierung und Anmeldedatenverwaltung abdecken. Sie lassen jedoch aufgrund des Mockings von Backend-Aufrufen nur eingeschränkt Aussagen über das Zusammenspiel von Frontend und Backend zu, und decken zudem noch nicht alle wichtigen UI-Abläufe der Anwendung ab.
+Ergänzend zu den Unit-Tests liegen damit bereits UI-nahe End-to-End-Tests vor. Sie decken zentrale Abläufe wie das Scrollverhalten, die Authentifizierung und die Verwaltung von Anmeldedaten ab. Aufgrund des Mockings von Backend-Aufrufen erlauben sie jedoch nur eingeschränkte Aussagen über das Zusammenspiel von Frontend und Backend. Zudem decken sie noch nicht alle wichtigen UI-Abläufe der Anwendung ab.
 
-Insgesamt liefert die bestehende Testinfrastruktur damit eine erste, aber ausbaufähige Grundlage, insbesondere im Hinblick auf eine gezieltere Abdeckung der Kernbereiche sowie auf systemübergreifende Tests ohne Mocking der Backend-Kommunikation.
+Zusammenfassend zeigt sich in der Domänenverteilung ein konkreter Ansatzpunkt für die künftige Verbesserung der Testabdeckung: Insbesondere die Domänen \texttt{experiment-wizard} und \texttt{experiment-dashboard} weisen die größten Lücken auf.
 
 \subsection{Backend-Testabdeckung}
-Zur Ermittlung der Code-Coverage wurde das in Visual Studio 2026 integrierte Werkzeug zur Analyse der Code-Coverage verwendet. Die Messung bezog sechs Testprojekte ein, die jeweils prüften, wie stark der zugehörige Backend-Service durch das eigene Testprojekt bereits mit Tests abgedeckt war. Ein Service, der in der Messung nicht aufgeführt ist, verfügte demnach zum betrachteten Zeitpunkt noch über kein eigenes Testprojekt. \autoref{tab:backend-coverage} zeigt die ermittelten Werte für die sechs erfassten Bereiche des produktiven Anwendungscodes.
+Zur Ermittlung der Code-Coverage des Backends wurde das in Visual Studio 2026 integrierte Analysewerkzeug verwendet. Die Messung bezog sechs Testprojekte ein, die jeweils prüften, wie stark der zugehörige Backend-Service durch das eigene Testprojekt bereits mit Tests abgedeckt war. Ein Service, der in der Messung nicht aufgeführt ist, verfügte demnach zum betrachteten Zeitpunkt noch über kein eigenes Testprojekt. \autoref{tab:backend-coverage} zeigt die ermittelten Werte für die sechs erfassten Bereiche des produktiven Anwendungscodes.
 
 
 \begin{table}[h]
@@ -232,7 +184,7 @@ Zur Ermittlung der Code-Coverage wurde das in Visual Studio 2026 integrierte Wer
 
 Für die übrigen Backend-Services, insbesondere \texttt{ReportService}, \texttt{AiService}, \texttt{ApplicationLoggingService} und \texttt{GatewayService}, existierte zum Messzeitpunkt noch kein eigenes Testprojekt, weshalb sie in der Coverage-Messung nicht aufgeführt sind und somit noch nicht durch eigene Tests abgedeckt waren.
 
-Bei den vorhandenen Testprojekten handelt es sich sowohl um Unit-Tests als auch um Integrationstests. Echte End-to-End-Tests, die einen vollständigen Ablauf über das Gesamtsystem hinweg prüfen, existierten im Backend dagegen nicht. Als Test-Frameworks kamen dabei sowohl MSTest als auch NUnit zum Einsatz.
+Bei den vorhandenen Testprojekten handelt es sich sowohl um Unit-Tests als auch um Integrationstests. Als Test-Frameworks kamen dabei sowohl MSTest als auch NUnit zum Einsatz.
 
 Sowohl im Frontend als auch im Backend zeigt sich damit ein uneinheitliches Bild: Einzelne Bereiche wie \texttt{LAC.Database} oder die Domäne \texttt{search-strategie} verfügten bereits über eine solide Testabdeckung, während zentrale Bereiche, etwa \texttt{LAC.ExperimentService}, \texttt{LAC.Core} sowie mehrere Backend-Services ohne eigenes Testprojekt, kaum oder gar nicht abgedeckt waren. Diese bestehende Testinfrastruktur bildet den Ausgangspunkt für die Erweiterung und Neuentwicklung von Tests im Rahmen dieser Arbeit. Um die vorhandenen Lücken gezielt zu schließen, werden im folgenden Kapitel zunächst die Anforderungen an die zu entwickelnden Tests systematisch analysiert.
 
@@ -248,7 +200,7 @@ Die funktionalen Anforderungen legen fest, welche Testarten für welche Komponen
 Für die zentralen Services (vgl. \autoref{tab:services}) und Klassenbibliotheken sollen Unit-Tests implementiert werden. Sie müssen isoliert, ohne Datenbankverbindung und lokal ausführbar sein.
 
 \textbf{Unit-Tests (Frontend)} \hfill \textbf{Priorität: Muss}\\
-Im Frontend sollen Unit-Tests für Services, Guards und ausgewählte Komponenten der in \autoref{tab:frontend-architektur} genannten Schichten ergänzt werden.
+Im Frontend sollen Unit-Tests für Domänen, Services und ausgewählte Komponenten der in \autoref{tab:frontend-architektur} genannten Schichten ergänzt werden.
 
 \textbf{Integrationstests} \hfill \textbf{Priorität: Muss}\\
 Das Zusammenspiel von \ac{HTTP}-Endpunkten, Datenbankschicht und Services soll durch Integrationstests abgesichert werden. Bestehende Integrationstests, beispielsweise für den \texttt{ExperimentService} und \texttt{SearchService}, dienen dabei als Muster. Fehlende Services sind entsprechend zu ergänzen, insbesondere im Backend.
@@ -272,7 +224,7 @@ Alle Tests sollen in der lokalen Entwicklungsumgebung ausführbar sein.
 Testcode soll denselben Qualitätsstandards wie Produktionscode folgen: klare Benennung nach dem Muster \textit{Methode\_Bedingung\_Erwartung}, keine unnötige Duplizierung sowie sinnvoller Einsatz von DataProvidern (wiederverwendbare Testdaten) und Test-Fixtures (definierter Ausgangszustand vor und nach einem Test). Dadurch bleibt die Testbasis auch bei Systemerweiterungen pflegbar, da automatisierte Tests jede noch so kleine Änderung an der Anwendung explizit nachvollziehen müssen und daher besonders wartungsintensiv sind \cite[S.~22]{Axelrod2018}.
 
 \textbf{Schnelle Feedbackzyklen} \hfill \textbf{Priorität: Soll}\\
-Unit- und Integrationstests sollen so kurz laufen, dass eine regelmäßige lokale oder zentral-automatisierte Ausführung während der Entwicklung ohne spürbare Unterbrechung des Arbeitsflusses möglich ist. Damit folgt die Anforderung dem Grundgedanken, dass der eigentliche Mehrwert automatisierter Tests in der schnellen Rückmeldung über den Systemzustand liegt und nicht im nachträglichen Auffinden möglichst vieler Fehler\footnote{\enquote{The sweet spot of automated testing is not to find as many bugs as possible, but rather to provide fast feedback about whether the system behaves in the way we expect, as defined in the tests.} \cite[S.~19]{Axelrod2018}}.
+Unit- und Integrationstests sollen so kurz laufen, dass eine regelmäßige lokale oder zentral-automatisierte Ausführung während der Entwicklung ohne spürbare Unterbrechung des Arbeitsflusses möglich ist. Damit folgt die Anforderung dem Grundgedanken, dass der eigentliche Mehrwert automatisierter Tests in der schnellen Rückmeldung über den Systemzustand liegt und nicht im nachträglichen Auffinden möglichst vieler Fehler\cite[S.~22]{Axelrod2018}..
 
 \textbf{Automatisierte Ausführbarkeit} \hfill \textbf{Priorität: Soll}\\
 Alle Tests sollen automatisiert ausführbar sein, beispielsweise über eine Azure-DevOps-Pipeline, und nicht auf eine manuelle Ausführung durch einzelne Entwickler angewiesen sein. Damit der Hauptentwickler die Tests ohne größeren Aufwand in eine bestehende oder neue Pipeline einbinden kann.

@@ -32,7 +32,7 @@ Für Backend und Frontend wurden die zu testenden Komponenten jeweils in zwei Pr
         \addlinespace
         Backend & 2 & \texttt{ReportService}, \texttt{SearchService} \\
         \addlinespace
-        Frontend & 1 & \texttt{features/}, \texttt{services/}, \texttt{auth/ (inkl. Guards)} \\
+        Frontend & 1 & \texttt{features/}, \texttt{services/}, \texttt{auth/} \\
         \addlinespace
         Frontend & 2 & \texttt{components/common/}, \texttt{layout/} \\
         \bottomrule
@@ -42,6 +42,7 @@ Für Backend und Frontend wurden die zu testenden Komponenten jeweils in zwei Pr
 Die Priorisierung wurde gemeinsam mit dem Hauptentwickler festgelegt, anhand der fachlichen Kritikalität sowie der bereits ermittelten Testabdeckung der jeweiligen Services. \texttt{GatewayService}, \texttt{ExperimentService} und \texttt{FileService} wurden dabei als kritischste Prozesse mit den größten Datenmengen zuerst priorisiert. Im Frontend steuern die Priorität-1-Komponenten Datenfluss und Zugriffsschutz, während die Priorität-2-Komponenten vor allem Bedienbarkeit und Wiederverwendbarkeit betreffen.
 
 \subsection{End-to-End- und UI-Testfälle}
+\label{sec:e2e-ui-testfaelle}
 Ergänzend sieht das Konzept eine Reihe konkreter End-to-End-Szenarien sowie UI-Testfälle vor, die zentrale Nutzerabläufe über mehrere Services beziehungsweise Frontend-Bereiche hinweg abbilden. Die wichtigsten Kategorien sind:
 \begin{itemize}
     \item Login und rollenbasierter Zugriff, einschließlich Weiterleitung nicht berechtigter Anwender
@@ -51,8 +52,10 @@ Ergänzend sieht das Konzept eine Reihe konkreter End-to-End-Szenarien sowie UI-
     \item Parametersuche inklusive Speichern und Wiederherstellen von Suchfiltern
 \end{itemize}
 
+Die genannten Szenarien sollen dabei nicht nur für eine einzelne Rolle, sondern jeweils für die relevanten Rollen aus dem in \autoref{sec:rollen-und-berechtigungen} beschriebenen Berechtigungskonzept geprüft werden, etwa um sicherzustellen, dass App-Engineer und Sales-Nutzer jeweils nur auf die für sie vorgesehenen Funktionen und Daten zugreifen können.
+
 \subsection{Testpyramide und Zielwerte}
-Methodisch wurde eine Testpyramide als Zielbild angesetzt. Eine solche Verteilung sieht einen Großteil eng begrenzter, schneller Unit-Tests vor, ergänzt um einen kleineren Anteil an Integrationstests sowie einen noch kleineren Anteil an End-to-End-Tests, wobei die genaue Aufteilung vom jeweiligen Projektkontext, der Systemarchitektur und dem Risikoprofil abhängt \autocite{QFTest2024}. \autoref{fig:testpyramide} zeigt die im Testkonzept angestrebte, entsprechend pyramidenförmige Verteilung der Testebenen.
+Methodisch wurde eine Testpyramide als Zielbild angesetzt. Eine solche Verteilung sieht einen Großteil eng begrenzter, schneller Unit-Tests vor, ergänzt um einen kleineren Anteil an Integrationstests sowie einen noch kleineren Anteil an End-to-End-Tests, wobei die genaue Aufteilung vom jeweiligen Projektkontext, der Systemarchitektur und dem Risikoprofil abhängt \autocite{QFTest2024}. \autoref{fig:testpyramide} zeigt die im Testkonzept angestrebte Verteilung der Testebenen.
 
 \begin{figure}[H]
 \centering
@@ -108,16 +111,18 @@ Für die zentrale Testausführung wurden zwei Varianten hinsichtlich des Umfangs
     \end{tabularx}
 \end{table}
 
-Unabhängig vom Umfang der Infrastruktur stellt sich zusätzlich die Frage nach dem Betriebsmodell: Soll die Umgebung dauerhaft laufen oder erst bei Bedarf gestartet werden? Ein dauerhaft laufender Server, etwa ein dedizierter PC, wäre jederzeit ohne Kaltstart verfügbar und eignet sich besonders für viele parallele oder regelmäßige Testläufe gegen dieselbe URL, verursacht dafür aber laufende Betriebskosten sowie höheren Wartungs- und Sicherheitsaufwand. Diese Entscheidung ist unabhängig vom Infrastrukturumfang zu treffen, ein dauerhafter Server könnte ebenso die gesamte wie auch nur eine reduzierte Infrastruktur bereitstellen.
+Unabhängig vom Umfang der Infrastruktur stellt sich zusätzlich die Frage nach dem Betriebsmodell: Soll die Umgebung dauerhaft laufen oder erst bei Bedarf gestartet werden? Ein dauerhaft laufender Server wäre zwar jederzeit ohne Kaltstart verfügbar, verursacht dafür aber laufende Betriebskosten sowie höheren Wartungs- und Sicherheitsaufwand, unabhängig davon, ob die gesamte oder nur eine reduzierte Infrastruktur bereitgestellt wird.
 
-Für die gewählte Lösung wird beim Umfang der Infrastruktur ein Mittelweg verfolgt: Backend-Services und Frontend werden vollständig bereitgestellt, während Datenbank und externe Schnittstellen durch lokale Emulatoren beziehungsweise Fakes ersetzt werden. Beim Betriebsmodell wird ein hybrider Ansatz gewählt, der Host selbst läuft dauerhaft, die eigentliche Infrastruktur wird jedoch je Testlauf neu gestartet und danach wieder beendet. Damit steht die Ausführungsumgebung jederzeit bereit, ohne dass Infrastrukturkomponenten dauerhaft aktiv gehalten werden müssen. Dieser Kompromiss wurde nach Gesprächen mit dem Hauptentwickler gewählt, entscheidend war dabei ein angemessenes Verhältnis zwischen Realitätsnähe, Aussagekraft und Betriebsaufwand.
+Für die gewählte Lösung wird beim Umfang der Infrastruktur ein Mittelweg verfolgt: Backend-Services und Frontend werden vollständig bereitgestellt, während Datenbank, Azure Blob Storage und weitere externe Schnittstellen durch lokale Emulatoren beziehungsweise Fakes ersetzt werden. Beim Betriebsmodell wird ein hybrider Ansatz gewählt, der Host selbst läuft dauerhaft, die eigentliche Infrastruktur wird jedoch je Testlauf neu gestartet und danach wieder beendet. Damit steht die Ausführungsumgebung jederzeit bereit, ohne dass Infrastrukturkomponenten dauerhaft aktiv gehalten werden müssen. Dieser Kompromiss wurde nach Gesprächen mit dem Hauptentwickler gewählt, entscheidend war dabei ein angemessenes Verhältnis zwischen Realitätsnähe, Aussagekraft und Betriebsaufwand.
 
 Als konkrete Umsetzung wird eine Test-VM mit einem Azure-DevOps-Self-Hosted-Agent gewählt. Sie ermöglicht reproduzierbare Testläufe und kann die benötigten Infrastrukturkomponenten bedarfsgerecht bereitstellen. Die Ausführung der Tests und die Veröffentlichung der Ergebnisse bleiben in Azure DevOps nachvollziehbar.
 
 \subsection{Zielbild der Test-VM}
-Die Test-VM stellt den Azure-DevOps-Self-Hosted-Agent dauerhaft bereit, der bei jedem Testlauf die erforderlichen Schritte startet. Sowohl die Infrastruktur als auch Backend und Frontend laufen dagegen nicht dauerhaft, sondern werden je Testlauf gestartet und nach dessen Abschluss wieder beendet. Die Infrastruktur wird über Docker Compose bereitgestellt und umfasst PostgreSQL, Azurite sowie einen Fake-Auth-Service. Der Fake-Auth-Service ersetzt für die rollenbasierten Tests den externen Dienst SalesPoint und läuft dabei ausschließlich auf der Test-VM. 
+Die Test-VM stellt den Azure-DevOps-Self-Hosted-Agent dauerhaft bereit, der bei jedem Testlauf die erforderlichen Schritte startet. Infrastruktur, Backend und Frontend laufen dagegen nicht dauerhaft, sondern werden je Testlauf gestartet und nach dessen Abschluss wieder beendet.
 
-Backend und Frontend werden ebenfalls auf der VM gestartet. Dabei werden alle benötigten Backend-Services sowie die Angular-Anwendung des Frontends hochgefahren. \autoref{tab:vm-testumgebung-ebenen} ordnet diese Komponenten den drei Betriebsebenen der VM zu.
+Die Infrastruktur wird über Docker Compose bereitgestellt und umfasst PostgreSQL, Azurite als Emulator für Azure Blob Storage sowie einen Fake-Auth-Service. Der Fake-Auth-Service ersetzt Microsoft Entra ID für die rollenbasierten Tests und läuft ausschließlich auf der Test-VM. Er ist erforderlich, da sich über den echten Entra-ID-Dienst die Rolle eines Testnutzers nicht ohne Weiteres kurzfristig wechseln lässt, der Fake-Auth-Service erlaubt es dagegen, die Rolle eines simulierten Anwenders je Testfall gezielt vorzugeben, ohne dafür echte Konten mit unterschiedlichen Berechtigungen anlegen und verwalten zu müssen.
+
+Backend und Frontend werden ebenfalls je Testlauf auf der VM gestartet, dabei werden alle benötigten Backend-Services sowie die Angular-Anwendung des Frontends hochgefahren. \autoref{tab:vm-testumgebung-ebenen} ordnet diese Komponenten den drei Betriebsebenen der VM zu.
 
 \begin{table}[H]
 \centering
@@ -151,6 +156,6 @@ Der geplante Pipeline-Ablauf gliedert sich in folgende Schritte:
 \item Bereinigung der Testumgebung nach dem Testlauf
 \end{enumerate}
 
-Ein vollständiger Lauf führt dabei alle Unit-, Integrations- und End-to-End-Tests aus und eignet sich für nächtliche Läufe, Releases sowie Änderungen mit unklarem Einfluss. Ein selektiver Lauf beschränkt sich dagegen auf die von einer Änderung betroffenen Tests, ermittelt über einen Vergleich der geänderten Dateien mit einer festen Zuordnung zu den zugehörigen Testprojekten oder Playwright-Spezifikationen. 
+Ein vollständiger Lauf führt dabei alle Unit-, Integrations- und End-to-End-Tests aus und eignet sich für nächtliche Läufe, Releases sowie Änderungen mit unklarem Einfluss. Ein selektiver Lauf beschränkt sich dagegen auf die von einer Änderung betroffenen Tests, ermittelt über einen Vergleich der geänderten Dateien mit einer festen Zuordnung zu den zugehörigen Testprojekten oder Playwright-Spezifikationen.
 
 Auf Grundlage dieses Konzepts für die lokale und die zentrale Testumgebung werden im folgenden Kapitel die priorisierten Tests praktisch umgesetzt.

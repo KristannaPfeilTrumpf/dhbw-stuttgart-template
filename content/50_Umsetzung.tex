@@ -2,186 +2,73 @@
 
 \chapter{Umsetzung}
 \label{chap:umsetzung}
-Dieses Kapitel dokumentiert die konkrete technische Realisierung der lokalen Testinfrastruktur und zeigt, wie die in \autoref{chap:konzeption} beschriebenen Bausteine praktisch umgesetzt wurden. Entsprechend der in der Zielsetzung dieser Arbeit getroffenen Festlegung wird für die automatisierte Testausführung in einer eigenen Testumgebung lediglich ein Konzept entwickelt, während der Schwerpunkt der praktischen Umsetzung auf Tests für zentrale Komponenten des Frontends und Backends liegt. Die konkrete Priorisierung dieser Komponenten wurde bereits dort festgelegt. Im Backend wurden entsprechend Unit- und Integrationstests erstellt, im Frontend Unit-Tests sowie UI-nahe End-to-End-Tests mit Playwright.
+Dieses Kapitel dokumentiert die konkrete technische Realisierung der lokalen Testinfrastruktur und zeigt, wie die in \autoref{chap:konzeption} beschriebenen Bausteine praktisch umgesetzt wurden. Im Backend wurden entsprechend Unit- und Integrationstests erstellt, im Frontend Unit-Tests sowie UI-nahe End-to-End-Tests mit Playwright.
 
 \section{Backend}
+Dieser Abschnitt beschreibt die im Rahmen dieser Arbeit erstellten Unit- und Integrationstests für die vier priorisierten Backend-Services.
+
 
 \subsection{Unit-Tests}
-Im Backend wurden Unit-Tests für vier priorisierte Services erstellt beziehungsweise erweitert: \texttt{GatewayService}, \texttt{FileService}, \texttt{ExperimentService} und \texttt{ApplicationLoggingService}. \autoref{tab:backend-unit-tests} gibt einen Überblick über die dabei jeweils geprüfte Funktionalität.
+Im Backend wurden Unit-Tests für vier priorisierte Services erstellt beziehungsweise erweitert: \texttt{GatewayService}, \texttt{FileService}, \texttt{ExperimentService} und \texttt{ApplicationLoggingService}. \autoref{tab:backend-unit-tests} gibt einen Überblick über ausgewählte, dabei geprüfte Funktionalitäten. Die Tabelle zeigt somit nur einen kleinen Ausschnitt der insgesamt geprüften Funktionen.
 
 \begin{table}[H]
     \centering
     \caption{Im Rahmen dieser Arbeit erstellte oder erweiterte Backend-Unit-Tests}
     \label{tab:backend-unit-tests}
     \renewcommand{\arraystretch}{1.3}
-    \begin{tabularx}{\textwidth}{@{}p{0.25\textwidth}X@{}}
+    \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}X X@{}}
         \toprule
         \textbf{Service} & \textbf{Geprüftes Verhalten} \\
         \midrule
-        \texttt{GatewayService} & Ermittlung der Zugriffsberechtigung anhand der Azure-AD-Gruppenzugehörigkeit eines Anwenders, Schwärzung vertraulicher Experiment- und Kundendaten bei fehlenden Leserechten sowie die Weiterleitung von Anfragen der Gateway-Controller an die zuständigen Backend-Services. \\
+        \texttt{\seqsplit{GatewayService}} & Ermittlung der Zugriffsberechtigung anhand der Azure-AD-Gruppenzugehörigkeit eines Anwenders, Schwärzung vertraulicher Experiment- und Kundendaten bei fehlenden Leserechten sowie die Weiterleitung von Anfragen der Gateway-Controller an die zuständigen Backend-Services. \\
         \addlinespace
-        \texttt{FileService} & Validierung der Konfiguration beim Start des Dienstes, Ableitung des Content-Types einer Datei aus Header, Tags oder Dateiendung, Bildrotation sowie Benennung von Dateien beim Download. \\
+        \texttt{\seqsplit{FileService}} & Validierung der Konfiguration beim Start des Dienstes, Ableitung des Content-Types einer Datei aus Header, Tags oder Dateiendung, Bildrotation sowie Benennung von Dateien beim Download. \\
         \addlinespace
-        \texttt{ExperimentService} & Lesen und Filtern von Experimenten, Anlegen und Aktualisieren von Experimenten, Zuordnung von Tasks zu Experimenten sowie Berechnung von Parametern und Setups. \\
+        \texttt{\seqsplit{ExperimentService}} & Lesen und Filtern von Experimenten, Anlegen und Aktualisieren von Experimenten, Zuordnung von Tasks zu Experimenten sowie Berechnung von Parametern und Setups. \\
         \addlinespace
-        \texttt{ApplicationLoggingService} & Verwaltung von Anwendungs- und Konsolenlogs, insbesondere Hinzufügen neuer Einträge, deren Reihenfolge sowie die Begrenzung auf eine maximale Anzahl gespeicherter Einträge. \\
+        \texttt{\seqsplit{ApplicationLoggingService}} & Verwaltung von Anwendungs- und Konsolenlogs, insbesondere Hinzufügen neuer Einträge, deren Reihenfolge sowie die Begrenzung auf eine maximale Anzahl gespeicherter Einträge. \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
-Für die Isolation der Abhängigkeiten kamen je nach Service unterschiedliche Ansätze zum Einsatz. Bei Services mit Datenbankzugriff, etwa dem \texttt{ExperimentService}, wurden die zugehörigen Repository-Schnittstellen mit Moq gemockt, sodass die Tests ohne echten Datenbankzugriff auskommen. \autoref{lst:experimentservice-unit-test} zeigt exemplarisch einen solchen Test, der prüft, ob beim Anlegen eines neuen Experiments die Insert- statt der Update-Methode des Repositorys aufgerufen wird.
-
-\begin{lstlisting}[language=C, caption={Unit-Test für den \texttt{ExperimentService} mit gemocktem Repository}, label=lst:experimentservice-unit-test]
-[Fact]
-public async Task CreateOrUpdate_GivenNewExperiment_InsertsExperiment()
-{
-    // Arrange
-    var model = CreateExperimentModel(id: Guid.Empty);
-    var experimentRepository = new Mock<IExperimentRepository>();
-    experimentRepository
-        .Setup(r => r.Insert(It.IsAny<ExperimentEntity>()))
-        .ReturnsAsync((ExperimentEntity e) => e);
-    var service = new ExperimentService(experimentRepository.Object);
-
-    // Act
-    var result = await service.CreateOrUpdate(model);
-
-    // Assert
-    result.Title.Should().Be(model.Title);
-    experimentRepository.Verify(r => r.Insert(It.IsAny<ExperimentEntity>()), Times.Once);
-    experimentRepository.Verify(r => r.Update(It.IsAny<ExperimentEntity>()), Times.Never);
-}
-\end{lstlisting}
+Für die Isolation der Abhängigkeiten kamen je nach Service unterschiedliche Ansätze zum Einsatz. Bei Services mit Datenbankzugriff, etwa dem \texttt{ExperimentService}, wurden die zugehörigen Repository-Schnittstellen mit Moq gemockt, sodass die Tests ohne echten Datenbankzugriff auskommen (vgl. \autoref{app:experimentservice-unit-test}).
 
 Beim \texttt{GatewayService} wurde für die Integrations- und Unit-Tests der Controller zusätzlich eine eigene \texttt{GatewayWebApplicationFactory} eingesetzt, eine Erweiterung der \texttt{WebApplicationFactory} aus ASP.NET Core, über die einzelne Abhängigkeiten gezielt durch Fakes ersetzt werden können, unter anderem ein Autorisierungs-Handler, der die Berechtigungsprüfung für Testzwecke deaktiviert, sowie In-Memory-Fakes für angebundene Backend-Services.
 
-Bei Services ohne externe Abhängigkeiten, etwa dem \texttt{ApplicationLoggingService} oder statischen Hilfsmethoden im \texttt{FileService}, war dagegen kein Mocking notwendig, da die getesteten Klassen entweder zustandsbasiert und ohne externe Anbindung arbeiten oder rein auf Basis übergebener Eingabewerte prüfbar sind. \autoref{lst:applicationloggingservice-test} zeigt einen solchen Test, der das Speichern eines neuen Log-Eintrags direkt gegen eine neu instanziierte Service-Instanz prüft.
+Bei Services ohne externe Abhängigkeiten, etwa dem \texttt{ApplicationLoggingService} oder statischen Hilfsmethoden im \texttt{FileService}, war dagegen kein Mocking notwendig, da die getesteten Klassen entweder zustandsbasiert und ohne externe Anbindung arbeiten oder rein auf Basis übergebener Eingabewerte prüfbar sind (vgl. \autoref{app:applicationloggingservice-unit-test}).
 
-\begin{lstlisting}[language=C, caption={Unit-Test für den \texttt{ApplicationLoggingService} ohne externe Abhängigkeiten}, label=lst:applicationloggingservice-test]
-[Theory]
-[InlineData("Test title", "Test error", "Test stacktrace", 500)]
-[InlineData("Only title", null, null, null)]
-public void Add_GivenEmptyLog_WithApplicationLogData_StoresSingleEntry(
-    string title, string? error, string? stackTrace, int? statusCode)
-{
-    // Arrange
-    var service = new ApplicationLogService();
-
-    // Act
-    service.Add(title, error, stackTrace, statusCode);
-
-    // Assert
-    var logs = service.GetAll();
-    logs.Count.Should().Be(1);
-    logs[0].Title.Should().Be(title);
-    logs[0].StatusCode.Should().Be(statusCode);
-}
-\end{lstlisting}
-
-Assertions wurden dabei durchgängig mit der Bibliothek FluentAssertions formuliert, erkennbar an der lesbaren \texttt{Should()}-Syntax in den gezeigten Beispielen. \todo{Begründung: An früherer Stelle dieser Arbeit (Kapitel zur Backend-Testabdeckung) wurde als projektweit verwendete Assertion-Bibliothek Shouldly genannt, nicht FluentAssertions. Die hier vorliegenden Testbeispiele verwenden jedoch erkennbar die \texttt{Should()}-Syntax von FluentAssertions. Lösungsvorschlag: Klären, welche der beiden Bibliotheken tatsächlich projektweit beziehungsweise in den vier hier beschriebenen Testprojekten verwendet wird, und die Aussage an der entsprechenden Stelle korrigieren.}
+Prüfaussagen (Assertions) wurden dabei durchgängig mit der Bibliothek FluentAssertions formuliert, erkennbar an der lesbaren \texttt{Should()}-Syntax in den im Anhang gezeigten Beispielen.
 
 \subsection{Integrationstests}
 Im Backend wurden Integrationstests für den \texttt{GatewayService} und den \texttt{FileService} erstellt. Dabei kamen je nach Service unterschiedliche Ansätze zur Bereitstellung der Testumgebung zum Einsatz.
 
 \subsubsection{GatewayService}
-Für den \texttt{GatewayService} wird weder Azurite noch ein Docker-Container eingesetzt. Stattdessen kommt eine eigene \texttt{GatewayWebApplicationFactory} zum Einsatz, eine Erweiterung der \texttt{WebApplicationFactory} aus ASP.NET Core, die die tatsächliche Anwendung einschließlich Routing, Modellbindung und Autorisierungs-Middleware in einem In-Memory-Server startet. Alle nachgelagerten Backend-Services werden dabei durch In-Memory-Fakes beziehungsweise Mocks ersetzt, sodass kein tatsächlicher Netzwerkzugriff auf andere Services stattfindet. Konkret werden unter anderem ein Autorisierungs-Handler, der sämtliche Berechtigungsprüfungen für Testzwecke automatisch erfüllt, sowie handgeschriebene Fakes für den Parameter-, den BO- und den Report-Service eingesetzt. Weitere Services lassen sich zusätzlich über Moq gezielt mocken und in den Dependency-Injection-Container der Testanwendung einsetzen.
+Für den \texttt{GatewayService} wird weder Azurite noch ein Docker-Container eingesetzt. Stattdessen kommt eine eigene \texttt{GatewayWebApplicationFactory} zum Einsatz, eine Erweiterung der \texttt{WebApplicationFactory} aus ASP.NET Core, die die tatsächliche Anwendung einschließlich Routing, Modellbindung und Autorisierungs-Middleware in einem In-Memory-Server startet. Alle nachgelagerten Backend-Services werden dabei durch In-Memory-Fakes beziehungsweise Mocks ersetzt, sodass kein tatsächlicher Netzwerkzugriff auf andere Services stattfindet. Konkret werden unter anderem ein Autorisierungs-Handler, der sämtliche Berechtigungsprüfungen für Testzwecke automatisch erfüllt, sowie handgeschriebene Fakes für den Parameter- und den Report-Service eingesetzt. Weitere Services lassen sich zusätzlich über Moq gezielt mocken und in den Dependency-Injection-Container der Testanwendung einsetzen.
 
-Getestet werden auf dieser Basis unter anderem die Ermittlung der Zugriffsberechtigung anhand von Azure-AD-Gruppen, die Schwärzung vertraulicher Experiment- und Kundendaten bei fehlenden Leserechten, die Anreicherung von Suchanfragen um den Benutzerkontext vor der Weiterleitung an den zuständigen Service sowie die korrekte Ablehnung von Dateizugriffen bei fehlender Berechtigung. \autoref{lst:gateway-integration-test} zeigt exemplarisch einen Testfall, der prüft, ob eine Suchanfrage vor der Weiterleitung korrekt um die Identität und die Rollen des anfragenden Anwenders ergänzt wird.
-
-\begin{lstlisting}[language=C, caption={Integrationstest für den \texttt{GatewayService} mit In-Memory-Server und gemocktem Downstream-Service}, label=lst:gateway-integration-test]
-[Fact]
-public async Task SearchPage_WhenUserMaySearch_EnrichesRequestWithUserContext()
-{
-    // Arrange
-    var currentUser = new UserModel
-    {
-        Id = Guid.NewGuid(),
-        Email = "engineer@trumpf.com",
-        Roles = [UserRole.AppEngineer]
-    };
-
-    SearchPageRequest? forwardedRequest = null;
-    var searchGatewayServiceMock = new Mock<ISearchGatewayService>();
-    searchGatewayServiceMock
-        .Setup(s => s.SearchPage(It.IsAny<SearchPageRequest>()))
-        .Callback<SearchPageRequest>(r => forwardedRequest = r)
-        .ReturnsAsync(new SearchPageResponse { Rows = [], HasMore = false });
-
-    await using var factory = CreateFactory(
-        currentUser, searchGatewayServiceMock.Object,
-        GatewayTestData.CreateUserPermissions(canSearchExperiments: true));
-    var client = factory.CreateClient();
-
-    // Act
-    var response = await client.PostAsJsonAsync(
-        GatewayTestData.Routes.SearchPage,
-        new SearchPageRequest { PageSize = 25 });
-
-    // Assert
-    response.StatusCode.Should().Be(HttpStatusCode.OK);
-    forwardedRequest!.UserId.Should().Be(currentUser.Id);
-    forwardedRequest.UserEmail.Should().Be(currentUser.Email);
-    forwardedRequest.UserRoles.Should().BeEquivalentTo(currentUser.Roles);
-}
-\end{lstlisting}
+Getestet werden auf dieser Basis unter anderem die Ermittlung der Zugriffsberechtigung anhand von Azure-AD-Gruppen, die Schwärzung vertraulicher Experiment- und Kundendaten bei fehlenden Leserechten, die Anreicherung von Suchanfragen um den Benutzerkontext vor der Weiterleitung an den zuständigen Service sowie die korrekte Ablehnung von Dateizugriffen bei fehlender Berechtigung (vgl. \autoref{app:gateway-integration-test}). 
 
 \subsubsection{FileService}
-Für den \texttt{FileService} wurden Integrationstests für die zentralen Datei-Workflows umgesetzt. Getestet werden das grundlegende Hoch- und Herunterladen einer Datei im Round-Trip, das Löschen bereits hochgeladener Dateien, das Hochladen von Report-Artefakten zu einem Experiment einschließlich der Kompensationslogik bei teilweise fehlgeschlagenen Uploads sowie der gebündelte Download mehrerer Dateien anhand ihrer IDs.
+Für den \texttt{FileService} wurden Integrationstests für die zentralen Datei-Workflows umgesetzt: das Hoch- und Herunterladen einer Datei, das Löschen hochgeladener Dateien sowie das Hochladen von Report-Artefakten.
 
-Im Unterschied zum \texttt{GatewayService} kommt für den \texttt{FileService} eine echte Azure-Blob-Storage-Umgebung zum Einsatz. Über Testcontainers.Azurite wird für die Dauer der Testausführung automatisiert ein isolierter Azurite-Container gestartet, gegen den der produktive \texttt{FileStorageService} unverändert läuft. In Kombination mit der \texttt{WebApplicationFactory} aus ASP.NET Core wird dabei die vollständige Anwendung inklusive HTTP-Schicht gestartet, sodass der Produktivcode ohne Mocks oder Fakes gegen eine reale Speicherumgebung getestet wird.
-
-\autoref{lst:fileservice-integration-test} zeigt exemplarisch den grundlegenden Round-Trip-Test, der prüft, ob eine zuvor hochgeladene Datei anschließend korrekt über ihre ID wieder abgerufen werden kann.
-
-\begin{lstlisting}[language=C, caption={Integrationstest für den \texttt{FileService} mit Testcontainers.Azurite}, label=lst:fileservice-integration-test]
-public class FileUploadDownloadTests : IClassFixture<AzuriteWebApplicationFactory>
-{
-    private readonly HttpClient _client;
-
-    public FileUploadDownloadTests(AzuriteWebApplicationFactory factory)
-    {
-        _client = factory.CreateClient();
-    }
-
-    [Fact]
-    public async Task UploadAndGetById_GivenUploadedFile_ReturnsSameContent()
-    {
-        // Arrange
-        var content = new ByteArrayContent(Encoding.UTF8.GetBytes("Testinhalt"));
-        content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
-        using var form = new MultipartFormDataContent { { content, "file", "test.txt" } };
-
-        // Act
-        var uploadResponse = await _client.PostAsync("/files", form);
-        var uploaded = await uploadResponse.Content.ReadFromJsonAsync<FileUploadResult>();
-        var downloadResponse = await _client.GetAsync($"/files/{uploaded!.Id}");
-
-        // Assert
-        uploadResponse.StatusCode.Should().Be(HttpStatusCode.Created);
-        downloadResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-        var downloadedContent = await downloadResponse.Content.ReadAsStringAsync();
-        downloadedContent.Should().Be("Testinhalt");
-    }
-}
-\end{lstlisting}
-
-Die \texttt{AzuriteWebApplicationFactory} startet dabei vor der Testausführung automatisiert einen Azurite-Container über Testcontainers und konfiguriert die Anwendung so, dass sie gegen diese isolierte Instanz statt gegen die produktive Azure-Umgebung läuft. Nach Abschluss der Tests wird der Container automatisch wieder entfernt, sodass jeder Testlauf mit einem sauberen, reproduzierbaren Ausgangszustand startet.
+Im Unterschied zum \texttt{GatewayService} kommt hier eine echte Speicherumgebung zum Einsatz. Über Testcontainers.Azurite wird je Testlauf automatisiert ein isolierter Azurite-Container gestartet, gegen den der produktive \texttt{FileStorageService} unverändert läuft, kombiniert mit der \texttt{WebApplicationFactory} für die HTTP-Schicht. Dadurch wird der Produktivcode ohne Mocks oder Fakes gegen eine reale Speicherumgebung getestet, die nach jedem Testlauf automatisch wieder entfernt wird (vgl. \autoref{app:fileservice-integration-test}).
 
 \section{Frontend}
+Dieser Abschnitt beschreibt die im Rahmen dieser Arbeit erstellten Unit-Tests sowie die neu ergänzten End-to-End-Tests mit Playwright.
+
 
 \subsection{Unit-Tests}
-Die im Rahmen dieser Arbeit erstellten und erweiterten Unit-Tests verteilen sich auf mehrere der bereits in \autoref{tab:frontend-architektur} eingeführten Schichten der Frontendarchitektur. Der Schwerpunkt liegt auf der Domänen-Schicht sowie den applikationsweiten Services, da diese Bereiche laut \autoref{fig:frontend-coverage-domaenen} vor Beginn der Umsetzung die schwächste Testabdeckung aufwiesen.
+Die im Rahmen dieser Arbeit erstellten und erweiterten Unit-Tests verteilen sich auf mehrere der bereits in \autoref{tab:frontend-architektur} eingeführten Schichten der Frontendarchitektur.
 
 Innerhalb der Domänen-Schicht wurden Tests für zentrale Abläufe in drei Bereichen ergänzt. Im Experiment-Wizard wurden Tests für einzelne Schritte des mehrstufigen Erstellungsprozesses eines Experiments ergänzt, unter anderem für die Erfassung allgemeiner Angaben sowie für die Erfassung von Versuchsergebnissen. In der Report-Vorschau wurde die Logik zur Anzeige des zugehörigen Dialogfensters getestet. Bei der Parametersuche wurden die Anfragen an das Backend zur Suche nach Parametersätzen sowie zur Bewertung einzelner Suchergebnisse abgedeckt.
 
 Ergänzend wurden applikationsweite Services getestet, die von mehreren Domänen gemeinsam genutzt werden: die Verwaltung von Medien wie Bildern, die Navigation innerhalb des Experiment-Wizards sowie die zentrale Protokollierung von Meldungen in der Konsole. Auch der für die Zugriffssteuerung zuständige Baustein, der Anmeldedaten automatisch an Anfragen an das Backend anhängt, sowie ein wiederverwendbares Bedienelement zur Bildvermessung wurden mit Tests versehen.
 
 \subsection{End-to-End-Tests mit Playwright}
-Ergänzend zu den bereits in \autoref{sec:bestehende-testinfrastruktur} beschriebenen sechs vorhandenen Playwright-Testdateien wurde im Rahmen dieser Arbeit die Testsuite \texttt{Create experiment (UI only)} mit zwei weiteren End-to-End-Tests erstellt. Wie bei den bestehenden Tests werden dabei alle Backend-API-Aufrufe über \texttt{page.route('/api/**')} abgefangen, sodass es sich um UI-nahe Tests handelt, nicht um vollständige End-to-End-Tests über das Gesamtsystem. Zusätzlich wird vor jedem Test ein simulierter JSON Web Token im lokalen Speicher des Browsers hinterlegt, sodass die Anwendung einen angemeldeten Anwender erkennt, ohne dass eine echte Anmeldung bei Microsoft Entra ID erforderlich ist.
+Ergänzend zu den bereits in \autoref{sec:bestehende-testinfrastruktur} beschriebenen sechs vorhandenen Playwright-Testdateien wurde im Rahmen dieser Arbeit die Testsuite \texttt{Create experiment (UI only)} mit zwei weiteren Tests erstellt. Wie bereits der Name der Testsuite andeutet, handelt es sich dabei, ebenso wie bei den bereits bestehenden sechs Tests, nicht um vollständige End-to-End-Tests mit echter Backend-Anbindung, sondern um reine UI-Tests, alle Backend-API-Aufrufe werden über \texttt{page.route('/api/**')} abgefangen und simuliert, sodass zu keinem Zeitpunkt eine tatsächliche Kommunikation mit dem Backend stattfindet. Die Anmeldung wird dabei durch einen simulierten JSON Web Token im lokalen Speicher des Browsers vorgetäuscht, sodass die Anwendung einen angemeldeten Anwender mit einer fest hinterlegten Rolle erkennt, ohne dass eine echte Anmeldung bei Microsoft Entra ID erforderlich ist. Der im Konzept vorgesehene Fake-Auth-Service, über den sich Rollen für Testzwecke gezielt wechseln lassen sollen, kommt hier nicht zum Einsatz, da er bislang nur als erstes Modell existiert und noch nicht mit Testfällen erprobt wurde.
 
-Der erste Test bildet den vollständigen, vierstufigen Experiment-Wizard rein auf Ebene der Benutzeroberfläche nach. Im ersten Schritt werden allgemeine Angaben zum Experiment wie Projektname, Firmenname und Beschreibung ausgefüllt, anschließend wird geprüft, dass die daraufhin gesendete Anfrage korrekt aufgebaut ist und die Anwendung zur neu angelegten Experiment-ID weiterleitet. Im zweiten Schritt werden der Name des Versuchsrahmens, die Art der Verbindung und Schweißung über Auswahlfelder sowie die verwendeten Materialien erfasst, auch hier wird die anschließende Weiterleitung anhand der erzeugten ID geprüft. Im dritten Schritt werden Maschine, Laser und Optik sowie zugehörige Prozessparameter wie Leistung, Kollimation, Brennweite und Faserdurchmesser konfiguriert, ebenfalls mit anschließender Prüfung der Weiterleitung. Der vierte Schritt zur Parametererfassung schließt den Ablauf fort.
+Der erste Test bildet den vollständigen, vierstufigen Experiment-Wizard rein auf Ebene der Benutzeroberfläche nach. Im ersten Schritt werden allgemeine Angaben zum Experiment wie Projektname, Firmenname und Beschreibung ausgefüllt, anschließend wird geprüft, dass die daraufhin gesendete Anfrage korrekt aufgebaut ist und die Anwendung zur neu angelegten Experiment-ID weiterleitet. Im zweiten Schritt werden der Name des Versuchsrahmens, die Art der Verbindung und Schweißung über Auswahlfelder sowie die verwendeten Materialien erfasst, auch hier wird die anschließende Weiterleitung anhand der erzeugten ID geprüft. Im dritten Schritt werden Maschine, Laser und Optik sowie zugehörige Prozessparameter wie Leistung, Kollimation, Brennweite und Faserdurchmesser konfiguriert, ebenfalls mit anschließender Prüfung der Weiterleitung. Der vierte Schritt zur Parametererfassung schließt den Ablauf ab. Da sämtliche Backend-Antworten simuliert sind, prüft dieser Test ausschließlich das korrekte Verhalten der Benutzeroberfläche und den formalen Aufbau der versendeten Anfragen, nicht jedoch, ob das Backend die Daten tatsächlich korrekt verarbeitet.
 
-Der zweite Test prüft das Verhalten bei unvollständigen Pflichtangaben: Bleiben erforderliche Felder leer, darf keine Anfrage zum Anlegen eines Experiments gesendet werden, stattdessen muss die Anwendung entsprechende Validierungshinweise anzeigen.
-
+Der zweite Test prüft das Verhalten bei unvollständigen Pflichtangaben: Bleiben erforderliche Felder leer, darf keine Anfrage zum Anlegen eines Experiments gesendet werden, stattdessen muss die Anwendung entsprechende Validierungshinweise anzeigen. Beide Tests laufen mit derselben, einzelnen simulierten Rolle. Die im Konzept vorgesehene Ausweitung auf mehrere Rollen sowie echte, systemübergreifende End-to-End-Tests ohne Mocking der Backend-Kommunikation konnten im Rahmen dieser Arbeit noch nicht umgesetzt werden.
 
 
 \section{Ergebnisse}
@@ -191,24 +78,27 @@ Sowohl im Frontend als auch im Backend zeigt sich für die im Rahmen dieser Arbe
     \centering
     \caption{Vergleich der Testabdeckung vor und nach der Umsetzung}
     \label{tab:coverage-ergebnis}
-    \renewcommand{\arraystretch}{1.3}
-    \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrrr@{}}
+    \renewcommand{\arraystretch}{1.1}
+    \small
+    \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}X*{3}{>{\centering\arraybackslash}p{0.16\textwidth}}@{}}
         \toprule
         \textbf{Bereich} & \textbf{Vor der Umsetzung} & \textbf{Nach der Umsetzung} & \textbf{Veränderung} \\
         \midrule
-        \multicolumn{4}{@{}l}{\textit{Frontend (Statement/Branch/Function/Line)}} \\
+        \multicolumn{4}{@{}l}{\textit{Frontend}} \\
         Statement-Coverage & 57,0\,\% & 60,72\,\% & +3,72 \\
         Branch-Coverage & 53,0\,\% & 57,09\,\% & +4,09 \\
         Function-Coverage & 47,0\,\% & 50,88\,\% & +3,88 \\
         Line-Coverage & 60,0\,\% & 63,32\,\% & +3,32 \\
         \addlinespace
         \multicolumn{4}{@{}l}{\textit{Backend (je Service)}} \\
-        \texttt{ExperimentService} & 9,8\,\% & 77,2\,\% & +67,4 \\
-        \texttt{FileService} & 18,6\,\% & 51,5\,\% & +32,9 \\
-        \texttt{GatewayService} & Kein Testprojekt & 79,7\,\% & neu \\
-        \texttt{ApplicationLoggingService} & Kein Testprojekt & 60,6\,\% & neu \\
+        \texttt{\seqsplit{ExperimentService}} & 9,8\,\% & 77,2\,\% & +67,4 \\
+        \texttt{\seqsplit{FileService}} & 18,6\,\% & 51,5\,\% & +32,9 \\
+        \texttt{\seqsplit{GatewayService}} & Kein Testprojekt & 79,7\,\% & neu \\
+        \texttt{\seqsplit{ApplicationLoggingService}} & Kein Testprojekt & 60,6\,\% & neu \\
         \bottomrule
     \end{tabularx}
 \end{table}
 
 Im Frontend verbesserten sich alle vier Kennzahlen um jeweils rund drei bis vier Prozentpunkte, im Backend fiel die Steigerung bei den bearbeiteten Services deutlich stärker aus. \texttt{ExperimentService} und \texttt{GatewayService} liegen nun über 75\,\%, für \texttt{GatewayService} und \texttt{ApplicationLoggingService} wurde die Coverage vollständig neu aufgebaut, da vor der Umsetzung noch kein eigenes Testprojekt existierte. \texttt{FileService} und \texttt{ApplicationLoggingService} wurden ebenfalls spürbar verbessert, liegen mit rund 51\,\% beziehungsweise 61\,\% jedoch noch unterhalb der übrigen bearbeiteten Bereiche. Trotz dieser Fortschritte bleibt weiterer Ausbau erforderlich, um die verbleibenden Abdeckungslücken systematisch zu reduzieren.
+
+Auf Ebene der einzelnen Frontend-Domänen zeigt sich, dass sich die Verbesserung auf die tatsächlich bearbeiteten Bereiche konzentriert. Für \texttt{experiment-wizard}, eine der beiden in \autoref{fig:frontend-coverage-domaenen} als schwächste Domänen identifizierten Bereiche, stieg die Branch-Coverage von 38{,}0\,\% auf 43{,}9\,\% und die Line-Coverage von 43{,}0\,\% auf 51{,}8\,\%, während die Function-Coverage von 38{,}0\,\% auf 34{,}3\,\% leicht zurückging.

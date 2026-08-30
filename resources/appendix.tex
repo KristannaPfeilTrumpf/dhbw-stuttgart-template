@@ -2,9 +2,13 @@
 
 \addchap{Anhang}
 \begin{itemize}
-	\item \ref{apx:1} Anhang 1 \dotfill{} \pageref{apx:1}
-	\item \ref{apx:2} Anhang 2 \dotfill{} \pageref{apx:2}
+	\item \autoref{app:code-beispiele} Code-Beispiele zu den erstellten Tests \dotfill{} \pageref{app:code-beispiele}
+	\item \autoref{app:experimentservice-unit-test} Unit-Test für den \texttt{ExperimentService} \dotfill{} \pageref{app:experimentservice-unit-test}
+	\item \autoref{app:applicationloggingservice-unit-test} Unit-Test für den \texttt{ApplicationLoggingService} \dotfill{} \pageref{app:applicationloggingservice-unit-test}
+	\item \autoref{app:gateway-integration-test} Integrationstest für den \texttt{GatewayService} \dotfill{} \pageref{app:gateway-integration-test}
+	\item \autoref{app:fileservice-integration-test} Integrationstest für den \texttt{FileService} \dotfill{} \pageref{app:fileservice-integration-test}
 \end{itemize}
+
 
 \chapter{Code-Beispiele zu den erstellten Tests}
 \label{app:code-beispiele}
@@ -128,9 +132,3 @@ public class FileUploadDownloadTests : IClassFixture<AzuriteWebApplicationFactor
 	}
 }
 \end{lstlisting}
-
-\chapter{Anhang 1}
-\label{apx:1}
-
-\chapter{Anhang 2}
-\label{apx:2}
